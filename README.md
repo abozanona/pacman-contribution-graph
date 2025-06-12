@@ -1,8 +1,9 @@
-<div align="center">
+### <div align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=tejasji-09&show_icons=true&theme=github_dark&hide_border=true&count_private=true&include_all_commits=true" height="180px"/>
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=tejasji-09&theme=github_dark&hide_border=true" height="180px"/>
 </div>
-<picture>
+
+### <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/abozanona/abozanona/output/pacman-contribution-graph-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/abozanona/abozanona/output/pacman-contribution-graph.svg">
   <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/abozanona/abozanona/output/pacman-contribution-graph.svg">
