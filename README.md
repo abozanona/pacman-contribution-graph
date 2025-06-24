@@ -9,7 +9,7 @@
   <img src="https://nirzak-streak-stats.vercel.app/?user=mechaDoodle2005&theme=highcontrast&hide_border=true" />
 </p>
 
-[![](https://visitcount.itsvg.in/api?id=mechDoodle2005&icon=0&color=0)](https://visitcount.itsvg.in)
+[![](https://visitcount.itsvg.in/api?id=mechaDoodle2005&icon=0&color=0)](https://visitcount.itsvg.in)
 
 <div align="center">
   <h2 align="center" style="margin: 0; padding: 0;">Till now I have worked on these Tech Stack</h2>
