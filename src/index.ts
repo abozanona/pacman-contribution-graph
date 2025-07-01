@@ -21,7 +21,7 @@ export class PacmanRenderer {
 			canvas: undefined as unknown as HTMLCanvasElement,
 			outputFormat: 'svg',
 			svgCallback: (_: string) => {},
-			gameOverCallback: () => () => {},
+			gameOverCallback: () => {},
 			gameTheme: 'github',
 			gameSpeed: 1,
 			enableSounds: false,
@@ -29,17 +29,18 @@ export class PacmanRenderer {
 		};
 		this.store.config = { ...defaultConfing, ...this.conf };
 
+		// Fetch contributions based on platform
 		switch (this.conf.platform) {
 			case 'gitlab':
 				this.store.contributions = await Utils.getGitlabContribution(this.store);
 				break;
-
 			case 'github':
 				this.store.contributions = await Utils.getGithubContribution(this.store);
 				break;
 		}
 
-		Game.startGame(this.store);
+		// Start the game with real contributions
+		await Game.startGame(this.store);
 	}
 
 	public stop() {
