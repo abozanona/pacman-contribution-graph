@@ -42,7 +42,7 @@ export interface StoreType {
 	grid: { intensity: number; commitsCount: number }[][];
 	monthLabels: string[];
 	pacmanMouthOpen: boolean;
-	gameInterval: NodeJS.Timeout | null;
+	gameInterval: number | NodeJS.Timeout | null;
 	gameHistory: {
 		pacman: Pacman;
 		ghosts: Ghost[];

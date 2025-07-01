@@ -111,6 +111,9 @@ const startGame = async (store: StoreType) => {
 
   // Fetch and use real contribution grid
   store.contributionGrid = await fetchGitHubContributions(store.config.username);
+  console.log("Contribution Grid:");
+  console.table(store.contributionGrid);
+
   store.grid = store.contributionGrid.map(row =>
     row.map(count => ({
       commitsCount: count,
@@ -120,6 +123,7 @@ const startGame = async (store: StoreType) => {
 
   // Place pellets on contribution cells
   placePellets(store);
+  console.log("Pellets at positions:", store.pellets);
 
   // Initialize ghosts array
   store.ghosts = [];
@@ -148,13 +152,18 @@ const startGame = async (store: StoreType) => {
     // One more time to generate svg
     await updateGame(store);
   } else {
-    clearInterval(store.gameInterval);
+    if (store.gameInterval) {
+      clearInterval(store.gameInterval as number | NodeJS.Timeout);
+    }
     store.gameInterval = setInterval(async () => await updateGame(store), DELTA_TIME);
   }
 };
 
 const stopGame = async (store: StoreType) => {
-  clearInterval(store.gameInterval);
+  if (store.gameInterval) {
+    clearInterval(store.gameInterval as number | NodeJS.Timeout);
+    store.gameInterval = null;
+  }
 };
 
 const updateGame = async (store: StoreType) => {
@@ -190,15 +199,17 @@ const updateGame = async (store: StoreType) => {
 
 	const remainingCells = store.grid.some((row) => row.some((cell) => cell.intensity > 0));
 	if (!remainingCells) {
-		if (store.config.outputFormat == 'canvas') {
-			clearInterval(store.gameInterval);
-			if (store.config.outputFormat == 'canvas') {
-				Canvas.renderGameOver(store);
-				MusicPlayer.getInstance()
-					.play(Sound.BEGINNING)
-					.then(() => MusicPlayer.getInstance().stopDefaultSound());
-			}
-		}
+    if (store.config.outputFormat == 'canvas') {
+      if (store.gameInterval !== null && store.gameInterval !== undefined) {
+        clearInterval(store.gameInterval as number | NodeJS.Timeout);
+      }
+      if (store.config.outputFormat == 'canvas') {
+        Canvas.renderGameOver(store);
+        MusicPlayer.getInstance()
+          .play(Sound.BEGINNING)
+          .then(() => MusicPlayer.getInstance().stopDefaultSound());
+      }
+    }
 
 		if (store.config.outputFormat == 'svg') {
 			const animatedSVG = SVG.generateAnimatedSVG(store);
