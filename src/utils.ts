@@ -100,6 +100,14 @@ export async function fetchGitHubContributions(username: string): Promise<number
       }
     });
     
+    console.log("Fetched contribution SVG (first 500 chars):", text.substring(0, 500));
+    let totalSquares = 0, totalContributions = 0;
+    grid.forEach(row => row.forEach(count => {
+      if (count > 0) totalSquares++;
+      totalContributions += count;
+    }));
+    console.log(`Total nonzero squares: ${totalSquares}, total contributions: ${totalContributions}`);
+    
     return grid;
   } catch (error) {
     console.error('Error fetching GitHub contributions:', error);
