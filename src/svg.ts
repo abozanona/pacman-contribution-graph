@@ -13,6 +13,15 @@ import {
 import { AnimationData, StoreType } from './types';
 import { Utils } from './utils';
 
+// Helper for GitHub's contribution color scheme
+function getContributionColor(count: number): string {
+    if (count === 0) return '#ebedf0';      // GitHub's empty color
+    if (count < 5) return '#9be9a8';        // Light green
+    if (count < 10) return '#40c463';       // Medium green
+    if (count < 20) return '#30a14e';       // Dark green
+    return '#216e39';                       // Darkest green
+}
+
 const generateAnimatedSVG = (store: StoreType) => {
 	const svgWidth = GRID_WIDTH * (CELL_SIZE + GAP_SIZE);
 	const svgHeight = GRID_HEIGHT * (CELL_SIZE + GAP_SIZE) + 20;
@@ -32,17 +41,14 @@ const generateAnimatedSVG = (store: StoreType) => {
 		}
 	}
 
-	// Grid
+	// Grid - using real contribution colors
 	for (let x = 0; x < GRID_WIDTH; x++) {
 		for (let y = 0; y < GRID_HEIGHT; y++) {
 			const cellX = x * (CELL_SIZE + GAP_SIZE);
 			const cellY = y * (CELL_SIZE + GAP_SIZE) + 15;
-			const cellColorAnimation = generateChangingValuesAnimation(store, generateCellColorValues(store, x, y));
-			svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${CELL_SIZE}" height="${CELL_SIZE}" rx="5" fill="${Utils.getCurrentTheme(store).emptyContributionBoxColor}">
-                <animate attributeName="fill" dur="${store.gameHistory.length * DELTA_TIME}ms" repeatCount="indefinite" 
-                    values="${cellColorAnimation.values}" 
-                    keyTimes="${cellColorAnimation.keyTimes}"/>
-            </rect>`;
+			const count = store.contributionGrid?.[y]?.[x] || 0;
+			const color = getContributionColor(count);
+			svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${CELL_SIZE}" height="${CELL_SIZE}" rx="5" fill="${color}"/>`;
 		}
 	}
 
@@ -248,6 +254,23 @@ const generateChangingValuesAnimation = (store: StoreType, changingValues: strin
 		values: values.join(';')
 	};
 };
+
+function renderGrid(store: StoreType): SVGElement {
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const group = document.createElementNS(SVG_NS, 'g');
+    store.contributionGrid.forEach((row, y) => {
+        row.forEach((count, x) => {
+            const rect = document.createElementNS(SVG_NS, 'rect');
+            rect.setAttribute('x', String(x * CELL_SIZE));
+            rect.setAttribute('y', String(y * CELL_SIZE));
+            rect.setAttribute('width', String(CELL_SIZE));
+            rect.setAttribute('height', String(CELL_SIZE));
+            rect.setAttribute('fill', getContributionColor(count));
+            group.appendChild(rect);
+        });
+    });
+    return group;
+}
 
 export const SVG = {
 	generateAnimatedSVG
