@@ -47,3 +47,52 @@ export class PacmanRenderer {
 		Game.stopGame(this.store);
 	}
 }
+
+if (typeof window !== 'undefined') {
+  // Browser environment
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('game-container');
+    if (container) {
+      const canvas = document.createElement('canvas');
+      container.appendChild(canvas);
+
+      const renderer = new PacmanRenderer({
+        platform: 'github',
+        username: 'diogocarrola',
+        canvas: canvas,
+        outputFormat: 'canvas',
+        svgCallback: () => {},
+        gameOverCallback: () => console.log('Game Over'),
+        gameTheme: 'github',
+        gameSpeed: 1,
+        enableSounds: false,
+        pointsIncreasedCallback: () => {}
+      });
+
+      renderer.start();
+    }
+  });
+} else {
+  // CLI environment
+  const args = process.argv.slice(2);
+  const usernameArg = args.find(arg => arg.startsWith('--username='));
+  const outputArg = args.find(arg => arg.startsWith('--output='));
+
+  const username = usernameArg ? usernameArg.split('=')[1] : 'diogocarrola';
+  const output = outputArg ? outputArg.split('=')[1] : 'svg';
+
+  const renderer = new PacmanRenderer({
+    platform: 'github',
+    username: username,
+    canvas: null as any,
+    outputFormat: output as any,
+    svgCallback: (svg) => console.log(svg),
+    gameOverCallback: () => {},
+    gameTheme: 'github',
+    gameSpeed: 1,
+    enableSounds: false,
+    pointsIncreasedCallback: () => {}
+  });
+
+  renderer.start();
+}
