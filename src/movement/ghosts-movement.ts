@@ -2,6 +2,7 @@ import { GRID_HEIGHT, GRID_WIDTH } from '../constants';
 import { Ghost, Point2d, StoreType } from '../types';
 import { MovementUtils } from './movement-utils';
 
+// Update to check real contribution grid for valid moves
 const moveGhosts = (store: StoreType) => {
 	store.ghosts.forEach((ghost) => {
 		if (ghost.scared || Math.random() < 0.15) {
@@ -12,13 +13,32 @@ const moveGhosts = (store: StoreType) => {
 	});
 };
 
-// When scared, ghosts move randomly but with some intelligence
+// Update valid move check to use contribution grid
+const getValidMoves = (x: number, y: number, store: StoreType) => {
+	const moves = [];
+
+	// Right
+	if (x < GRID_WIDTH - 1 && store.contributionGrid[y][x + 1] > 0) moves.push([1, 0]);
+
+	// Left
+	if (x > 0 && store.contributionGrid[y][x - 1] > 0) moves.push([-1, 0]);
+
+	// Down
+	if (y < GRID_HEIGHT - 1 && store.contributionGrid[y + 1][x] > 0) moves.push([0, 1]);
+
+	// Up
+	if (y > 0 && store.contributionGrid[y - 1][x] > 0) moves.push([0, -1]);
+
+	return moves;
+};
+
+// Update moveScaredGhost to use the new getValidMoves
 const moveScaredGhost = (ghost: Ghost, store: StoreType) => {
 	if (!ghost.target || (ghost.x === ghost.target.x && ghost.y === ghost.target.y)) {
 		ghost.target = getRandomDestination(ghost.x, ghost.y);
 	}
 
-	const validMoves = MovementUtils.getValidMoves(ghost.x, ghost.y);
+	const validMoves = getValidMoves(ghost.x, ghost.y, store);
 	if (validMoves.length === 0) return;
 
 	// Move toward target but with some randomness to appear "scared"
@@ -47,20 +67,8 @@ const moveScaredGhost = (ghost: Ghost, store: StoreType) => {
 	ghost.y += moveY;
 };
 
-// Move ghost according to its personality
-const moveGhostWithPersonality = (ghost: Ghost, store: StoreType) => {
-	const target = calculateGhostTarget(ghost, store);
-	ghost.target = target;
-
-	const nextMove = BFSTargetLocation(ghost.x, ghost.y, target.x, target.y);
-	if (nextMove) {
-		ghost.x = nextMove.x;
-		ghost.y = nextMove.y;
-	}
-};
-
-// Find the next position to move to using BFS
-const BFSTargetLocation = (startX: number, startY: number, targetX: number, targetY: number): Point2d | null => {
+// Update BFSTargetLocation to use the new getValidMoves
+const BFSTargetLocation = (startX: number, startY: number, targetX: number, targetY: number, store: StoreType): Point2d | null => {
 	// If we're already at the target, no need to move
 	if (startX === targetX && startY === targetY) return null;
 
@@ -72,7 +80,7 @@ const BFSTargetLocation = (startX: number, startY: number, targetX: number, targ
 		const current = queue.shift()!;
 		const { x, y, path } = current;
 
-		const validMoves = MovementUtils.getValidMoves(x, y);
+		const validMoves = getValidMoves(x, y, store);
 
 		for (const [dx, dy] of validMoves) {
 			const newX = x + dx;
@@ -94,6 +102,18 @@ const BFSTargetLocation = (startX: number, startY: number, targetX: number, targ
 
 	// If no path found, no need to move
 	return null;
+};
+
+// Update moveGhostWithPersonality to pass store to BFS
+const moveGhostWithPersonality = (ghost: Ghost, store: StoreType) => {
+	const target = calculateGhostTarget(ghost, store);
+	ghost.target = target;
+
+	const nextMove = BFSTargetLocation(ghost.x, ghost.y, target.x, target.y, store);
+	if (nextMove) {
+		ghost.x = nextMove.x;
+		ghost.y = nextMove.y;
+	}
 };
 
 // Calculate ghost target based on personality
@@ -171,8 +191,7 @@ const getPacmanDirection = (store: StoreType): [number, number] => {
 const getRandomDestination = (x: number, y: number) => {
 	const maxDistance = 8;
 	const randomX = x + Math.floor(Math.random() * (2 * maxDistance + 1)) - maxDistance;
-	const randomY = y + Math.floor(Math.random() * (2 * maxDistance + 1)) - maxDistance;
-	return {
+	const randomY = y + Math.floor(Math.random() * (2 * maxDistance + 1)) - maxDistance;	return {
 		x: Math.max(0, Math.min(randomX, GRID_WIDTH - 1)),
 		y: Math.max(0, Math.min(randomY, GRID_HEIGHT - 1))
 	};
