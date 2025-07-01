@@ -8,17 +8,20 @@
 	"main": "dist/pacman-contribution-graph.min.js",
 	"scripts": {
 		"build": "webpack --config webpack.prod.js",
-		"dev": "webpack --progress --config webpack.dev.js",
+		"start": "node dist/index.js --username=diogocarrola --output=svg > assets/pacman-contributions.svg",
+		"dev": "webpack serve --config webpack.dev.js",
 		"prepublishOnly": "npm run build",
 		"build-action": "pnpm run --prefix ./github-action build"
 	},
 	"devDependencies": {
+		"html-webpack-plugin": "^5.6.3",
 		"prettier": "^3.4.2",
 		"terser": "^5.37.0",
 		"ts-loader": "^9.5.2",
 		"typescript": "^4.9.5",
 		"webpack": "^5.97.1",
 		"webpack-cli": "^6.0.1",
+		"webpack-dev-server": "^5.2.2",
 		"webpack-merge": "^5.9.0"
 	},
 	"keywords": [],
