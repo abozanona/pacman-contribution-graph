@@ -3,6 +3,11 @@ export type Point2d = {
 	y: number;
 };
 
+export interface Pellet {
+  x: number;
+  y: number;
+}
+
 export interface Pacman {
 	x: number;
 	y: number;
@@ -44,6 +49,8 @@ export interface StoreType {
 		grid: number[][];
 	}[];
 	config: Config;
+	contributionGrid: number[][];
+	pellets: Pellet[];
 }
 
 export interface Config {
