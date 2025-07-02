@@ -229,7 +229,16 @@ const checkAndEatPoint = (store: StoreType) => {
 
 const activatePowerUp = (store: StoreType) => {
 	store.pacman.powerupRemainingDuration = PACMAN_POWERUP_DURATION;
-	store.ghosts.forEach((ghost) => (ghost.scared = true));
+	store.ghosts.forEach((ghost) => {
+		ghost.scared = true;
+		// Reverse direction
+		if (ghost.direction) {
+			if (ghost.direction === 'left') ghost.direction = 'right';
+			else if (ghost.direction === 'right') ghost.direction = 'left';
+			else if (ghost.direction === 'up') ghost.direction = 'down';
+			else if (ghost.direction === 'down') ghost.direction = 'up';
+		}
+	});
 };
 
 export const PacmanMovement = {
