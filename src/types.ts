@@ -27,6 +27,9 @@ export interface Ghost {
 	name: GhostName;
 	scared: boolean;
 	target?: Point2d;
+	direction?: 'right' | 'left' | 'up' | 'down';
+	flashing?: boolean;
+	state?: 'normal' | 'scared' | 'eaten';
 }
 
 export interface Contribution {
