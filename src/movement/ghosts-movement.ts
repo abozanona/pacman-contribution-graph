@@ -106,6 +106,27 @@ const BFSTargetLocation = (startX: number, startY: number, targetX: number, targ
 
 // Update moveGhostWithPersonality to pass store to BFS
 const moveGhostWithPersonality = (ghost: Ghost, store: StoreType) => {
+	if (ghost.state === 'eaten') {
+		// Move toward ghost house (e.g., center of grid)
+		const ghostHouse = { x: Math.floor(GRID_WIDTH / 2), y: Math.floor(GRID_HEIGHT / 2) };
+		const nextMove = BFSTargetLocation(ghost.x, ghost.y, ghostHouse.x, ghostHouse.y, store);
+		if (nextMove) {
+			ghost.x = nextMove.x;
+			ghost.y = nextMove.y;
+		}
+		// Tunnel wrapping for ghosts
+		if (ghost.x < 0) ghost.x = GRID_WIDTH - 1;
+		if (ghost.x >= GRID_WIDTH) ghost.x = 0;
+		// When ghost reaches ghost house, restore to normal
+		if (ghost.x === ghostHouse.x && ghost.y === ghostHouse.y) {
+			ghost.state = 'normal';
+			ghost.scared = false;
+			ghost.flashing = false;
+			// Optionally reset direction
+		}
+		return; // Skip normal movement for this ghost
+	}
+
 	const target = calculateGhostTarget(ghost, store);
 	ghost.target = target;
 

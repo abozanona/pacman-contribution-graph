@@ -255,11 +255,9 @@ const checkCollisions = (store: StoreType) => {
 	store.ghosts.forEach((ghost, index) => {
 		if (ghost.x === store.pacman.x && ghost.y === store.pacman.y) {
 			if (store.pacman.powerupRemainingDuration && ghost.scared) {
-				respawnGhost(store, index);
-				store.pacman.points += 10;
-				if (store.config.outputFormat == 'canvas') {
-					MusicPlayer.getInstance().play(Sound.EAT_GHOST);
-				}
+				ghost.state = 'eaten';
+				ghost.scared = false;
+				ghost.flashing = false;				
 			} else {
 				store.pacman.points = 0;
 				store.pacman.powerupRemainingDuration = 0;
