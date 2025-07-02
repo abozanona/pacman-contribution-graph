@@ -205,8 +205,15 @@ const updatePacmanPosition = (store: StoreType, position: Point2d) => {
 	else if (dy > 0) store.pacman.direction = 'down';
 	else if (dy < 0) store.pacman.direction = 'up';
 
-	store.pacman.x = position.x;
-	store.pacman.y = position.y;
+	let x = position.x;
+	let y = position.y;
+
+	// Tunnel wrapping
+	if (x < 0) x = GRID_WIDTH - 1;
+	if (x >= GRID_WIDTH) x = 0;
+
+	store.pacman.x = x;
+	store.pacman.y = y;
 };
 
 const checkAndEatPoint = (store: StoreType) => {
