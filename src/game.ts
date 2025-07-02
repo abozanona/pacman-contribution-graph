@@ -191,8 +191,16 @@ const updateGame = async (store: StoreType) => {
 
 	if (store.pacman.powerupRemainingDuration) {
 		store.pacman.powerupRemainingDuration--;
+		if (store.pacman.powerupRemainingDuration < 3 * (1000 / DELTA_TIME)) {
+			store.ghosts.forEach((ghost) => {
+				if (ghost.scared) ghost.flashing = (store.pacman.powerupRemainingDuration % 2 === 0);
+			});
+		}
 		if (!store.pacman.powerupRemainingDuration) {
-			store.ghosts.forEach((ghost) => (ghost.scared = false));
+			store.ghosts.forEach((ghost) => {
+				ghost.scared = false;
+				ghost.flashing = false;
+			});
 			store.pacman.points = 0;
 		}
 	}
