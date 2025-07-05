@@ -8,6 +8,10 @@ Transform your GitHub or GitLab contribution graph into an interactive Pac-Man g
   <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/abozanona/abozanona/output/pacman-contribution-graph.svg">
 </picture>
 
+> **Note:**  
+> This tool visualizes only your **public contributions** as shown on your GitHub profile.  
+> Private contributions are not included due to GitHub's privacy policy.
+
 ## Features
 
 Elevate your GitHub profile with the Pac-Man Contribution Graph Game and add a playful touch to your coding journey!
@@ -16,6 +20,9 @@ Elevate your GitHub profile with the Pac-Man Contribution Graph Game and add a p
 - **Interactive Gameplay**: Navigate Pac-Man through your contributions, evading ghosts and collecting pellets.
 - **Multiple Themes**: Choose between different themes, such as GitHub Dark and GitLab Dark.
 - **Customizable Settings**: Adjust game speed, sound preferences, and output format (Canvas or SVG).
+- **NEW: Real Contribution Mapping**: Pac-Man and ghosts now move through your **actual public contribution graph** (not a generic or demo grid).
+- **NEW: Improved Accuracy**: Uses GitHub's real color scheme and grid layout for a faithful representation.
+- **NEW: Enhanced Game Mechanics**: Ghosts and Pac-Man only move where you have contributed.
 
 ## Demo
 
@@ -48,12 +55,12 @@ Here's how to set up and run the Pac-Man Contribution Graph:
     import { generatePacManGame } from 'pacman-contribution-graph';
 
     generatePacManGame({
-    	username: 'your_username',
-    	platform: 'github', // or 'gitlab'
-    	theme: 'github-dark', // or 'gitlab-dark'
-    	speed: 2,
-    	sound: true,
-    	output: 'canvas' // or 'svg'
+        username: 'your_username',
+        platform: 'github', // or 'gitlab'
+        theme: 'github-dark', // or 'gitlab-dark'
+        speed: 2,
+        sound: true,
+        output: 'canvas' // or 'svg'
     });
     ```
 
@@ -130,7 +137,7 @@ To showcase the Pac-Man game on your GitHub profile, follow these steps:
 4. **Commit and Push**:
     - Push the changes to GitHub. The GitHub Actions workflow will run daily, updating the Pac-Man game on your profile.
 
-For a detailed guide, refer to the blog post: [Integrate Pac-Man Contribution Graph into Your GitHub Profile](https://abozanona.me/integrate-pacman-contribution-graph-into-github/)
+For a detailed guide, refer to the blog post: [Integrate Pac-Man Contribution Graph into your GitHub Profile](https://abozanona.me/integrate-pacman-contribution-graph-into-github/)
 
 ## Contributing
 
@@ -144,7 +151,8 @@ Contributions are welcome! To contribute:
 
 ## Acknowledgements
 
-Inspired by the [snk](https://github.com/Platane/snk) project, which turns your GitHub contribution graph into a snake game. Special thanks to all contributors and the open-source community for their support.
+Inspired by the [snk](https://github.com/Platane/snk) project, which turns your GitHub contribution graph into a snake game.  
+Special thanks to [@abozanona](https://github.com/abozanona) for the original Pac-Man Contribution Graph Game and to all contributors and the open-source community for their support.
 
 ## Online tools that use Pac-Man Contribution Graph Game
 

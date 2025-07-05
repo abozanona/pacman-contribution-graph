@@ -72,6 +72,50 @@ const hexToHexAlpha = (hex: string, alpha: number): string => {
 	return `#${hex}${alphaHex}`;
 };
 
+export async function fetchGitHubContributions(username: string): Promise<number[][]> {
+  try {
+    const res = await fetch(`https://github.com/users/${username}/contributions`);
+    const text = await res.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, 'image/svg+xml');
+    const rects = doc.querySelectorAll('rect[data-date]');
+    
+    // Create grid: 7 rows (days) x 53 columns (weeks)
+    const grid: number[][] = Array(7).fill(0).map(() => Array(53).fill(0));
+
+    rects.forEach(rect => {
+      const count = parseInt(rect.getAttribute('data-count') || '0', 10);
+      const date = rect.getAttribute('data-date');
+      if (!date) return;
+
+      const dateObj = new Date(date);
+      const today = new Date();
+      const weekDiff = Math.floor((today.getTime() - dateObj.getTime()) / (7 * 24 * 60 * 60 * 1000));
+      const dayOfWeek = dateObj.getDay(); // 0 (Sunday) to 6 (Saturday)
+      
+      // Only consider contributions within the last year (53 weeks)
+      if (weekDiff >= 0 && weekDiff < 53) {
+        // GitHub grid: columns are weeks, rows are days
+        grid[dayOfWeek][52 - weekDiff] = count;
+      }
+    });
+    
+    console.log("Fetched contribution SVG (first 500 chars):", text.substring(0, 500));
+    let totalSquares = 0, totalContributions = 0;
+    grid.forEach(row => row.forEach(count => {
+      if (count > 0) totalSquares++;
+      totalContributions += count;
+    }));
+    console.log(`Total nonzero squares: ${totalSquares}, total contributions: ${totalContributions}`);
+    
+    return grid;
+  } catch (error) {
+    console.error('Error fetching GitHub contributions:', error);
+    // Return empty grid on error
+    return Array(7).fill(0).map(() => Array(53).fill(0));
+  }
+}
+
 export const Utils = {
 	getGitlabContribution,
 	getGithubContribution,

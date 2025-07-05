@@ -205,8 +205,15 @@ const updatePacmanPosition = (store: StoreType, position: Point2d) => {
 	else if (dy > 0) store.pacman.direction = 'down';
 	else if (dy < 0) store.pacman.direction = 'up';
 
-	store.pacman.x = position.x;
-	store.pacman.y = position.y;
+	let x = position.x;
+	let y = position.y;
+
+	// Tunnel wrapping
+	if (x < 0) x = GRID_WIDTH - 1;
+	if (x >= GRID_WIDTH) x = 0;
+
+	store.pacman.x = x;
+	store.pacman.y = y;
 };
 
 const checkAndEatPoint = (store: StoreType) => {
@@ -222,7 +229,16 @@ const checkAndEatPoint = (store: StoreType) => {
 
 const activatePowerUp = (store: StoreType) => {
 	store.pacman.powerupRemainingDuration = PACMAN_POWERUP_DURATION;
-	store.ghosts.forEach((ghost) => (ghost.scared = true));
+	store.ghosts.forEach((ghost) => {
+		ghost.scared = true;
+		// Reverse direction
+		if (ghost.direction) {
+			if (ghost.direction === 'left') ghost.direction = 'right';
+			else if (ghost.direction === 'right') ghost.direction = 'left';
+			else if (ghost.direction === 'up') ghost.direction = 'down';
+			else if (ghost.direction === 'down') ghost.direction = 'up';
+		}
+	});
 };
 
 export const PacmanMovement = {

@@ -3,6 +3,11 @@ export type Point2d = {
 	y: number;
 };
 
+export interface Pellet {
+  x: number;
+  y: number;
+}
+
 export interface Pacman {
 	x: number;
 	y: number;
@@ -22,6 +27,9 @@ export interface Ghost {
 	name: GhostName;
 	scared: boolean;
 	target?: Point2d;
+	direction?: 'right' | 'left' | 'up' | 'down';
+	flashing?: boolean;
+	state?: 'normal' | 'scared' | 'eaten';
 }
 
 export interface Contribution {
@@ -37,13 +45,15 @@ export interface StoreType {
 	grid: { intensity: number; commitsCount: number }[][];
 	monthLabels: string[];
 	pacmanMouthOpen: boolean;
-	gameInterval: number;
+	gameInterval: number | NodeJS.Timeout | null;
 	gameHistory: {
 		pacman: Pacman;
 		ghosts: Ghost[];
 		grid: number[][];
 	}[];
 	config: Config;
+	contributionGrid: number[][];
+	pellets: Pellet[];
 }
 
 export interface Config {
