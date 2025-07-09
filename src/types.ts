@@ -57,6 +57,7 @@ export interface StoreType {
 }
 
 export interface Config {
+	useCustomStartPositions?: boolean;
 	platform: 'github' | 'gitlab';
 	username: string;
 	canvas: HTMLCanvasElement;
