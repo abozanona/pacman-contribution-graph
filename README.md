@@ -151,8 +151,7 @@ Contributions are welcome! To contribute:
 
 ## Acknowledgements
 
-Inspired by the [snk](https://github.com/Platane/snk) project, which turns your GitHub contribution graph into a snake game.  
-Special thanks to [@abozanona](https://github.com/abozanona) for the original Pac-Man Contribution Graph Game and to all contributors and the open-source community for their support.
+Inspired by the [snk](https://github.com/Platane/snk) project, which turns your GitHub contribution graph into a snake game. Special thanks to all contributors and the open-source community for their support.
 
 ## Online tools that use Pac-Man Contribution Graph Game
 
