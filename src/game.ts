@@ -21,26 +21,41 @@ const placePellets = (store: StoreType) => {
 
 // Place Pacman at a valid position
 const placePacman = (store: StoreType) => {
-  const validPositions: {x: number, y: number}[] = [];
-  store.contributionGrid.forEach((row, y) => {
-    row.forEach((count, x) => {
-      if (count > 0) validPositions.push({x, y});
+  if (!store.config.useCustomStartPositions) {
+    // Original fixed position
+    store.pacman = {
+      x: 1,
+      y: 1,
+      direction: 'right',
+      points: 0,
+      totalPoints: 0,
+      deadRemainingDuration: 0,
+      powerupRemainingDuration: 0,
+      recentPositions: []
+    };
+  } else {
+    // Custom position logic
+    const validPositions: {x: number, y: number}[] = [];
+    store.contributionGrid.forEach((row, y) => {
+      row.forEach((count, x) => {
+        if (count > 0) validPositions.push({x, y});
+      });
     });
-  });
 
-  if (validPositions.length === 0) return;
-
-  const pos = validPositions[Math.floor(Math.random() * validPositions.length)];
-  store.pacman = {
-    x: pos.x,
-    y: pos.y,
-    direction: 'right',
-    points: 0,
-    totalPoints: 0,
-    deadRemainingDuration: 0,
-    powerupRemainingDuration: 0,
-    recentPositions: []
-  };
+    if (validPositions.length > 0) {
+      const pos = validPositions[Math.floor(Math.random() * validPositions.length)];
+      store.pacman = {
+        x: pos.x,
+        y: pos.y,
+        direction: 'right',
+        points: 0,
+        totalPoints: 0,
+        deadRemainingDuration: 0,
+        powerupRemainingDuration: 0,
+        recentPositions: []
+      };
+    }
+  }
 
   if (store.config.outputFormat === 'canvas') Canvas.drawPacman(store);
 };
