@@ -16,6 +16,7 @@ export class PacmanRenderer {
 
 	public async start() {
 		const defaultConfing: Config = {
+      useCustomStartPositions: false,
 			platform: 'github',
 			username: '',
 			canvas: undefined as unknown as HTMLCanvasElement,
