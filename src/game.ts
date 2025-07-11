@@ -64,52 +64,41 @@ const placePacman = (store: StoreType) => {
 const placeGhosts = (store: StoreType) => {
   store.ghosts = [];
 
-  const findGhostPosition = (minDistance: number) => {
-    const validPositions: {x: number, y: number}[] = [];
-    store.contributionGrid.forEach((row, y) => {
-      row.forEach((count, x) => {
-        const dist = Math.abs(x - store.pacman.x) + Math.abs(y - store.pacman.y);
-        if (count > 0 && dist > minDistance) {
-          validPositions.push({x, y});
-        }
-      });
-    });
+  if (!store.config.useCustomStartPositions) {
+    // Classic ghost house formation (center-top)
+    const ghostHouseY = 3;
+    const houseCenterX = Math.floor(store.contributionGrid[0].length / 2);
+    
+    store.ghosts = [
+      { x: houseCenterX, y: ghostHouseY, name: GHOST_NAMES[0], scared: false }, // Center
+      { x: houseCenterX - 1, y: ghostHouseY, name: GHOST_NAMES[1], scared: false }, // Left
+      { x: houseCenterX + 1, y: ghostHouseY, name: GHOST_NAMES[2], scared: false }, // Right
+      { x: houseCenterX, y: ghostHouseY - 1, name: GHOST_NAMES[3], scared: false } // Above
+    ];
+  } else {
+    // Ghost house with contribution validation
+    const ghostHouseY = 3;
+    const houseCenterX = Math.floor(store.contributionGrid[0].length / 2);
+    
+    const ghostHousePositions = [
+      { x: houseCenterX, y: ghostHouseY },
+      { x: houseCenterX - 1, y: ghostHouseY },
+      { x: houseCenterX + 1, y: ghostHouseY },
+      { x: houseCenterX, y: ghostHouseY - 1 }
+    ];
 
-    if (validPositions.length === 0) {
-      return {x: 0, y: 0};
-    }
+    // Filter to only valid contribution cells
+    const validPositions = ghostHousePositions.filter(pos => 
+      store.contributionGrid[pos.y]?.[pos.x] > 0
+    );
 
-    return validPositions[Math.floor(Math.random() * validPositions.length)];
-  };
-
-  // Place 4 ghosts at different distances from Pacman
-  store.ghosts.push({
-    x: findGhostPosition(10).x,
-    y: findGhostPosition(10).y,
-    name: GHOST_NAMES[0],
-    scared: false
-  });
-
-  store.ghosts.push({
-    x: findGhostPosition(15).x,
-    y: findGhostPosition(15).y,
-    name: GHOST_NAMES[1],
-    scared: false
-  });
-
-  store.ghosts.push({
-    x: findGhostPosition(20).x,
-    y: findGhostPosition(20).y,
-    name: GHOST_NAMES[2],
-    scared: false
-  });
-
-  store.ghosts.push({
-    x: findGhostPosition(25).x,
-    y: findGhostPosition(25).y,
-    name: GHOST_NAMES[3],
-    scared: false
-  });
+    // Fill ghosts with valid positions first, then fallback to center
+    store.ghosts = GHOST_NAMES.map((name, index) => ({
+      ...(validPositions[index] || { x: houseCenterX, y: ghostHouseY }),
+      name,
+      scared: false
+    }));
+  }
 
   if (store.config.outputFormat === 'canvas') Canvas.drawGhosts(store);
 };
