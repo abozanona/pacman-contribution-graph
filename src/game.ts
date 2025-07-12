@@ -157,7 +157,7 @@ const startGame = async (store: StoreType) => {
     await updateGame(store);
   } else {
     if (store.gameInterval) {
-      clearInterval(store.gameInterval as number | NodeJS.Timeout);
+      clearInterval(store.gameInterval as number);
     }
     store.gameInterval = setInterval(async () => await updateGame(store), DELTA_TIME);
   }
@@ -165,7 +165,7 @@ const startGame = async (store: StoreType) => {
 
 const stopGame = async (store: StoreType) => {
   if (store.gameInterval) {
-    clearInterval(store.gameInterval as number | NodeJS.Timeout);
+    clearInterval(store.gameInterval as number);
     store.gameInterval = null;
   }
 };
@@ -213,7 +213,7 @@ const updateGame = async (store: StoreType) => {
 	if (!remainingCells) {
     if (store.config.outputFormat == 'canvas') {
       if (store.gameInterval !== null && store.gameInterval !== undefined) {
-        clearInterval(store.gameInterval as number | NodeJS.Timeout);
+        clearInterval(store.gameInterval as number);
       }
       if (store.config.outputFormat == 'canvas') {
         Canvas.renderGameOver(store);
