@@ -13,13 +13,21 @@ import {
 import { AnimationData, StoreType } from './types';
 import { Utils } from './utils';
 
-// Helper for GitHub's contribution color scheme
+const CONTRIBUTION_COLOR_PALETTE = [
+  { threshold: 0, color: '#ebedf0' },    // empty
+  { threshold: 5, color: '#9be9a8' },    // light green
+  { threshold: 10, color: '#40c463' },   // medium green
+  { threshold: 20, color: '#30a14e' },   // dark green
+  { threshold: Infinity, color: '#216e39' } // darkest green
+];
+
 function getContributionColor(count: number): string {
-    if (count === 0) return '#ebedf0';      // GitHub's empty color
-    if (count < 5) return '#9be9a8';        // Light green
-    if (count < 10) return '#40c463';       // Medium green
-    if (count < 20) return '#30a14e';       // Dark green
-    return '#216e39';                       // Darkest green
+  for (const level of CONTRIBUTION_COLOR_PALETTE) {
+    if (count <= level.threshold) {
+      return level.color;
+    }
+  }
+  return '#ebedf0'; // fallback
 }
 
 const generateAnimatedSVG = (store: StoreType) => {
