@@ -191,14 +191,33 @@ const moveGhostToScatterTarget = (ghost: Ghost, store: StoreType) => {
 	}
 };
 
-// When scared, ghosts move randomly but with some intelligence
+// Update valid move check to use contribution grid
+const getValidMoves = (x: number, y: number, store: StoreType) => {
+	const moves = [];
+
+	// Right
+	if (x < GRID_WIDTH - 1 && store.contributionGrid[y][x + 1] > 0) moves.push([1, 0]);
+
+	// Left
+	if (x > 0 && store.contributionGrid[y][x - 1] > 0) moves.push([-1, 0]);
+
+	// Down
+	if (y < GRID_HEIGHT - 1 && store.contributionGrid[y + 1][x] > 0) moves.push([0, 1]);
+
+	// Up
+	if (y > 0 && store.contributionGrid[y - 1][x] > 0) moves.push([0, -1]);
+
+	return moves;
+};
+
+// Update moveScaredGhost to use the new getValidMoves
 const moveScaredGhost = (ghost: Ghost, store: StoreType) => {
 	// Check if you already have a target or if you have already reached the current target
 	if (!ghost.target || (ghost.x === ghost.target.x && ghost.y === ghost.target.y)) {
 		ghost.target = getRandomDestination(ghost.x, ghost.y);
 	}
 
-	const validMoves = getValidMovesWithoutReverse(ghost);
+	const validMoves = getValidMovesWithoutReverse(ghost, store);
 	if (validMoves.length === 0) return;
 
 	// Move toward target but with some randomness to appear "scared"
@@ -242,7 +261,7 @@ const moveScaredGhost = (ghost: Ghost, store: StoreType) => {
 };
 
 // Function to get valid moves that are not reversals of the current direction
-const getValidMovesWithoutReverse = (ghost: Ghost): [number, number][] => {
+const getValidMovesWithoutReverse = (ghost: Ghost, store: StoreType): [number, number][] => {
 	const validMoves = MovementUtils.getValidMoves(ghost.x, ghost.y);
 
 	// Do not allow the ghost to reverse its direction unless it is the only way
@@ -458,106 +477,58 @@ const BFSTargetLocation = (
 	return null;
 };
 
-// Calculates the fate for each ghost based on their personality
+// Calculate ghost target based on personality
 const calculateGhostTarget = (ghost: Ghost, store: StoreType): Point2d => {
 	const { pacman } = store;
-	let pacDirection = getPacmanDirection(store);
-
-	// Adjust Blinky's speed based on remaining points (becomes more aggressive)
-	let speedMultiplier = 1;
-	if (ghost.name === 'blinky') {
-		// When there are few points left, Blinky becomes faster ("Elroy mode")
-		const totalDots = GRID_WIDTH * GRID_HEIGHT;
-		const dotsEaten = totalDots - dotsRemaining;
-		const percentageEaten = dotsEaten / totalDots;
-
-		if (percentageEaten > 0.7) {
-			speedMultiplier = 1.2; // 20% faster
-		}
-		if (percentageEaten > 0.9) {
-			speedMultiplier = 1.4; // 40% faster
-		}
-
-		// Apply speed multiplier if chasing Pac-Man
-		if (Math.random() < 0.8 * speedMultiplier) {
-			// Blinky aims directly at Pac-Man
-			return { x: pacman.x, y: pacman.y };
-		}
-	}
-
+	let pacDirection = [0, 0];
 	switch (ghost.name) {
-		case 'blinky': // Red - Aim directly at Pac-Man
+		case 'blinky': // Red ghost - directly targets Pacman
 			return { x: pacman.x, y: pacman.y };
 
-		case 'pinky': // Pink - tries to ambush Pac-Man by positioning herself in front of him
-			const lookAhead = 4; // 4 cells ahead of Pac-Man
+		case 'pinky': // Pink ghost - targets 4 spaces ahead of Pacman
+			pacDirection = getPacmanDirection(store);
 
-			// Special calculation for the original "bug": when Pac-Man looks up,
-			// the calculation also adds 4 cells to the left
-			let targetX = pacman.x;
-			let targetY = pacman.y;
+			const lookAhead = 4;
+			let fourAhead = {
+				x: pacman.x + pacDirection[0] * lookAhead,
+				y: pacman.y + pacDirection[1] * lookAhead
+			};
 
-			if (pacman.direction === 'up') {
-				// Reproducing the original bug
-				targetX = pacman.x - 4;
-				targetY = pacman.y - 4;
-			} else {
-				targetX = pacman.x + pacDirection[0] * lookAhead;
-				targetY = pacman.y + pacDirection[1] * lookAhead;
-			}
+			fourAhead.x = Math.min(Math.max(fourAhead.x, 0), GRID_WIDTH - 1);
+			fourAhead.y = Math.min(Math.max(fourAhead.y, 0), GRID_HEIGHT - 1);
+			return fourAhead;
 
-			// Ensure the target is within the grid
-			targetX = Math.min(Math.max(targetX, 0), GRID_WIDTH - 1);
-			targetY = Math.min(Math.max(targetY, 0), GRID_HEIGHT - 1);
-
-			return { x: targetX, y: targetY };
-
-		case 'inky': // Blue - Coordinated behavior with Blinky
+		case 'inky': // Blue ghost - complex targeting based on Blinky's position
 			const blinky = store.ghosts.find((g) => g.name === 'blinky');
+			pacDirection = getPacmanDirection(store);
 
-			// Landmark: 2 cells ahead of Pac-Man
+			// Target is 2 spaces ahead of Pacman
 			let twoAhead = {
 				x: pacman.x + pacDirection[0] * 2,
 				y: pacman.y + pacDirection[1] * 2
 			};
 
-			// Again, reproducing the Pinky bug upwards
-			if (pacman.direction === 'up') {
-				twoAhead.x = pacman.x - 2;
-				twoAhead.y = pacman.y - 2;
-			}
-
-			// If Blinky exists, calculate the vector from it
+			// Then double the vector from Blinky to that position
 			if (blinky) {
-				// Fold Blinky's vector to the reference point
-				const vectorX = twoAhead.x - blinky.x;
-				const vectorY = twoAhead.y - blinky.y;
-
 				twoAhead = {
-					x: twoAhead.x + vectorX,
-					y: twoAhead.y + vectorY
+					x: twoAhead.x + (twoAhead.x - blinky.x),
+					y: twoAhead.y + (twoAhead.y - blinky.y)
 				};
 			}
-
-			// Ensure the target is within the grid
 			twoAhead.x = Math.min(Math.max(twoAhead.x, 0), GRID_WIDTH - 1);
 			twoAhead.y = Math.min(Math.max(twoAhead.y, 0), GRID_HEIGHT - 1);
-
 			return twoAhead;
 
-		case 'clyde': // Orange - Toggles between chasing and random
+		case 'clyde': // Orange ghost - targets Pacman when far, runs away when close
 			const distanceToPacman = MovementUtils.calculateDistance(ghost.x, ghost.y, pacman.x, pacman.y);
-
-			// Clyde's special behavior: if he's too close, he runs away to his corner
-			if (distanceToPacman < 8) {
-				return SCATTER_CORNERS['clyde']; // Go to your corner when close
-			} else {
-				// When far away, chases Pac-Man directly
+			if (distanceToPacman > 8) {
 				return { x: pacman.x, y: pacman.y };
+			} else {
+				return { x: 0, y: GRID_HEIGHT - 1 };
 			}
 
 		default:
-			// Default behavior: Aim at Pac-Man
+			// Default behavior targets Pacman directly
 			return { x: pacman.x, y: pacman.y };
 	}
 };
@@ -577,7 +548,7 @@ const getPacmanDirection = (store: StoreType): [number, number] => {
 	}
 };
 
-// Get a random destination for spooked ghosts
+// Get a random destination for scared ghosts
 const getRandomDestination = (x: number, y: number) => {
 	const maxDistance = 8;
 	const randomX = x + Math.floor(Math.random() * (2 * maxDistance + 1)) - maxDistance;

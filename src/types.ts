@@ -46,6 +46,13 @@ export interface Ghost {
 	respawnCounter: number; // Time to respawn after reaches home
 	freezeCounter: number; // Time ghost stays in base before going out
 	justReleasedFromHouse: boolean; // If ghost just released from house, it can only walk thru the house door
+	flashing?: boolean;
+	state?: 'normal' | 'scared' | 'eaten';
+}
+
+export interface Pellet {
+	x: number;
+	y: number;
 }
 
 /* ───────────────────────── Grid & Store ───────────────────────────── */
@@ -63,7 +70,7 @@ export interface StoreType {
 	grid: GridCell[][]; // [week][day]
 	monthLabels: string[];
 	pacmanMouthOpen: boolean;
-	gameInterval: number;
+	gameInterval: number | NodeJS.Timeout | null;
 	gameHistory: {
 		pacman: Pacman;
 		ghosts: Ghost[];
@@ -71,10 +78,13 @@ export interface StoreType {
 	}[];
 	config: Config;
 	useGithubThemeColor: boolean;
+	contributionGrid: number[][];
+	pellets: Pellet[];
 }
 
 /* ───────────────────────── Settings ───────────────────────────── */
 export interface Config {
+	useCustomStartPositions?: boolean;
 	platform: 'github' | 'gitlab';
 	username: string;
 	canvas: HTMLCanvasElement;

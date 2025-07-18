@@ -9,10 +9,17 @@ const __dirname = path.dirname(__filename);
 export default merge(common, {
     mode: 'production',
     output: {
-        filename: 'pacman-contribution-graph.min.js',
+        filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),
         library: {
-            type: 'module',
+            type: 'module'
         },
+        environment: {
+            module: true
+        }
     },
+    target: 'node16',
+    experiments: {
+        outputModule: true
+    }
 });

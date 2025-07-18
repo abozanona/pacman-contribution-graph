@@ -9,84 +9,141 @@ import { DELTA_TIME, PACMAN_DEATH_DURATION } from './constants';
 
 /* ---------- positioning helpers ---------- */
 
+const placePellets = (store: StoreType) => {
+	store.pellets = [];
+	store.grid.forEach((row, y) => {
+		row.forEach((cell, x) => {
+			if (cell.commitsCount > 0 && Math.random() > 0.7) {
+				store.pellets.push({ x, y });
+			}
+		});
+	});
+};
+
 const placePacman = (store: StoreType) => {
-	store.pacman = {
-		x: 0,
-		y: 0,
-		direction: 'right',
-		points: 0,
-		totalPoints: 0,
-		deadRemainingDuration: 0,
-		powerupRemainingDuration: 0,
-		recentPositions: []
-	};
+	if (!store.config.useCustomStartPositions) {
+		// Original fixed position
+		store.pacman = {
+			x: 1,
+			y: 1,
+			direction: 'right',
+			points: 0,
+			totalPoints: 0,
+			deadRemainingDuration: 0,
+			powerupRemainingDuration: 0,
+			recentPositions: []
+		};
+	} else {
+		// Custom position logic
+		const validPositions: { x: number; y: number }[] = [];
+		store.grid.forEach((row, y) => {
+			row.forEach((cell, x) => {
+				if (cell.commitsCount > 0) validPositions.push({ x, y });
+			});
+		});
+
+		if (validPositions.length > 0) {
+			const pos = validPositions[Math.floor(Math.random() * validPositions.length)];
+			store.pacman = {
+				x: pos.x,
+				y: pos.y,
+				direction: 'right',
+				points: 0,
+				totalPoints: 0,
+				deadRemainingDuration: 0,
+				powerupRemainingDuration: 0,
+				recentPositions: []
+			};
+		}
+	}
 };
 
 const placeGhosts = (store: StoreType) => {
-	store.ghosts = [
-		{
-			x: 26,
-			y: 2,
-			name: 'blinky',
+	store.ghosts = [];
+
+	if (!store.config.useCustomStartPositions) {
+		// Classic ghost house formation (center-top)
+		const ghostHouseY = 3;
+		const houseCenterX = Math.floor(store.grid[0].length / 2);
+
+		store.ghosts = [
+			{
+				x: houseCenterX,
+				y: ghostHouseY,
+				name: 'blinky' as GhostName,
+				direction: 'left',
+				scared: false,
+				target: undefined,
+				inHouse: false,
+				respawnCounter: 0,
+				freezeCounter: 0,
+				justReleasedFromHouse: false
+			},
+			{
+				x: houseCenterX - 1,
+				y: ghostHouseY,
+				name: 'inky' as GhostName,
+				direction: 'up',
+				scared: false,
+				target: undefined,
+				inHouse: true,
+				respawnCounter: 0,
+				freezeCounter: 10,
+				justReleasedFromHouse: false
+			},
+			{
+				x: houseCenterX + 1,
+				y: ghostHouseY,
+				name: 'pinky' as GhostName,
+				direction: 'down',
+				scared: false,
+				target: undefined,
+				inHouse: true,
+				respawnCounter: 0,
+				freezeCounter: 20,
+				justReleasedFromHouse: false
+			},
+			{
+				x: houseCenterX,
+				y: ghostHouseY - 1,
+				name: 'clyde' as GhostName,
+				direction: 'up',
+				scared: false,
+				target: undefined,
+				inHouse: true,
+				respawnCounter: 0,
+				freezeCounter: 30,
+				justReleasedFromHouse: false
+			}
+		];
+	} else {
+		// Ghost house with contribution validation
+		const ghostHouseY = 3;
+		const houseCenterX = Math.floor(store.grid[0].length / 2);
+
+		const ghostHousePositions = [
+			{ x: houseCenterX, y: ghostHouseY },
+			{ x: houseCenterX - 1, y: ghostHouseY },
+			{ x: houseCenterX + 1, y: ghostHouseY },
+			{ x: houseCenterX, y: ghostHouseY - 1 }
+		];
+
+		// Filter to only valid contribution cells
+		const validPositions = ghostHousePositions.filter((pos) => store.grid[pos.y]?.[pos.x].commitsCount > 0);
+
+		// Fill ghosts with valid positions first, then fallback to center
+		store.ghosts = ['blinky', 'inky', 'pinky', 'clyde'].map((name, index) => ({
+			...(validPositions[index] || { x: houseCenterX, y: ghostHouseY }),
+			name: name as GhostName,
 			direction: 'left',
 			scared: false,
 			target: undefined,
-			inHouse: false,
+			inHouse: index !== 0,
 			respawnCounter: 0,
-			freezeCounter: 0,
+			freezeCounter: index * 10,
 			justReleasedFromHouse: false
-		},
-		{
-			x: 25,
-			y: 3,
-			name: 'inky',
-			direction: 'up',
-			scared: false,
-			target: undefined,
-			inHouse: true,
-			respawnCounter: 0,
-			freezeCounter: 10,
-			justReleasedFromHouse: false
-		},
-		{
-			x: 26,
-			y: 3,
-			name: 'pinky',
-			direction: 'down',
-			scared: false,
-			target: undefined,
-			inHouse: true,
-			respawnCounter: 0,
-			freezeCounter: 20,
-			justReleasedFromHouse: false
-		},
-		{
-			x: 27,
-			y: 3,
-			name: 'clyde',
-			direction: 'up',
-			scared: false,
-			target: undefined,
-			inHouse: true,
-			respawnCounter: 0,
-			freezeCounter: 30,
-			justReleasedFromHouse: false
-		}
-	];
-
-	// reset extras
-	store.ghosts.forEach((g) => {
-		g.justReleasedFromHouse = false;
-		g.respawnCounter = 0;
-
-		// Set different directions to create an asynchronous motion effect
-		if (g.inHouse) {
-			// Distribute the initial directions so that everyone is not synchronized
-			if (g.name === 'inky') g.direction = 'up';
-			else if (g.name === 'pinky') g.direction = 'down';
-			else if (g.name === 'clyde') g.direction = 'up';
-		}
-	});
+		}));
+	}
 };
 
 /* ---------- main cycle ---------- */

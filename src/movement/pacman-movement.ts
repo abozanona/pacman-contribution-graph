@@ -98,7 +98,7 @@ const calculateOptimalPath = (store: StoreType, target: Point2d) => {
 
 	switch (store.config.playerStyle) {
 		case PlayerStyle.CONSERVATIVE:
-			safetyWeight = 3.0; // Much higher values ​​to ensure conservative behavior
+			safetyWeight = 3.0; // Much higher values to ensure conservative behavior
 			pointWeight = 0.1;
 			break;
 		case PlayerStyle.AGGRESSIVE:
@@ -285,8 +285,15 @@ const updatePacmanPosition = (store: StoreType, position: Point2d) => {
 
 	store.pacman.direction = dx > 0 ? 'right' : dx < 0 ? 'left' : dy > 0 ? 'down' : dy < 0 ? 'up' : store.pacman.direction;
 
-	store.pacman.x = position.x;
-	store.pacman.y = position.y;
+	let x = position.x;
+	let y = position.y;
+
+	// Tunnel wrapping
+	if (x < 0) x = GRID_WIDTH - 1;
+	if (x >= GRID_WIDTH) x = 0;
+
+	store.pacman.x = x;
+	store.pacman.y = y;
 };
 
 const checkAndEatPoint = (store: StoreType) => {
@@ -311,7 +318,16 @@ const checkAndEatPoint = (store: StoreType) => {
 
 const activatePowerUp = (store: StoreType) => {
 	store.pacman.powerupRemainingDuration = PACMAN_POWERUP_DURATION;
-	store.ghosts.forEach((g) => (g.scared = true));
+	store.ghosts.forEach((ghost) => {
+		ghost.scared = true;
+		// Reverse direction
+		if (ghost.direction) {
+			if (ghost.direction === 'left') ghost.direction = 'right';
+			else if (ghost.direction === 'right') ghost.direction = 'left';
+			else if (ghost.direction === 'up') ghost.direction = 'down';
+			else if (ghost.direction === 'down') ghost.direction = 'up';
+		}
+	});
 };
 
 export const PacmanMovement = {

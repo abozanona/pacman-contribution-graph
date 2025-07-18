@@ -20,5 +20,7 @@ export const Store: StoreType = {
 	gameInterval: 0,
 	gameHistory: [],
 	config: undefined as unknown as Config,
-	useGithubThemeColor: true
+	useGithubThemeColor: true,
+	contributionGrid: [],
+	pellets: []
 };
