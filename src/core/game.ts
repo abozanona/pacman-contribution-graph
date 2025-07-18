@@ -67,10 +67,54 @@ const placeGhosts = (store: StoreType) => {
 		const houseCenterX = Math.floor(store.grid[0].length / 2);
 
 		store.ghosts = [
-			{ x: houseCenterX, y: ghostHouseY, name: 'blinky' as GhostName, direction: 'left', scared: false, target: undefined, inHouse: false, respawnCounter: 0, freezeCounter: 0, justReleasedFromHouse: false },
-			{ x: houseCenterX - 1, y: ghostHouseY, name: 'inky' as GhostName, direction: 'up', scared: false, target: undefined, inHouse: true, respawnCounter: 0, freezeCounter: 10, justReleasedFromHouse: false },
-			{ x: houseCenterX + 1, y: ghostHouseY, name: 'pinky' as GhostName, direction: 'down', scared: false, target: undefined, inHouse: true, respawnCounter: 0, freezeCounter: 20, justReleasedFromHouse: false },
-			{ x: houseCenterX, y: ghostHouseY - 1, name: 'clyde' as GhostName, direction: 'up', scared: false, target: undefined, inHouse: true, respawnCounter: 0, freezeCounter: 30, justReleasedFromHouse: false }
+			{
+				x: houseCenterX,
+				y: ghostHouseY,
+				name: 'blinky' as GhostName,
+				direction: 'left',
+				scared: false,
+				target: undefined,
+				inHouse: false,
+				respawnCounter: 0,
+				freezeCounter: 0,
+				justReleasedFromHouse: false
+			},
+			{
+				x: houseCenterX - 1,
+				y: ghostHouseY,
+				name: 'inky' as GhostName,
+				direction: 'up',
+				scared: false,
+				target: undefined,
+				inHouse: true,
+				respawnCounter: 0,
+				freezeCounter: 10,
+				justReleasedFromHouse: false
+			},
+			{
+				x: houseCenterX + 1,
+				y: ghostHouseY,
+				name: 'pinky' as GhostName,
+				direction: 'down',
+				scared: false,
+				target: undefined,
+				inHouse: true,
+				respawnCounter: 0,
+				freezeCounter: 20,
+				justReleasedFromHouse: false
+			},
+			{
+				x: houseCenterX,
+				y: ghostHouseY - 1,
+				name: 'clyde' as GhostName,
+				direction: 'up',
+				scared: false,
+				target: undefined,
+				inHouse: true,
+				respawnCounter: 0,
+				freezeCounter: 30,
+				justReleasedFromHouse: false
+			}
 		];
 	} else {
 		// Ghost house with contribution validation
