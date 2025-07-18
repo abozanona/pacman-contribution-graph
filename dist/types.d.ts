@@ -39,6 +39,12 @@ export interface Ghost {
     respawnCounter: number;
     freezeCounter: number;
     justReleasedFromHouse: boolean;
+    flashing?: boolean;
+    state?: 'normal' | 'scared' | 'eaten';
+}
+export interface Pellet {
+    x: number;
+    y: number;
 }
 export interface GridCell {
     commitsCount: number;
@@ -61,8 +67,11 @@ export interface StoreType {
     }[];
     config: Config;
     useGithubThemeColor: boolean;
+    contributionGrid: number[][];
+    pellets: Pellet[];
 }
 export interface Config {
+    useCustomStartPositions?: boolean;
     platform: 'github' | 'gitlab';
     username: string;
     canvas: HTMLCanvasElement;

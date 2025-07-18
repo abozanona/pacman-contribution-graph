@@ -11,7 +11,15 @@ export default merge(common, {
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, 'dist'),
-        libraryTarget: 'commonjs2',
+        library: {
+            type: 'module'
+        },
+        environment: {
+            module: true
+        }
     },
-    target: 'node',
+    target: 'node16',
+    experiments: {
+        outputModule: true
+    }
 });
