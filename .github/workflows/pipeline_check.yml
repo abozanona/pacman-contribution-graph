@@ -1,0 +1,27 @@
+name: Pipeline Check
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+
+jobs:
+    pipeline-check:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Run Prettier check
+              run: pnpm exec prettier --check "**/*.{ts,json,md}"
+
+            - name: Build code
+              run: pnpm build

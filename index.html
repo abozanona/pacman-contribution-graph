@@ -180,6 +180,16 @@
 									/>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label for="playerStyle" class="form-label">Player Style:</label>
+									<select id="playerStyle" class="form-select">
+										<option value="conservative">Conservative</option>
+										<option value="aggressive">Aggressive</option>
+										<option value="opportunistic">Opportunistic</option>
+									</select>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -247,6 +257,11 @@
 							<td><code>gameTheme</code></td>
 							<td>The visual theme of the game</td>
 							<td><code>github</code>, <code>github-dark</code>, <code>gitlab</code>, <code>gitlab-dark</code></td>
+						</tr>
+						<tr>
+							<td><code>playerStyle</code></td>
+							<td>Pacman movement style</td>
+							<td><code>conservative</code>, <code>aggressive</code>, <code>opportunistic</code></td>
 						</tr>
 						<tr>
 							<td><code>enableSounds</code></td>
@@ -345,6 +360,98 @@ jobs:
 _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.io/pacman-contribution-graph/)_</code></pre></li>
 <li>That's it! You can also check my github repo <a target="__blank" href="https://github.com/abozanona/abozanona">@abozanona</a> for an example </li>
 			</ol>
+
+			<h3>Method 5: Gitlab Pipeline</h3>
+			<ol>
+				<li>Create a new repository with the same name as your gitlab username</li>
+				<li>
+					Generate & Setup Push Token
+					<ol>
+						<li>Open the repository, and from left sidebar navigate to settings => Access Token tab.</li>
+						<li>Generate a new Access Token with the name `CI/CD Push Token` & scope `write_repository`. Access tokens are only valid for 1 year maximum.</li>
+						<li>From left sidebar navigate to settings => CI/CD.</li>
+						<li>In Variables section, add a new variable with the name `CI_PUSH_TOKEN` and the value of the Access Token. Make sure that the variable is `Masked` & `Protect`.</li>
+					</ol>
+				</li>
+				<li>
+					In the repository, create a <code>.gitlab-ci.yml</code> file with the following content
+					<pre><code>stages:
+	- generate
+	- deploy
+
+variables:
+	GIT_SUBMODULE_STRATEGY: recursive
+
+generate_pacman_graph:
+	stage: generate
+	image: node:20
+	script:
+		- mkdir -p dist
+		- npm install -g pacman-contribution-graph
+		- pacman-contribution-graph --platform gitlab --username "$CI_PROJECT_NAMESPACE" --gameTheme gitlab --output pacman-contribution-graph-light.svg
+		- mv pacman-contribution-graph-light.svg dist/pacman-contribution-graph-light.svg
+		- pacman-contribution-graph --platform gitlab --username "$CI_PROJECT_NAMESPACE" --gameTheme gitlab-dark --output pacman-contribution-graph-dark.svg
+		- mv pacman-contribution-graph-dark.svg dist/pacman-contribution-graph-dark.svg
+	artifacts:
+		paths:
+			- dist/pacman-contribution-graph-light.svg
+			- dist/pacman-contribution-graph-dark.svg
+		expire_in: 1 hour
+	rules:
+		- if: '$CI_PIPELINE_SOURCE == "schedule"'
+		- if: '$CI_PIPELINE_SOURCE == "push"'
+
+deploy_to_readme:
+	stage: deploy
+	image: alpine:latest
+	script:
+		- apk add --no-cache git
+		- mkdir -p output
+		- cp dist/pacman-contribution-graph-light.svg output/
+		- cp dist/pacman-contribution-graph-dark.svg output/
+		- git remote set-url origin https://gitlab-ci-token:${CI_PUSH_TOKEN}@gitlab.com/${CI_PROJECT_PATH}.git
+		- git config --global user.email "pacman-bot@example.com"
+		- git config --global user.name "Pacman Bot"
+		- git add output/pacman-contribution-graph-light.svg output/pacman-contribution-graph-dark.svg
+		- git commit -m "Update Pac-Man contribution graph [ci skip]" || echo "No changes"
+		- git push origin HEAD:main
+	rules:
+		- if: '$CI_PIPELINE_SOURCE == "schedule"'
+		- if: '$CI_PIPELINE_SOURCE == "push"'</code></pre>
+				</li>
+				<li>Create <code>README.md</code> file in your gitlab repo with the following content. Change `[USERNAME]` with your github username
+				<pre><code>&lt;picture>
+  &lt;source media="(prefers-color-scheme: dark)" srcset="https://gitlab.com/[USERNAME]/[USERNAME]/-/raw/main/output/pacman-contribution-graph-dark.svg">
+  &lt;source media="(prefers-color-scheme: light)" srcset="https://gitlab.com/[USERNAME]/[USERNAME]/-/raw/main/output/pacman-contribution-graph-light.svg">
+  &lt;img alt="pacman contribution graph" src="https://gitlab.com/[USERNAME]/[USERNAME]/-/raw/main/output/pacman-contribution-graph-light.svg">
+&lt;/picture>
+
+_generated with [abozanona/pacman-contribution-graph](https://abozanona.github.io/pacman-contribution-graph/)_</code></pre></li>
+<li>
+	Schedule pipeline running
+	<ul>
+		<li>Go to your project in GitLab</li>
+		<li>In the left sidebar, navigate to Build > Pipeline schedules (sometimes under CI/CD > Schedules)</li>
+		<li>Click New schedule</li>
+		<li>
+			In the form:
+			<ul>
+				<li>Interval pattern: Enter a cron expression for daily runs. For example, <code>0 2 \* \* \*</code> to run every day at 2:00 AM (UTC).</li>
+				<li>Timezone: Select your preferred timezone.</li>
+				<li>Target branch: Choose the main branch.</li>
+			</ul>
+		</li>
+		<li>Click Save pipeline schedule (or Create pipeline schedule).</li>
+	</ul>
+</li>
+<li>That's it! You can also check my gitlab repo <a target="__blank" href="https://gitlab.com/abozanona/abozanona">@abozanona</a> for an example </li>
+			</ol>
+			<h3>Method 6: Using cli</h3>
+			<ol>
+				<li>Run <code>npm install -g pacman-contribution-graph</code></li>
+				<li>Run <code>pacman-contribution-graph --platform gitlab --username username --gameTheme github --output output.svg</code></li>
+			</ol>
+
 		</div>
 
 		<footer class="bg-light py-3 mt-5 invisible">
@@ -370,6 +477,7 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 			const gameSpeedValue = document.getElementById('gameSpeedValue');
 			const themeSelect = document.getElementById('theme');
 			const enableSoundsSelect = document.getElementById('enableSounds');
+			const playerStyleSelect = document.getElementById('playerStyle');
 			const canvas = document.getElementById('canvas');
 			const svgContainer = document.getElementById('svgContainer');
 			const svgHolder = document.getElementById('svgholder');
@@ -462,6 +570,7 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 					gameSpeed: parseInt(gameSpeedInput.value),
 					gameTheme: themeSelect.value,
 					enableSounds: enableSounds.value === 'enabled',
+					playerStyle: playerStyle,
 					githubSettings: {
 						accessToken: githubAccessToken.value
 					}

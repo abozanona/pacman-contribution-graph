@@ -1,12 +1,12 @@
 {
 	"name": "@pacman-contribution-graph/action",
-	"version": "1.0.0",
+	"version": "2.2.1",
 	"scripts": {
 		"build": "ncc build src/index.js -o dist --external canvas"
 	},
 	"dependencies": {
 		"@actions/core": "1.10.1",
-		"pacman-contribution-graph": "^1.0.14"
+		"pacman-contribution-graph": "^2.2.1"
 	},
 	"devDependencies": {
 		"@vercel/ncc": "^0.38.3"

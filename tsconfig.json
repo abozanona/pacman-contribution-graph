@@ -1,5 +1,7 @@
 {
 	"compilerOptions": {
+		"declaration": true,
+		"emitDeclarationOnly": false,
 		"target": "ES6",
 		"module": "ESNext",
 		"strict": true,
@@ -7,5 +9,6 @@
 		"outDir": "dist",
 		"sourceMap": true,
 		"lib": ["ES2017", "DOM"]
-	}
+	},
+	"include": ["src"]
 }

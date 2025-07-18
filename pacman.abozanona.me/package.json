@@ -3,6 +3,6 @@
 	"type": "module",
 	"version": "1.0.0",
 	"dependencies": {
-		"pacman-contribution-graph": "^1.0.13"
+		"pacman-contribution-graph": "^2.0.0"
 	}
 }

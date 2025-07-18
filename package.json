@@ -1,11 +1,32 @@
 {
 	"name": "pacman-contribution-graph",
-	"version": "1.0.14",
+	"version": "2.2.1",
 	"description": "Generates a pacman game from a github or gitlab user contributions grid",
 	"repository": "github:abozanona/pacman-contribution-graph",
 	"homepage": "https://abozanona.github.io/pacman-contribution-graph/",
 	"type": "module",
 	"main": "dist/pacman-contribution-graph.min.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/pacman-contribution-graph.min.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"files": [
+		"dist/pacman-contribution-graph.min.js",
+		"dist/index.d.ts",
+		"action.yml"
+	],
+	"keywords": [
+		"github",
+		"pacman",
+		"svg",
+		"contribution-graph",
+		"animation",
+		"game",
+		"actions"
+	],
 	"scripts": {
 		"build": "webpack --config webpack.prod.js",
 		"start": "node dist/index.js --username=diogocarrola --output=svg > assets/pacman-contributions.svg",
@@ -22,7 +43,12 @@
 		"webpack-cli": "^6.0.1",
 		"webpack-merge": "^5.9.0"
 	},
-	"keywords": [],
 	"author": "abozanona",
-	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+	"packageManager": "pnpm@9.15.4",
+	"dependencies": {
+		"yargs": "^18.0.0"
+	},
+	"bin": {
+		"pacman-contribution-graph": "./cli/cli.js"
+	}
 }

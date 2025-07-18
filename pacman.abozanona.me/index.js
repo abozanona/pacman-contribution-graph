@@ -5,14 +5,14 @@ import url from 'url';
 
 const githubToken = process.env.GITHUB_ACCESS_TOKEN;
 
-const generateSvg = async (userName) => {
+const generateSvg = async (userName, platform, gameTheme) => {
     return new Promise((resolve) => {
         const conf = {
-            platform: "github",
+            platform: platform,
             username: userName,
             outputFormat: "svg",
             gameSpeed: 1,
-            gameTheme: "github-dark",
+            gameTheme: gameTheme,
             githubSettings: {
                 accessToken: githubToken
             },
@@ -28,9 +28,11 @@ const server = http.createServer(async (req, res) => {
     const parsedUrl = url.parse(req.url);
     const queryParams = querystring.parse(parsedUrl.query);
     const username = queryParams.username || 'abozanona';
+    const platform = queryParams.platform || 'github';
+    const gameTheme = queryParams.gameTheme || 'github-dark';
 
     try {
-        const svg = await generateSvg(username);
+        const svg = await generateSvg(username, platform, gameTheme);
         res.writeHead(200, {
             'Content-Type': 'image/svg+xml',
             'Cache-Control': 'no-store, no-cache, must-revalidate',

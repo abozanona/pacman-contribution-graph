@@ -1,17 +1,8 @@
-import {
-	CELL_SIZE,
-	GAP_SIZE,
-	GHOSTS,
-	GRID_HEIGHT,
-	GRID_WIDTH,
-	PACMAN_COLOR,
-	PACMAN_COLOR_DEAD,
-	PACMAN_COLOR_POWERUP,
-	WALLS
-} from './constants';
-import { MusicPlayer } from './music-player';
-import { StoreType } from './types';
-import { Utils } from './utils';
+import { CELL_SIZE, GAP_SIZE, GHOSTS, GRID_HEIGHT, GRID_WIDTH, WALLS } from '../core/constants';
+import { MusicPlayer } from '../music-player';
+import { Ghost, StoreType } from '../types';
+import { Utils } from '../utils/utils';
+import { RendererUnits } from './renderer-units';
 
 const resizeCanvas = (store: StoreType) => {
 	const canvasWidth = GRID_WIDTH * (CELL_SIZE + GAP_SIZE);
@@ -28,13 +19,11 @@ const drawGrid = (store: StoreType) => {
 
 	for (let x = 0; x < GRID_WIDTH; x++) {
 		for (let y = 0; y < GRID_HEIGHT; y++) {
-			const intensity = store.grid[x][y].intensity;
-			if (intensity > 0) {
-				const adjustedIntensity = intensity < 0.2 ? 0.3 : intensity;
-				const color = Utils.hexToRGBA(Utils.getCurrentTheme(store).contributionBoxColor, adjustedIntensity);
+			if (store.grid[x][y].level !== 'NONE') {
+				const color = store.grid[x][y].color;
 				ctx.fillStyle = color;
 			} else {
-				ctx.fillStyle = Utils.getCurrentTheme(store).emptyContributionBoxColor;
+				ctx.fillStyle = Utils.getCurrentTheme(store).intensityColors[0];
 			}
 			ctx.beginPath();
 			store.config.canvas
@@ -55,7 +44,7 @@ const drawGrid = (store: StoreType) => {
 					CELL_SIZE + GAP_SIZE,
 					GAP_SIZE
 				);
-				// // TODO: For debug only
+				// TODO: For drawing lines labels only
 				// ctx.fillStyle = '#000';
 				// ctx.fillText(WALLS.horizontal[x][y].id, x * (GAP_SIZE + CELL_SIZE), y * (GAP_SIZE + CELL_SIZE));
 			}
@@ -68,7 +57,7 @@ const drawGrid = (store: StoreType) => {
 					GAP_SIZE,
 					CELL_SIZE + GAP_SIZE
 				);
-				// // TODO: For debug only
+				// TODO: For drawing lines labels only
 				// ctx.fillStyle = '#000';
 				// ctx.fillText(WALLS.vertical[x][y].id, x * (GAP_SIZE + CELL_SIZE), (y + 1) * (GAP_SIZE + CELL_SIZE));
 			}
@@ -97,13 +86,7 @@ const drawPacman = (store: StoreType) => {
 	const radius = CELL_SIZE / 2;
 
 	// Change Pac-Man's color to red if he's on power-up, dead, else yellow
-	if (store.pacman.deadRemainingDuration) {
-		ctx.fillStyle = PACMAN_COLOR_DEAD;
-	} else if (store.pacman.powerupRemainingDuration) {
-		ctx.fillStyle = PACMAN_COLOR_POWERUP;
-	} else {
-		ctx.fillStyle = PACMAN_COLOR;
-	}
+	ctx.fillStyle = RendererUnits.generatePacManColors(store.pacman);
 
 	const mouthAngle = store.pacmanMouthOpen ? 0.35 * Math.PI : 0.1 * Math.PI;
 
@@ -145,16 +128,22 @@ const getLoadedImage = (key: string, imgDate: string): HTMLImageElement => {
 };
 
 const drawGhosts = (store: StoreType) => {
-	store.ghosts.forEach((ghost) => {
+	store.ghosts.forEach((ghost: Ghost) => {
 		const x = ghost.x * (CELL_SIZE + GAP_SIZE);
 		const y = ghost.y * (CELL_SIZE + GAP_SIZE) + 15;
 		const size = CELL_SIZE;
 
 		const ctx = store.config.canvas.getContext('2d')!;
 		if (ghost.scared) {
-			ctx.drawImage(getLoadedImage('scared', GHOSTS['scared'].imgDate), x, y, size, size);
+			if ('imgDate' in GHOSTS.scared) {
+				ctx.drawImage(getLoadedImage('scared', GHOSTS.scared.imgDate), x, y, size, size);
+			}
 		} else {
-			ctx.drawImage(getLoadedImage(ghost.name, GHOSTS[ghost.name].imgDate), x, y, size, size);
+			const ghostData = GHOSTS[ghost.name];
+			const direction = ghost.direction as 'up' | 'down' | 'left' | 'right';
+			const imgSrc = (ghostData as Record<'up' | 'down' | 'left' | 'right', string>)[direction];
+
+			ctx.drawImage(getLoadedImage(ghost.name + '-' + ghost.direction, imgSrc), x, y, size, size);
 		}
 	});
 };
