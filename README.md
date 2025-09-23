@@ -1,5 +1,11 @@
 # 👻 Pac-Man Contribution Graph Game
 
+![Active users count][active-users-shield]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Contributors][contributors-shield]][contributors-url]
+[![Buy Me a Coffee][buy-me-a-coffee-shield]][buy-me-a-coffee-url]
+
 Transform your GitHub or GitLab contribution graph into an interactive Pac-Man game! This JavaScript library offers a unique and engaging way to visualize your coding activity over the past year.
 
 <picture>
@@ -295,3 +301,15 @@ Inspired by the [snk](https://github.com/Platane/snk) project, which turns your 
     These ghosts work hard! Leave a cuddle before you leave.<br>
     <img src="assets/gifs/pink_pet_cafune.gif" alt="Ghost being petted" height="80">
 </p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+
+[active-users-shield]: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Felec.abozanona.me%2Fpacman-users-count-shield.php&query=%24.active_users&style=for-the-badge&label=Active%20Users
+[contributors-shield]: https://img.shields.io/github/contributors/abozanona/pacman-contribution-graph.svg?style=for-the-badge
+[contributors-url]: https://github.com/abozanona/pacman-contribution-graph/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/abozanona/pacman-contribution-graph.svg?style=for-the-badge
+[forks-url]: https://github.com/abozanona/pacman-contribution-graph/network/members
+[stars-shield]: https://img.shields.io/github/stars/abozanona/pacman-contribution-graph.svg?style=for-the-badge
+[stars-url]: https://github.com/abozanona/pacman-contribution-graph/stargazers
+[buy-me-a-coffee-shield]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-orange?logo=buy-me-a-coffee&style=for-the-badge
+[buy-me-a-coffee-url]: https://www.buymeacoffee.com/abozanona

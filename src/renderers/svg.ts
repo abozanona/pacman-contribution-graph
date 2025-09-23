@@ -3,7 +3,7 @@ import { AnimationData, GhostName, StoreType } from '../types';
 import { Utils } from '../utils/utils';
 import { RendererUnits } from './renderer-units';
 
-const SVG_KEY_TIMES_PRECISION = 4
+const SVG_KEY_TIMES_PRECISION = 4;
 
 const generateAnimatedSVG = (store: StoreType) => {
 	// Dimensions and duration
