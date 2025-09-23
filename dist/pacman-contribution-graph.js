@@ -1958,6 +1958,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const SVG_KEY_TIMES_PRECISION = 4;
 const generateAnimatedSVG = (store) => {
     // Dimensions and duration
     const svgWidth = _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE);
@@ -2049,7 +2050,7 @@ const generateAnimatedSVG = (store) => {
             // Use the correct ID for reference (blinky-right, scared, etc)
             const href = `#ghost-${state}`;
             // Build the strings for the animation
-            const keyTimes = keyframes.map((kf) => kf.time).join(';');
+            const keyTimes = keyframes.map((kf) => kf.time.toFixed(SVG_KEY_TIMES_PRECISION)).join(';');
             const values = keyframes.map((kf) => (kf.visible ? 'visible' : 'hidden')).join(';');
             // Initial visibility
             const initialVisibility = keyframes[0].visible ? 'visible' : 'hidden';
@@ -2260,11 +2261,11 @@ const generateChangingValuesAnimation = (store, changingValues) => {
         if (currentValue !== lastValue) {
             if (lastValue !== null && lastIndex !== null && index - 1 !== lastIndex) {
                 // Add a keyframe right before the value change
-                keyTimes.push(Number(((index - 0.000001) / (totalFrames - 1)).toFixed(6)));
+                keyTimes.push(Number(((index - 1 / (10 * SVG_KEY_TIMES_PRECISION)) / (totalFrames - 1)).toFixed(SVG_KEY_TIMES_PRECISION)));
                 values.push(lastValue);
             }
             // Add the new value keyframe
-            keyTimes.push(Number((index / (totalFrames - 1)).toFixed(6)));
+            keyTimes.push(Number((index / (totalFrames - 1)).toFixed(SVG_KEY_TIMES_PRECISION)));
             values.push(currentValue);
             lastValue = currentValue;
             lastIndex = index;
