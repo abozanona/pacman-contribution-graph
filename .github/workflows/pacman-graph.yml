@@ -1,0 +1,37 @@
+name: Pacman Contribution Graph
+
+on:
+  # 毎日 日本時間 午前9時に実行 (UTC 0:00)
+  schedule:
+    - cron: "0 0 * * *"
+  # 手動でも実行できるようにする
+  workflow_dispatch:
+  # mainブランチへのプッシュ時にも実行
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Generate Pacman Graph
+    permissions:
+      contents: write # 画像を保存するために書き込み権限が必要
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Generate Pacman Graph
+        uses: abozanona/pacman-contribution-graph@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 必要に応じてオプションを設定（例：背景色など）
+          # background_color: '#ffffff'
+
+      - name: Commit and Push
+        # 生成された画像をリポジトリにコミットしてプッシュする
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update Pacman Contribution Graph"
+          file_pattern: "pacman-graph.svg" # 生成されるファイル名
