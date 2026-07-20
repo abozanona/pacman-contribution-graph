@@ -10,6 +10,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 	const svgHeight = GRID_HEIGHT * (CELL_SIZE + GAP_SIZE) + 30;
 	const totalDurationMs = store.gameHistory.length * DELTA_TIME;
 	const animationDurationMs = Math.max(totalDurationMs, DELTA_TIME);
+	const theme = Utils.getCurrentTheme(store);
 
 	let svg = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
 	svg += `<desc>Generated with pacman-contribution-graph on ${new Date()}</desc>`;
@@ -21,15 +22,17 @@ const generateAnimatedSVG = (store: StoreType) => {
 			<generatedOn>${new Date().toISOString()}</generatedOn>
 		</info>
 	</metadata>`;
-	svg += `<rect width="100%" height="100%" fill="${Utils.getCurrentTheme(store).gridBackground}"/>`;
+	svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
 
-	svg += generateGhostsPredefinition();
+	if (store.ghosts.length > 0) {
+		svg += generateGhostsPredefinition();
+	}
 
 	let lastMonth = '';
 	for (let y = 0; y < GRID_WIDTH; y++) {
 		if (store.monthLabels[y] !== lastMonth) {
 			const xPos = y * (CELL_SIZE + GAP_SIZE) + CELL_SIZE / 2;
-			svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${Utils.getCurrentTheme(store).textColor}">${store.monthLabels[y]}</text>`;
+			svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[y]}</text>`;
 			lastMonth = store.monthLabels[y];
 		}
 	}
@@ -40,11 +43,16 @@ const generateAnimatedSVG = (store: StoreType) => {
 			const cellX = x * (CELL_SIZE + GAP_SIZE);
 			const cellY = y * (CELL_SIZE + GAP_SIZE) + 15;
 			const cellColorAnimation = getCellAnimationData(store, x, y);
-			svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${CELL_SIZE}" height="${CELL_SIZE}" rx="5" fill="${Utils.getCurrentTheme(store).intensityColors[0]}">
-				<animate attributeName="fill" dur="${animationDurationMs}ms" repeatCount="indefinite" calcMode="discrete"
-					values="${cellColorAnimation.values}" 
-					keyTimes="${cellColorAnimation.keyTimes}"/>
-			</rect>`;
+			const cellColors = cellColorAnimation.values.split(';');
+			const isAnimated = cellColors.some((color) => color !== cellColors[0]);
+			const initialFill = isAnimated ? theme.intensityColors[0] : cellColors[0];
+			svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${CELL_SIZE}" height="${CELL_SIZE}" rx="5" fill="${initialFill}">`;
+			if (isAnimated) {
+				svg += `<animate attributeName="fill" dur="${animationDurationMs}ms" repeatCount="indefinite" calcMode="discrete"
+					values="${cellColorAnimation.values}"
+					keyTimes="${cellColorAnimation.keyTimes}"/>`;
+			}
+			svg += `</rect>`;
 		}
 	}
 
@@ -58,7 +66,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 			}
 			if ((!active || x === GRID_WIDTH) && runStart !== null) {
 				let length = x - runStart;
-				svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${y * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${length * (CELL_SIZE + GAP_SIZE)}" height="${GAP_SIZE}" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+				svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${y * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${length * (CELL_SIZE + GAP_SIZE)}" height="${GAP_SIZE}" fill="${theme.wallColor}"></rect>`;
 				runStart = null;
 			}
 		}
@@ -74,7 +82,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 			}
 			if ((!active || y === GRID_HEIGHT) && runStart !== null) {
 				let length = y - runStart;
-				svg += `<rect id="wv-${x}-${runStart}" x="${x * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${GAP_SIZE}" height="${length * (CELL_SIZE + GAP_SIZE)}" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+				svg += `<rect id="wv-${x}-${runStart}" x="${x * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${GAP_SIZE}" height="${length * (CELL_SIZE + GAP_SIZE)}" fill="${theme.wallColor}"></rect>`;
 				runStart = null;
 			}
 		}
@@ -130,7 +138,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 		const stateChanges = mapGhostStateChanges(store, index);
 
 		for (const [state, keyframes] of Object.entries(stateChanges)) {
-			if (keyframes.length === 0) continue;
+			if (keyframes.length === 0 || !keyframes.some((keyframe) => keyframe.visible)) continue;
 
 			const href = `#ghost-${state}`;
 

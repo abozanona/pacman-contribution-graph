@@ -95,6 +95,9 @@ describe('Pac-Man SVG short histories', () => {
 		expect(svg).toContain('values="0,15;0,15"');
 		expect(svg).toContain('values="0 10 10;0 10 10"');
 		expect(svg).toContain('values="44,37;44,37"');
+		expect(svg.match(/<use href="#ghost-/g)).toHaveLength(1);
+		expect(svg).toContain('<symbol id="ghost-inky-up"');
+		expect(svg).not.toContain('<use href="#ghost-inky-up"');
 	});
 
 	it('duplicates the only frame value instead of dividing by zero', () => {
@@ -121,6 +124,25 @@ describe('Pac-Man SVG short histories', () => {
 		expect(svg).toContain('values="44,37;44,37"');
 	});
 
+	it('omits animations for cells whose color never changes', () => {
+		const firstPacman = createPacman();
+		const secondPacman = createPacman({ x: 1 });
+		const store = createStore([
+			{ pacman: firstPacman, ghosts: [] },
+			{ pacman: secondPacman, ghosts: [] }
+		]);
+		store.cellEvents.push({ frameIndex: 1, x: 1, y: 1, color: '#ffffff' });
+
+		const svg = SVG.generateAnimatedSVG(store);
+		const staticCell = svg.match(/<rect id="c-0-0"[\s\S]*?<\/rect>/)?.[0];
+		const animatedCell = svg.match(/<rect id="c-1-1"[\s\S]*?<\/rect>/)?.[0];
+
+		expect(staticCell).toBeDefined();
+		expect(staticCell).not.toContain('<animate');
+		expect(animatedCell).toContain('<animate attributeName="fill"');
+		expect(animatedCell).toContain('values="#ebedf0;#ffffff"');
+	});
+
 	it('keeps multi-frame position timing unchanged', () => {
 		const firstPacman = createPacman();
 		const secondPacman = createPacman({ x: 1 });
@@ -134,6 +156,7 @@ describe('Pac-Man SVG short histories', () => {
 		expectValidAnimationKeyframes(svg);
 		expect(svg).toContain('<durationMs>400</durationMs>');
 		expect(svg).not.toContain('NaN');
+		expect(svg).not.toContain('<defs>');
 		expect(svg).toMatch(/type="translate"[\s\S]*?keyTimes="0;1"[\s\S]*?values="0,15;22,15"/);
 	});
 });
