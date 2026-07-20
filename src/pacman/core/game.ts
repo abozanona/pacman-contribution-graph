@@ -216,14 +216,6 @@ const updateGame = async (store: StoreType) => {
 		store.aliveSteps++;
 	}
 
-	if (store.config.gameStatsCallback) {
-		store.config.gameStatsCallback({
-			totalScore: store.pacman.totalPoints,
-			steps: store.aliveSteps,
-			ghostsEaten: store.pacman.ghostsEaten ?? 0
-		});
-	}
-
 	pushSnapshot(store);
 };
 

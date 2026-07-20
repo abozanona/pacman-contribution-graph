@@ -76,15 +76,18 @@ describe('Pac-Man game completion', () => {
 		expect(store.grid.flat().some((cell) => cell.commitsCount > 0)).toBe(true);
 		expect(SVG.generateAnimatedSVG).toHaveBeenCalledTimes(1);
 		expect(svgCallback).toHaveBeenCalledWith('<svg/>');
+		expect(gameStatsCallback).toHaveBeenCalledTimes(1);
 		expect(gameStatsCallback).toHaveBeenLastCalledWith({ totalScore: 0, steps: 3000, ghostsEaten: 0 });
 		expect(gameOverCallback).toHaveBeenCalledTimes(1);
-		expect(callbackOrder.slice(-3)).toEqual(['svg', 'stats', 'gameOver']);
+		expect(callbackOrder).toEqual(['svg', 'stats', 'gameOver']);
 	});
 
 	it('continues to finalize an empty grid through the normal completion path', async () => {
 		const store = createStore(false);
 		const svgCallback = store.config.svgCallback as jest.Mock;
+		const gameStatsCallback = jest.fn();
 		const gameOverCallback = store.config.gameOverCallback as jest.Mock;
+		store.config.gameStatsCallback = gameStatsCallback;
 
 		jest.spyOn(SVG, 'generateAnimatedSVG').mockReturnValue('<svg/>');
 
@@ -93,6 +96,8 @@ describe('Pac-Man game completion', () => {
 		expect(store.gameHistory).toHaveLength(0);
 		expect(store.frameCount).toBe(1);
 		expect(svgCallback).toHaveBeenCalledWith('<svg/>');
+		expect(gameStatsCallback).toHaveBeenCalledTimes(1);
+		expect(gameStatsCallback).toHaveBeenCalledWith({ totalScore: 0, steps: 0, ghostsEaten: 0 });
 		expect(gameOverCallback).toHaveBeenCalledTimes(1);
 	});
 });
