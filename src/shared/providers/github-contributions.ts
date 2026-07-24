@@ -9,8 +9,8 @@ interface ContributionDay {
 }
 
 interface GraphQLResponse {
-	data: {
-		user: {
+	data?: {
+		user?: {
 			contributionsCollection: {
 				contributionCalendar: {
 					weeks: {
@@ -18,8 +18,11 @@ interface GraphQLResponse {
 					}[];
 				};
 			};
-		};
-	};
+		} | null;
+	} | null;
+	errors?: {
+		message?: string;
+	}[];
 }
 
 export const fetchGithubContributions = async (store: BaseStore): Promise<Contribution[]> => {
@@ -119,8 +122,20 @@ const fetchGithubContributionsGraphQL = async (store: BaseStore): Promise<Contri
 	}
 
 	const json = (await response.json()) as GraphQLResponse;
+	if (json.errors?.length) {
+		const details = json.errors
+			.map((error) => error.message)
+			.filter(Boolean)
+			.join('; ');
+		throw new Error(`GitHub GraphQL request failed${details ? `: ${details}` : ''}`);
+	}
 
-	return json.data.user.contributionsCollection.contributionCalendar.weeks
+	const weeks = json.data?.user?.contributionsCollection?.contributionCalendar?.weeks;
+	if (!Array.isArray(weeks)) {
+		throw new Error(`GitHub GraphQL response did not include contribution data for "${store.config.username}"`);
+	}
+
+	return weeks
 		.map((week) => week.contributionDays)
 		.reduce((acc, days) => acc.concat(days), [])
 		.map((d) => {
