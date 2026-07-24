@@ -9,6 +9,8 @@ const generateAnimatedSVG = (store: StoreType) => {
 	const svgWidth = GRID_WIDTH * (CELL_SIZE + GAP_SIZE);
 	const svgHeight = GRID_HEIGHT * (CELL_SIZE + GAP_SIZE) + 30;
 	const totalDurationMs = store.gameHistory.length * DELTA_TIME;
+	const animationDurationMs = Math.max(totalDurationMs, DELTA_TIME);
+	const theme = Utils.getCurrentTheme(store);
 
 	let svg = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
 	svg += `<desc>Generated with pacman-contribution-graph on ${new Date()}</desc>`;
@@ -20,15 +22,17 @@ const generateAnimatedSVG = (store: StoreType) => {
 			<generatedOn>${new Date().toISOString()}</generatedOn>
 		</info>
 	</metadata>`;
-	svg += `<rect width="100%" height="100%" fill="${Utils.getCurrentTheme(store).gridBackground}"/>`;
+	svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
 
-	svg += generateGhostsPredefinition();
+	if (store.ghosts.length > 0) {
+		svg += generateGhostsPredefinition();
+	}
 
 	let lastMonth = '';
 	for (let y = 0; y < GRID_WIDTH; y++) {
 		if (store.monthLabels[y] !== lastMonth) {
 			const xPos = y * (CELL_SIZE + GAP_SIZE) + CELL_SIZE / 2;
-			svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${Utils.getCurrentTheme(store).textColor}">${store.monthLabels[y]}</text>`;
+			svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[y]}</text>`;
 			lastMonth = store.monthLabels[y];
 		}
 	}
@@ -39,11 +43,16 @@ const generateAnimatedSVG = (store: StoreType) => {
 			const cellX = x * (CELL_SIZE + GAP_SIZE);
 			const cellY = y * (CELL_SIZE + GAP_SIZE) + 15;
 			const cellColorAnimation = getCellAnimationData(store, x, y);
-			svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${CELL_SIZE}" height="${CELL_SIZE}" rx="5" fill="${Utils.getCurrentTheme(store).intensityColors[0]}">
-				<animate attributeName="fill" dur="${totalDurationMs}ms" repeatCount="indefinite" calcMode="discrete"
-					values="${cellColorAnimation.values}" 
-					keyTimes="${cellColorAnimation.keyTimes}"/>
-			</rect>`;
+			const cellColors = cellColorAnimation.values.split(';');
+			const isAnimated = cellColors.some((color) => color !== cellColors[0]);
+			const initialFill = isAnimated ? theme.intensityColors[0] : cellColors[0];
+			svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${CELL_SIZE}" height="${CELL_SIZE}" rx="5" fill="${initialFill}">`;
+			if (isAnimated) {
+				svg += `<animate attributeName="fill" dur="${animationDurationMs}ms" repeatCount="indefinite" calcMode="discrete"
+					values="${cellColorAnimation.values}"
+					keyTimes="${cellColorAnimation.keyTimes}"/>`;
+			}
+			svg += `</rect>`;
 		}
 	}
 
@@ -57,7 +66,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 			}
 			if ((!active || x === GRID_WIDTH) && runStart !== null) {
 				let length = x - runStart;
-				svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${y * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${length * (CELL_SIZE + GAP_SIZE)}" height="${GAP_SIZE}" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+				svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${y * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${length * (CELL_SIZE + GAP_SIZE)}" height="${GAP_SIZE}" fill="${theme.wallColor}"></rect>`;
 				runStart = null;
 			}
 		}
@@ -73,7 +82,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 			}
 			if ((!active || y === GRID_HEIGHT) && runStart !== null) {
 				let length = y - runStart;
-				svg += `<rect id="wv-${x}-${runStart}" x="${x * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${GAP_SIZE}" height="${length * (CELL_SIZE + GAP_SIZE)}" fill="${Utils.getCurrentTheme(store).wallColor}"></rect>`;
+				svg += `<rect id="wv-${x}-${runStart}" x="${x * (CELL_SIZE + GAP_SIZE) - GAP_SIZE}" y="${runStart * (CELL_SIZE + GAP_SIZE) - GAP_SIZE + 15}" width="${GAP_SIZE}" height="${length * (CELL_SIZE + GAP_SIZE)}" fill="${theme.wallColor}"></rect>`;
 				runStart = null;
 			}
 		}
@@ -82,19 +91,28 @@ const generateAnimatedSVG = (store: StoreType) => {
 	// Pacman
 	const pacmanColorAnimation = generateChangingValuesAnimation(
 		store,
-		store.gameHistory.map((el) => RendererUnits.generatePacManColors(el.pacman))
+		store.gameHistory.map((el) => RendererUnits.generatePacManColors(el.pacman)),
+		RendererUnits.generatePacManColors(store.pacman)
 	);
-	const pacmanPositionAnimation = generateChangingValuesAnimation(store, generatePacManPositions(store));
-	const pacmanRotationAnimation = generateChangingValuesAnimation(store, generatePacManRotations(store));
+	const pacmanPositionAnimation = generateChangingValuesAnimation(
+		store,
+		generatePacManPositions(store),
+		generatePacManPosition(store.pacman)
+	);
+	const pacmanRotationAnimation = generateChangingValuesAnimation(
+		store,
+		generatePacManRotations(store),
+		generatePacManRotation(store.pacman.direction)
+	);
 	svg += `<path id="pacman" d="${generatePacManPath(0.55)}" fill="${PACMAN_COLOR}">
-		<animate attributeName="fill" dur="${totalDurationMs}ms" repeatCount="indefinite"
+		<animate attributeName="fill" dur="${animationDurationMs}ms" repeatCount="indefinite"
 			keyTimes="${pacmanColorAnimation.keyTimes}"
 			values="${pacmanColorAnimation.values}"/>
-		<animateTransform attributeName="transform" type="translate" dur="${totalDurationMs}ms" repeatCount="indefinite"
+		<animateTransform attributeName="transform" type="translate" dur="${animationDurationMs}ms" repeatCount="indefinite"
 			keyTimes="${pacmanPositionAnimation.keyTimes}"
 			values="${pacmanPositionAnimation.values}"
 			additive="sum"/>
-		<animateTransform attributeName="transform" type="rotate" dur="${totalDurationMs}ms" repeatCount="indefinite"
+		<animateTransform attributeName="transform" type="rotate" dur="${animationDurationMs}ms" repeatCount="indefinite"
 			keyTimes="${pacmanRotationAnimation.keyTimes}"
 			values="${pacmanRotationAnimation.values}"
 			calcMode="discrete"
@@ -104,11 +122,15 @@ const generateAnimatedSVG = (store: StoreType) => {
 	</path>`;
 
 	store.ghosts.forEach((ghost, index) => {
-		const ghostPositionAnimation = generateChangingValuesAnimation(store, generateGhostPositions(store, index));
+		const ghostPositionAnimation = generateChangingValuesAnimation(
+			store,
+			generateGhostPositions(store, index),
+			generateGhostPosition(ghost)
+		);
 
 		svg += `<g id="ghost${index}" transform="translate(0,0)">
 			<animateTransform attributeName="transform" type="translate" 
-				dur="${totalDurationMs}ms" repeatCount="indefinite"
+				dur="${animationDurationMs}ms" repeatCount="indefinite"
 				keyTimes="${ghostPositionAnimation.keyTimes}"
 				values="${ghostPositionAnimation.values}"
 				additive="replace"/>`;
@@ -116,7 +138,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 		const stateChanges = mapGhostStateChanges(store, index);
 
 		for (const [state, keyframes] of Object.entries(stateChanges)) {
-			if (keyframes.length === 0) continue;
+			if (keyframes.length === 0 || !keyframes.some((keyframe) => keyframe.visible)) continue;
 
 			const href = `#ghost-${state}`;
 
@@ -127,7 +149,7 @@ const generateAnimatedSVG = (store: StoreType) => {
 
 			svg += `<use href="${href}" width="${CELL_SIZE}" height="${CELL_SIZE}" visibility="${initialVisibility}">
 				<animate attributeName="visibility" 
-					dur="${totalDurationMs}ms" repeatCount="indefinite"
+					dur="${animationDurationMs}ms" repeatCount="indefinite"
 					keyTimes="${keyTimes}"
 					values="${values}" />
 			</use>`;
@@ -190,7 +212,7 @@ function mapGhostStateChanges(store: StoreType, ghostIndex: number) {
 		if (ghostIndex >= state.ghosts.length) return;
 
 		const ghost = state.ghosts[ghostIndex];
-		const currentTime = frameIndex / (store.gameHistory.length - 1);
+		const currentTime = frameIndex / Math.max(store.gameHistory.length - 1, 1);
 
 		const currentState = ghost.scared
 			? 'scared'
@@ -235,35 +257,34 @@ const generatePacManPath = (mouthAngle: number) => {
             Z`;
 };
 
-const generatePacManPositions = (store: StoreType): string[] => {
-	return store.gameHistory.map((state) => {
-		const x = state.pacman.x * (CELL_SIZE + GAP_SIZE);
-		const y = state.pacman.y * (CELL_SIZE + GAP_SIZE) + 15;
-		return `${x},${y}`;
-	});
+const generatePacManPosition = (pacman: StoreType['pacman']): string => {
+	const x = pacman.x * (CELL_SIZE + GAP_SIZE);
+	const y = pacman.y * (CELL_SIZE + GAP_SIZE) + 15;
+	return `${x},${y}`;
+};
+
+const generatePacManPositions = (store: StoreType): string[] => store.gameHistory.map((state) => generatePacManPosition(state.pacman));
+
+const generatePacManRotation = (direction: StoreType['pacman']['direction']): string => {
+	const pivot = CELL_SIZE / 2;
+	switch (direction) {
+		case 'right':
+			return `0 ${pivot} ${pivot}`;
+		case 'left':
+			return `180 ${pivot} ${pivot}`;
+		case 'up':
+			return `270 ${pivot} ${pivot}`;
+		case 'down':
+			return `90 ${pivot} ${pivot}`;
+	}
 };
 
 const generatePacManRotations = (store: StoreType): string[] => {
-	const pivit = CELL_SIZE / 2;
-	const directionToRotation = (direction: 'right' | 'left' | 'up' | 'down'): string => {
-		switch (direction) {
-			case 'right':
-				return `0 ${pivit} ${pivit}`;
-			case 'left':
-				return `180 ${pivit} ${pivit}`;
-			case 'up':
-				return `270 ${pivit} ${pivit}`;
-			case 'down':
-				return `90 ${pivit} ${pivit}`;
-			default:
-				return `0 ${pivit} ${pivit}`;
-		}
-	};
 	// The direction stored in snapshot[i+1] is the direction taken during the slide
 	// that begins at keyframe i, so shift one frame forward to keep it in sync.
 	return store.gameHistory.map((_, i) => {
 		const lookaheadIndex = Math.min(i + 1, store.gameHistory.length - 1);
-		return directionToRotation(store.gameHistory[lookaheadIndex].pacman.direction);
+		return generatePacManRotation(store.gameHistory[lookaheadIndex].pacman.direction);
 	});
 };
 
@@ -298,19 +319,16 @@ const getCellAnimationData = (store: StoreType, x: number, y: number): Animation
 	return { keyTimes: kTimes.join(';'), values: kValues.join(';') };
 };
 
-const generateGhostPositions = (store: StoreType, ghostIndex: number): string[] => {
-	return store.gameHistory.map((state) => {
-		if (ghostIndex >= state.ghosts.length) {
-			return '0,0'; // Default value for cases where the ghost does not exist
-		}
-		const ghost = state.ghosts[ghostIndex];
-		const fx = ghost.x + (ghost.subX ?? 0);
-		const fy = ghost.y + (ghost.subY ?? 0);
-		const x = fx * (CELL_SIZE + GAP_SIZE);
-		const y = fy * (CELL_SIZE + GAP_SIZE) + 15;
-		return `${x},${y}`;
-	});
+const generateGhostPosition = (ghost: StoreType['ghosts'][number]): string => {
+	const fx = ghost.x + (ghost.subX ?? 0);
+	const fy = ghost.y + (ghost.subY ?? 0);
+	const x = fx * (CELL_SIZE + GAP_SIZE);
+	const y = fy * (CELL_SIZE + GAP_SIZE) + 15;
+	return `${x},${y}`;
 };
+
+const generateGhostPositions = (store: StoreType, ghostIndex: number): string[] =>
+	store.gameHistory.map((state) => (ghostIndex < state.ghosts.length ? generateGhostPosition(state.ghosts[ghostIndex]) : '0,0'));
 
 const generateGhostsPredefinition = () => {
 	let defs = `<defs>`;
@@ -361,7 +379,7 @@ const generateGhostsPredefinition = () => {
 	return defs;
 };
 
-const generateChangingValuesAnimation = (store: StoreType, changingValues: string[]): AnimationData => {
+const generateChangingValuesAnimation = (store: StoreType, changingValues: string[], fallbackValue: string): AnimationData => {
 	if (store.gameHistory.length !== changingValues.length) {
 		throw new Error(
 			`The amount of values (${changingValues.length}) does not match the size of the game history (${store.gameHistory.length})`
@@ -369,8 +387,9 @@ const generateChangingValuesAnimation = (store: StoreType, changingValues: strin
 	}
 
 	const totalFrames = store.gameHistory.length;
-	if (totalFrames === 0) {
-		return { keyTimes: '0;1', values: changingValues[0] || '#000;#000' };
+	if (totalFrames <= 1) {
+		const value = changingValues[0] ?? fallbackValue;
+		return { keyTimes: '0;1', values: `${value};${value}` };
 	}
 
 	let keyTimes: number[] = [];
