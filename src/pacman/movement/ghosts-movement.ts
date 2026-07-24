@@ -415,17 +415,18 @@ const BFSTargetLocation = (
 	type QueueItem = {
 		x: number;
 		y: number;
-		path: PathNode[];
+		firstStep?: PathNode;
 		direction: 'right' | 'left' | 'up' | 'down' | string;
 	};
 
-	const queue: QueueItem[] = [{ x: startX, y: startY, path: [], direction: currentDirection || 'right' }];
+	const queue: QueueItem[] = [{ x: startX, y: startY, direction: currentDirection || 'right' }];
+	let queueHead = 0;
 	const visited = new Set<string>();
 	visited.add(`${startX},${startY}`);
 
-	while (queue.length > 0) {
-		const current = queue.shift()!;
-		const { x, y, path, direction } = current;
+	while (queueHead < queue.length) {
+		const current = queue[queueHead++];
+		const { x, y, firstStep, direction } = current;
 
 		// Get valid moves
 		const validMoves = MovementUtils.getValidMoves(x, y);
@@ -473,20 +474,18 @@ const BFSTargetLocation = (
 				pathDirection: newDirection
 			};
 
-			const newPath = [...path, pathNode];
+			const nextFirstStep = firstStep ?? pathNode;
 
 			if (newX === targetX && newY === targetY) {
 				// Return the first position of the path with the direction
-				return newPath.length > 0
-					? {
-							x: newPath[0].x,
-							y: newPath[0].y,
-							direction: newPath[0].pathDirection
-						}
-					: null;
+				return {
+					x: nextFirstStep.x,
+					y: nextFirstStep.y,
+					direction: nextFirstStep.pathDirection
+				};
 			}
 
-			queue.push({ x: newX, y: newY, path: newPath, direction: newDirection });
+			queue.push({ x: newX, y: newY, firstStep: nextFirstStep, direction: newDirection });
 		}
 	}
 
