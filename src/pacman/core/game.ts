@@ -91,6 +91,19 @@ const stopGame = async (store: StoreType) => {
 	clearInterval(store.gameInterval as number);
 };
 
+const finalizeGame = (store: StoreType) => {
+	const svg = SVG.generateAnimatedSVG(store);
+	store.config.svgCallback(svg);
+	if (store.config.gameStatsCallback) {
+		store.config.gameStatsCallback({
+			totalScore: store.pacman.totalPoints,
+			steps: store.aliveSteps,
+			ghostsEaten: store.pacman.ghostsEaten ?? 0
+		});
+	}
+	store.config.gameOverCallback();
+};
+
 const startGame = async (store: StoreType) => {
 	store.frameCount = 0;
 	store.aliveSteps = 0;
@@ -114,6 +127,12 @@ const startGame = async (store: StoreType) => {
 	while (remainingCells() && store.gameHistory.length < MAX_FRAMES) {
 		await updateGame(store);
 	}
+
+	if (remainingCells()) {
+		finalizeGame(store);
+		return;
+	}
+
 	await updateGame(store);
 };
 
@@ -178,16 +197,7 @@ const updateGame = async (store: StoreType) => {
 
 	const remaining = store.grid.some((row) => row.some((c) => c.commitsCount > 0));
 	if (!remaining) {
-		const svg = SVG.generateAnimatedSVG(store);
-		store.config.svgCallback(svg);
-		if (store.config.gameStatsCallback) {
-			store.config.gameStatsCallback({
-				totalScore: store.pacman.totalPoints,
-				steps: store.aliveSteps,
-				ghostsEaten: store.pacman.ghostsEaten ?? 0
-			});
-		}
-		store.config.gameOverCallback();
+		finalizeGame(store);
 		return;
 	}
 
@@ -204,14 +214,6 @@ const updateGame = async (store: StoreType) => {
 
 	if (store.pacman.deadRemainingDuration === 0) {
 		store.aliveSteps++;
-	}
-
-	if (store.config.gameStatsCallback) {
-		store.config.gameStatsCallback({
-			totalScore: store.pacman.totalPoints,
-			steps: store.aliveSteps,
-			ghostsEaten: store.pacman.ghostsEaten ?? 0
-		});
 	}
 
 	pushSnapshot(store);
