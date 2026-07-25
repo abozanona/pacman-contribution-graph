@@ -143,6 +143,7 @@ const resetPacman = (store: StoreType) => {
 	store.pacman.y = 7;
 	store.pacman.direction = 'right';
 	store.pacman.recentPositions = [];
+	store.pacman.target = undefined;
 };
 
 export const determineGhostName = (index: number): GhostName => {
