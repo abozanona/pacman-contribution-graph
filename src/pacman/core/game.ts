@@ -236,7 +236,7 @@ const checkCollisions = (store: StoreType) => {
 		if (ghost.name === 'eyes') return;
 
 		if (ghost.x === store.pacman.x && ghost.y === store.pacman.y) {
-			if (store.pacman.powerupRemainingDuration && ghost.scared) {
+			if (ghost.scared) {
 				ghost.originalName = ghost.name;
 				ghost.name = 'eyes';
 				ghost.scared = false;

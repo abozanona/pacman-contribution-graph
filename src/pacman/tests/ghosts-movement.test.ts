@@ -112,4 +112,22 @@ describe('Pac-Man ghost pathfinding', () => {
 
 		expect([ghost.x, ghost.y, ghost.direction]).toEqual(expected);
 	});
+
+	it('finishes a scared half-step before becoming dangerous again', () => {
+		const ghost = createGhost('blinky', 10, 6, 'right');
+		ghost.scared = true;
+		ghost.subX = 0.5;
+		const store = createStore(ghost);
+		store.pacman.powerupRemainingDuration = 0;
+
+		GhostsMovement.moveGhosts(store);
+
+		expect(ghost).toMatchObject({
+			x: 11,
+			y: 6,
+			scared: false,
+			subX: 0,
+			subY: 0
+		});
+	});
 });
