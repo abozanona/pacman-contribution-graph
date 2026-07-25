@@ -1,4 +1,5 @@
 import { GAME_THEMES } from '../../shared/constants';
+import { PACMAN_DEATH_DURATION } from '../core/constants';
 import { GhostsMovement } from '../movement/ghosts-movement';
 import { PacmanMovement } from '../movement/pacman-movement';
 import { SVG } from '../renderers/svg';
@@ -50,6 +51,23 @@ const createStore = (withContribution: boolean): StoreType => ({
 	useGithubThemeColor: true
 });
 
+const mockNextCollision = (scared: boolean) => {
+	jest.spyOn(PacmanMovement, 'movePacman').mockImplementation((store) => {
+		const ghost = store.ghosts[0];
+		store.pacman.x = ghost.x;
+		store.pacman.y = ghost.y;
+		store.pacman.powerupRemainingDuration = 0;
+		ghost.scared = scared;
+		ghost.subX = scared ? 0.5 : 0;
+		store.grid.flat().forEach((cell) => {
+			cell.commitsCount = 0;
+			cell.level = 'NONE';
+		});
+	});
+	jest.spyOn(GhostsMovement, 'moveGhosts').mockImplementation(() => {});
+	jest.spyOn(SVG, 'generateAnimatedSVG').mockReturnValue('<svg/>');
+};
+
 describe('Pac-Man game completion', () => {
 	afterEach(() => {
 		jest.restoreAllMocks();
@@ -99,5 +117,32 @@ describe('Pac-Man game completion', () => {
 		expect(gameStatsCallback).toHaveBeenCalledTimes(1);
 		expect(gameStatsCallback).toHaveBeenCalledWith({ totalScore: 0, steps: 0, ghostsEaten: 0 });
 		expect(gameOverCallback).toHaveBeenCalledTimes(1);
+	});
+
+	it('keeps a transitioning scared ghost edible after the power-up timer expires', async () => {
+		const store = createStore(true);
+		mockNextCollision(true);
+
+		await Game.startGame(store);
+
+		expect(store.pacman.deadRemainingDuration).toBe(0);
+		expect(store.pacman.ghostsEaten).toBe(1);
+		expect(store.ghosts[0]).toMatchObject({
+			name: 'eyes',
+			scared: false,
+			subX: 0,
+			subY: 0
+		});
+	});
+
+	it('still kills Pac-Man after the ghost finishes its scared transition', async () => {
+		const store = createStore(true);
+		mockNextCollision(false);
+
+		await Game.startGame(store);
+
+		expect(store.gameHistory[0].pacman.deadRemainingDuration).toBe(PACMAN_DEATH_DURATION);
+		expect(store.pacman.ghostsEaten).toBe(0);
+		expect(store.ghosts[0].name).toBe('blinky');
 	});
 });
