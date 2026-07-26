@@ -23,6 +23,12 @@ const getGridEndDate = (store: BaseStore) => {
 	return endDate;
 };
 
+const getGridStartDate = (endDate: Date) => {
+	const startDate = new Date(endDate);
+	startDate.setUTCDate(endDate.getUTCDate() - (GRID_WIDTH - 1) * 7 - endDate.getUTCDay());
+	return startDate;
+};
+
 /* ───────────────────────── Theme helpers ────────────────────── */
 export const getCurrentTheme = (store: BaseStore): GameTheme => GAME_THEMES[store.config.gameTheme] ?? GAME_THEMES['github'];
 
@@ -54,12 +60,9 @@ export const calculateContributionLevel = (contribution: number, maxContribution
 
 export const buildGrid = (store: BaseStore) => {
 	const endDate = getGridEndDate(store);
-	const startDate = new Date(endDate);
-	startDate.setUTCDate(endDate.getUTCDate() - 365);
-	startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay());
+	const startDate = getGridStartDate(endDate);
 
-	const realWidth = 53;
-	const grid = Array.from({ length: realWidth }, () =>
+	const grid = Array.from({ length: GRID_WIDTH }, () =>
 		Array.from({ length: GRID_HEIGHT }, () => ({
 			commitsCount: 0,
 			color: getCurrentTheme(store).intensityColors[0],
@@ -74,7 +77,7 @@ export const buildGrid = (store: BaseStore) => {
 		const day = date.getUTCDay();
 		const week = weeksBetween(startDate, date);
 
-		if (week >= 0 && week < realWidth) {
+		if (week >= 0 && week < GRID_WIDTH) {
 			const theme = getCurrentTheme(store);
 			grid[week][day] = {
 				commitsCount: c.count,
@@ -89,9 +92,7 @@ export const buildGrid = (store: BaseStore) => {
 
 export const buildMonthLabels = (store: BaseStore) => {
 	const endDate = getGridEndDate(store);
-	const startDate = new Date(endDate);
-	startDate.setUTCDate(endDate.getUTCDate() - 365);
-	startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay());
+	const startDate = getGridStartDate(endDate);
 
 	const realWidth = weeksBetween(startDate, endDate) + 1;
 	const labels = Array(realWidth).fill('');
