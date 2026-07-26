@@ -280,7 +280,6 @@ const checkAndEatPoint = (store: StoreType) => {
 	if (cell.level !== 'NONE') {
 		store.pacman.totalPoints += cell.commitsCount;
 		store.pacman.points++;
-		store.config.pointsIncreasedCallback(store.pacman.totalPoints);
 
 		const theme = Utils.getCurrentTheme(store);
 		if (cell.level === 'FOURTH_QUARTILE') {
@@ -298,6 +297,8 @@ const checkAndEatPoint = (store: StoreType) => {
 			y: store.pacman.y,
 			color: cell.color
 		});
+
+		store.config.pointsIncreasedCallback(store.pacman.totalPoints);
 	}
 };
 

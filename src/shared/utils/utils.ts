@@ -103,7 +103,7 @@ export const buildMonthLabels = (store: BaseStore) => {
 		const date = new Date(startDate);
 		date.setUTCDate(date.getUTCDate() + week * 7);
 
-		const currentMonth = date.toLocaleString('default', { month: 'short' });
+		const currentMonth = date.toLocaleString('default', { month: 'short', timeZone: 'UTC' });
 		if (currentMonth !== lastMonth) {
 			labels[week] = currentMonth;
 			lastMonth = currentMonth;

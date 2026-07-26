@@ -45,3 +45,27 @@ describe('buildGrid', () => {
 		});
 	});
 });
+
+describe('buildMonthLabels', () => {
+	afterEach(() => {
+		jest.useRealTimers();
+		jest.restoreAllMocks();
+	});
+
+	it('uses UTC month boundaries regardless of the runtime timezone', () => {
+		const toLocaleString = Date.prototype.toLocaleString;
+		jest.spyOn(Date.prototype, 'toLocaleString').mockImplementation(function (this: Date, locales, options) {
+			return toLocaleString.call(this, locales, {
+				...options,
+				timeZone: options?.timeZone ?? 'America/Los_Angeles'
+			});
+		});
+		jest.useFakeTimers();
+		jest.setSystemTime(SUNDAY);
+		const store = createStore();
+
+		Utils.buildMonthLabels(store);
+
+		expect(store.monthLabels[27]).toBe('Feb');
+	});
+});
