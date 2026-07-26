@@ -3,7 +3,7 @@ description: 'Generates arcade games from a GitHub user contributions grid and o
 author: 'abozanona'
 
 runs:
-    using: node20
+    using: node24
     main: github-action/dist/index.js
 
 inputs:
