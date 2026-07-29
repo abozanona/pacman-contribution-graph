@@ -68,6 +68,24 @@ const mockNextCollision = (scared: boolean) => {
 	jest.spyOn(SVG, 'generateAnimatedSVG').mockReturnValue('<svg/>');
 };
 
+const mockDangerousAndScaredCollision = () => {
+	jest.spyOn(PacmanMovement, 'movePacman').mockImplementation((store) => {
+		const [dangerousGhost, scaredGhost] = store.ghosts;
+		store.pacman.x = dangerousGhost.x;
+		store.pacman.y = dangerousGhost.y;
+		scaredGhost.x = dangerousGhost.x;
+		scaredGhost.y = dangerousGhost.y;
+		dangerousGhost.scared = false;
+		scaredGhost.scared = true;
+		store.grid.flat().forEach((cell) => {
+			cell.commitsCount = 0;
+			cell.level = 'NONE';
+		});
+	});
+	jest.spyOn(GhostsMovement, 'moveGhosts').mockImplementation(() => {});
+	jest.spyOn(SVG, 'generateAnimatedSVG').mockReturnValue('<svg/>');
+};
+
 describe('Pac-Man game completion', () => {
 	afterEach(() => {
 		jest.restoreAllMocks();
@@ -144,5 +162,16 @@ describe('Pac-Man game completion', () => {
 		expect(store.gameHistory[0].pacman.deadRemainingDuration).toBe(PACMAN_DEATH_DURATION);
 		expect(store.pacman.ghostsEaten).toBe(0);
 		expect(store.ghosts[0].name).toBe('blinky');
+	});
+
+	it('stops resolving collisions after Pac-Man dies', async () => {
+		const store = createStore(true);
+		mockDangerousAndScaredCollision();
+
+		await Game.startGame(store);
+
+		expect(store.gameHistory[0].pacman.deadRemainingDuration).toBe(PACMAN_DEATH_DURATION);
+		expect(store.pacman.ghostsEaten).toBe(0);
+		expect(store.ghosts[1].name).toBe('inky');
 	});
 });

@@ -233,8 +233,8 @@ const pushSnapshot = (store: StoreType) => {
 const checkCollisions = (store: StoreType) => {
 	if (store.pacman.deadRemainingDuration) return;
 
-	store.ghosts.forEach((ghost) => {
-		if (ghost.name === 'eyes') return;
+	for (const ghost of store.ghosts) {
+		if (ghost.name === 'eyes') continue;
 
 		if (ghost.x === store.pacman.x && ghost.y === store.pacman.y) {
 			if (ghost.scared) {
@@ -252,9 +252,10 @@ const checkCollisions = (store: StoreType) => {
 				if (store.pacman.deadRemainingDuration === 0) {
 					store.pacman.deadRemainingDuration = PACMAN_DEATH_DURATION;
 				}
+				return;
 			}
 		}
-	});
+	}
 };
 
 const releaseGhostFromHouse = (store: StoreType, name: GhostName) => {
