@@ -13,6 +13,10 @@ on:
           - minor
           - major
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -22,10 +26,18 @@ jobs:
       id-token: write
 
     steps:
+      - name: Verify release branch
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Releases must be dispatched from main, not $GITHUB_REF."
+            exit 1
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
@@ -40,54 +52,172 @@ jobs:
       - name: Install root dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Bump root package version
+      - name: Resolve release version
         id: version
         run: |
-          NEW_VERSION=$(npm version ${{ inputs.bump }} --no-git-tag-version | sed 's/^v//')
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "Bumped to v$NEW_VERSION"
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          CURRENT_TAG="v$CURRENT_VERSION"
+          TAG_COMMIT=$(git rev-list -n 1 "$CURRENT_TAG" 2>/dev/null || true)
+          PUBLISHED_VERSION=$(npm view "pacman-contribution-graph@$CURRENT_VERSION" version 2>/dev/null || true)
+
+          if gh api --silent "repos/$GITHUB_REPOSITORY/releases/tags/$CURRENT_TAG" >/dev/null 2>&1; then
+            RELEASE_EXISTS=true
+          else
+            RELEASE_EXISTS=false
+          fi
+
+          if [ -n "$TAG_COMMIT" ] && { [ "$PUBLISHED_VERSION" != "$CURRENT_VERSION" ] || [ "$RELEASE_EXISTS" != "true" ]; }; then
+            if [ "$TAG_COMMIT" != "$(git rev-parse HEAD)" ]; then
+              echo "::error::$CURRENT_TAG does not point to the current main commit."
+              exit 1
+            fi
+
+            if [ "$(git cat-file -t "$CURRENT_TAG")" != "tag" ]; then
+              echo "::error::$CURRENT_TAG must be an annotated tag."
+              exit 1
+            fi
+
+            NEW_VERSION=$CURRENT_VERSION
+            MODE=resume
+            echo "Resuming incomplete release v$NEW_VERSION."
+          else
+            NEW_VERSION=$(npm version "$BUMP" --no-git-tag-version | sed 's/^v//')
+            if [ "$(npm view "pacman-contribution-graph@$NEW_VERSION" version 2>/dev/null || true)" = "$NEW_VERSION" ]; then
+              echo "::error::pacman-contribution-graph@$NEW_VERSION already exists without a matching incomplete release."
+              exit 1
+            fi
+
+            MODE=new
+            PUBLISHED_VERSION=
+            RELEASE_EXISTS=false
+            echo "Preparing new release v$NEW_VERSION."
+          fi
+
+          npm pkg set --prefix github-action version="$NEW_VERSION"
+          {
+            echo "new_version=$NEW_VERSION"
+            echo "mode=$MODE"
+            echo "npm_published=$([ "$PUBLISHED_VERSION" = "$NEW_VERSION" ] && echo true || echo false)"
+            echo "release_exists=$RELEASE_EXISTS"
+          } >> "$GITHUB_OUTPUT"
+        env:
+          BUMP: ${{ inputs.bump }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify npm authentication
+        if: steps.version.outputs.npm_published != 'true'
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Run tests
+        run: pnpm test -- --runInBand
+
+      - name: Run Prettier check
+        run: pnpm exec prettier --check "**/*.{ts,json,md}"
 
       - name: Build main package
         run: pnpm build
 
-      - name: Publish main package to npm
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Update github-action package.json
-        run: |
-          VERSION=${{ steps.version.outputs.new_version }}
-          cd github-action
-          npm pkg set version="$VERSION"
-          npm pkg set dependencies.pacman-contribution-graph="$VERSION"
-
       - name: Install github-action dependencies
-        # Retry until the newly published version propagates on the npm registry
-        run: |
-          VERSION=${{ steps.version.outputs.new_version }}
-          cd github-action
-          for i in $(seq 1 12); do
-            echo "Attempt $i: installing pacman-contribution-graph@$VERSION..."
-            pnpm install --no-frozen-lockfile && break
-            echo "Not available yet. Waiting 15s..."
-            sleep 15
-          done
+        run: pnpm install --dir github-action --frozen-lockfile
 
       - name: Build github-action
         run: pnpm run --prefix ./github-action build
 
-      - name: Commit, tag, and push release
+      - name: Validate release artifacts
         run: |
-          VERSION=${{ steps.version.outputs.new_version }}
+          test -s dist/pacman-contribution-graph.min.js
+          test -s github-action/dist/index.js
+          node --check github-action/dist/index.js
+          git diff --check
+
+          if [ "$RELEASE_MODE" = "resume" ] && ! git diff --quiet -- package.json dist/pacman-contribution-graph.min.js github-action/package.json github-action/dist/index.js; then
+            echo "::error::The prepared release artifacts are not reproducible from the tagged source."
+            git diff --stat
+            exit 1
+          fi
+        env:
+          RELEASE_MODE: ${{ steps.version.outputs.mode }}
+
+      - name: Pack release artifact
+        id: package
+        run: |
+          PACK_OUTPUT=$(npm pack --json --pack-destination "$RUNNER_TEMP")
+          PACKAGE_FILE=$(node -p "JSON.parse(process.argv[1])[0].filename" "$PACK_OUTPUT")
+          PACKAGE_INTEGRITY=$(node -p "JSON.parse(process.argv[1])[0].integrity" "$PACK_OUTPUT")
+
+          if [ "$NPM_PUBLISHED" = "true" ]; then
+            PUBLISHED_INTEGRITY=$(npm view "pacman-contribution-graph@$VERSION" dist.integrity)
+            if [ "$PACKAGE_INTEGRITY" != "$PUBLISHED_INTEGRITY" ]; then
+              echo "::error::The local package does not match pacman-contribution-graph@$VERSION on npm."
+              exit 1
+            fi
+          fi
+
+          {
+            echo "path=$RUNNER_TEMP/$PACKAGE_FILE"
+            echo "integrity=$PACKAGE_INTEGRITY"
+          } >> "$GITHUB_OUTPUT"
+        env:
+          NPM_PUBLISHED: ${{ steps.version.outputs.npm_published }}
+          VERSION: ${{ steps.version.outputs.new_version }}
+
+      - name: Commit, tag, and push release source
+        if: steps.version.outputs.mode == 'new'
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
+          git add package.json dist/pacman-contribution-graph.min.js github-action/package.json github-action/dist/index.js
           git commit -m "chore: release v$VERSION"
-          git tag "v$VERSION"
-          git push origin main --follow-tags
+          git tag -a "v$VERSION" -m "v$VERSION"
+          git push --atomic origin HEAD:refs/heads/main "refs/tags/v$VERSION"
+        env:
+          VERSION: ${{ steps.version.outputs.new_version }}
+
+      - name: Publish main package to npm
+        if: steps.version.outputs.npm_published != 'true'
+        run: |
+          PUBLISHED_VERSION=$(npm view "pacman-contribution-graph@$VERSION" version 2>/dev/null || true)
+          if [ "$PUBLISHED_VERSION" = "$VERSION" ]; then
+            PUBLISHED_INTEGRITY=$(npm view "pacman-contribution-graph@$VERSION" dist.integrity)
+            if [ "$PUBLISHED_INTEGRITY" != "$PACKAGE_INTEGRITY" ]; then
+              echo "::error::pacman-contribution-graph@$VERSION already exists with different contents."
+              exit 1
+            fi
+
+            echo "pacman-contribution-graph@$VERSION is already published with the expected contents."
+          else
+            npm publish "$PACKAGE_PATH" --provenance --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_INTEGRITY: ${{ steps.package.outputs.integrity }}
+          PACKAGE_PATH: ${{ steps.package.outputs.path }}
+          VERSION: ${{ steps.version.outputs.new_version }}
+
+      - name: Verify npm package availability
+        run: |
+          for attempt in $(seq 1 12); do
+            PUBLISHED_VERSION=$(npm view "pacman-contribution-graph@$VERSION" version 2>/dev/null || true)
+            if [ "$PUBLISHED_VERSION" = "$VERSION" ]; then
+              echo "pacman-contribution-graph@$VERSION is available on npm."
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 12 ]; then
+              echo "::error::pacman-contribution-graph@$VERSION was not available after 12 attempts."
+              exit 1
+            fi
+
+            echo "Attempt $attempt: package is not available yet. Waiting 15s..."
+            sleep 15
+          done
+        env:
+          VERSION: ${{ steps.version.outputs.new_version }}
 
       - name: Create GitHub Release
+        if: steps.version.outputs.release_exists != 'true'
         uses: actions/github-script@v8
         with:
           script: |
