@@ -1,6 +1,6 @@
+import { Utils } from '../../shared/utils/utils';
 import { CELL_SIZE, DELTA_TIME, GAP_SIZE, GHOSTS, GRID_HEIGHT, GRID_WIDTH, PACMAN_COLOR, WALLS } from '../core/constants';
 import { AnimationData, GhostName, StoreType } from '../types';
-import { Utils } from '../../shared/utils/utils';
 import { RendererUnits } from './renderer-units';
 
 const SVG_KEY_TIMES_PRECISION = 4;
@@ -29,11 +29,13 @@ const generateAnimatedSVG = (store: StoreType) => {
 	}
 
 	let lastMonth = '';
-	for (let y = 0; y < GRID_WIDTH; y++) {
-		if (store.monthLabels[y] !== lastMonth) {
-			const xPos = y * (CELL_SIZE + GAP_SIZE) + CELL_SIZE / 2;
-			svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[y]}</text>`;
-			lastMonth = store.monthLabels[y];
+	if (store.config.showMonthLabels !== false) {
+		for (let y = 0; y < GRID_WIDTH; y++) {
+			if (store.monthLabels[y] !== lastMonth) {
+				const xPos = y * (CELL_SIZE + GAP_SIZE) + CELL_SIZE / 2;
+				svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[y]}</text>`;
+				lastMonth = store.monthLabels[y];
+			}
 		}
 	}
 

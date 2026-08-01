@@ -43,12 +43,14 @@ const generateAnimatedSVG = (store: BreakoutStoreType): string => {
 	svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
 
 	// ── Month labels ─────────────────────────────────────────────────────
-	let lastMonth = '';
-	for (let x = 0; x < GRID_WIDTH; x++) {
-		if (store.monthLabels[x] !== lastMonth) {
-			const xPos = x * (CELL_SIZE + GAP_SIZE) + CELL_SIZE / 2;
-			svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
-			lastMonth = store.monthLabels[x];
+	if (store.config.showMonthLabels !== false) {
+		let lastMonth = '';
+		for (let x = 0; x < GRID_WIDTH; x++) {
+			if (store.monthLabels[x] !== lastMonth) {
+				const xPos = x * (CELL_SIZE + GAP_SIZE) + CELL_SIZE / 2;
+				svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
+				lastMonth = store.monthLabels[x];
+			}
 		}
 	}
 

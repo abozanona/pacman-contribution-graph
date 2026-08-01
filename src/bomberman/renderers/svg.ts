@@ -1,8 +1,8 @@
 import { GameTheme } from '../../shared/types';
 import { Utils } from '../../shared/utils/utils';
+import { CELL_SIZE, DELTA_TIME, GAP_SIZE, GRID_HEIGHT, GRID_WIDTH, SPRITE_SETS, SVG } from '../core/constants';
 import { ITEM_DEFINITIONS } from '../entities/item';
-import { SPRITE_SETS, SVG, CELL_SIZE, DELTA_TIME, GAP_SIZE, GRID_HEIGHT, GRID_WIDTH } from '../core/constants';
-import { BombState, CellEvent, Direction, ExplosionEvent, ItemState, PlayerState, BombermanStore } from '../types';
+import { BombermanStore, BombState, CellEvent, Direction, ExplosionEvent, ItemState, PlayerState } from '../types';
 import {
 	buildChangingValuesAnimation,
 	buildFrameValueAnimation,
@@ -65,6 +65,7 @@ interface SvgLayerRenderer {
 
 class MonthLabelsLayerRenderer implements SvgLayerRenderer {
 	render({ store, theme }: SvgRenderContext) {
+		if (store.config.showMonthLabels === false) return '';
 		let svg = '';
 		let lastMonth = '';
 		for (let x = 0; x < GRID_WIDTH; x++) {

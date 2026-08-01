@@ -181,6 +181,7 @@ const buildCursorTransformSeries = (store: MinesweeperStore) => {
 };
 
 const buildMonthLabels = (store: MinesweeperStore) => {
+	if (store.config.showMonthLabels === false) return '';
 	let labels = '';
 	let last = '';
 	const theme = Utils.getCurrentTheme(store);

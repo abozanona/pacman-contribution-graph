@@ -22,3 +22,7 @@ inputs:
         description: 'Pac-Man player style: opportunistic, conservative, or aggressive'
         required: false
         default: 'opportunistic'
+    hide_month_labels:
+        description: 'When true, the row of month labels above the contribution grid is omitted from the generated SVGs.'
+        required: false
+        default: 'false'

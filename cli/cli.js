@@ -46,6 +46,12 @@ const argv = yargs(hideBin(process.argv))
 		default: 'contribution-graph.svg',
 		type: 'string'
 	})
+	.option('hideMonthLabels', {
+		alias: 'hm',
+		describe: 'Hide the month labels row above the contribution grid',
+		type: 'boolean',
+		default: false
+	})
 
 	.help().argv;
 
@@ -55,6 +61,7 @@ const renderer = new ArcadeRenderer({
 	username: argv.username,
 	gameTheme: argv.gameTheme ?? (argv.platform === 'gitlab' ? 'gitlab' : 'github'),
 	scenario: argv.scenario,
+	showMonthLabels: !argv.hideMonthLabels,
 	svgCallback: (svg) => {
 		fs.writeFileSync(argv.output, svg);
 		console.log(`SVG saved to ${argv.output}`);

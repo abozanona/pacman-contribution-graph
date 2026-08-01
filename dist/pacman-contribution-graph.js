@@ -1,10 +1,10 @@
 /******/ var __webpack_modules__ = ({
 
-/***/ "./src/bomberman/core/ai.ts"
+/***/ "./src/bomberman/core/ai.ts":
 /*!**********************************!*\
   !*** ./src/bomberman/core/ai.ts ***!
   \**********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -371,13 +371,13 @@ class AiController {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/core/board.ts"
+/***/ "./src/bomberman/core/board.ts":
 /*!*************************************!*\
   !*** ./src/bomberman/core/board.ts ***!
   \*************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -446,13 +446,13 @@ const getAdjacentPositions = (position) => GridPosition.from(position)
     .map((next) => ({ x: next.x, y: next.y, direction: next.direction }));
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/core/constants.ts"
+/***/ "./src/bomberman/core/constants.ts":
 /*!*****************************************!*\
   !*** ./src/bomberman/core/constants.ts ***!
   \*****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -847,13 +847,13 @@ const SPRITE_SETS = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/core/game.ts"
+/***/ "./src/bomberman/core/game.ts":
 /*!************************************!*\
   !*** ./src/bomberman/core/game.ts ***!
   \************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -999,13 +999,13 @@ const Game = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/core/pathfinding.ts"
+/***/ "./src/bomberman/core/pathfinding.ts":
 /*!*******************************************!*\
   !*** ./src/bomberman/core/pathfinding.ts ***!
   \*******************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1251,13 +1251,13 @@ const canEscapeAfterPlantingBomb = (store, player) => {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/core/state.ts"
+/***/ "./src/bomberman/core/state.ts":
 /*!*************************************!*\
   !*** ./src/bomberman/core/state.ts ***!
   \*************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1335,13 +1335,13 @@ class GameState {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/core/store.ts"
+/***/ "./src/bomberman/core/store.ts":
 /*!*************************************!*\
   !*** ./src/bomberman/core/store.ts ***!
   \*************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1367,13 +1367,13 @@ const storeTemplate = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/entities/bomb.ts"
+/***/ "./src/bomberman/entities/bomb.ts":
 /*!****************************************!*\
   !*** ./src/bomberman/entities/bomb.ts ***!
   \****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1606,13 +1606,13 @@ class Bomb {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/entities/explosion.ts"
+/***/ "./src/bomberman/entities/explosion.ts":
 /*!*********************************************!*\
   !*** ./src/bomberman/entities/explosion.ts ***!
   \*********************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1653,13 +1653,13 @@ class Explosion {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/entities/item.ts"
+/***/ "./src/bomberman/entities/item.ts":
 /*!****************************************!*\
   !*** ./src/bomberman/entities/item.ts ***!
   \****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1824,13 +1824,13 @@ class Item {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/entities/player.ts"
+/***/ "./src/bomberman/entities/player.ts":
 /*!******************************************!*\
   !*** ./src/bomberman/entities/player.ts ***!
   \******************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -1987,13 +1987,13 @@ class Player {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/index.ts"
+/***/ "./src/bomberman/index.ts":
 /*!********************************!*\
   !*** ./src/bomberman/index.ts ***!
   \********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -2045,13 +2045,13 @@ class BombermanRenderer {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/renderers/animation.ts"
+/***/ "./src/bomberman/renderers/animation.ts":
 /*!**********************************************!*\
   !*** ./src/bomberman/renderers/animation.ts ***!
   \**********************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -2173,21 +2173,21 @@ const appendFinalKeyframe = (keyTimes, values) => {
 const frameToKeyTime = (frameIndex, totalFrames) => Number((Math.min(frameIndex, Math.max(totalFrames - 1, 1)) / Math.max(totalFrames - 1, 1)).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_0__.SVG.PRECISION));
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/bomberman/renderers/svg.ts"
+/***/ "./src/bomberman/renderers/svg.ts":
 /*!****************************************!*\
   !*** ./src/bomberman/renderers/svg.ts ***!
   \****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Renderer: () => (/* binding */ Renderer)
 /* harmony export */ });
 /* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/utils/utils */ "./src/shared/utils/utils.ts");
-/* harmony import */ var _entities_item__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../entities/item */ "./src/bomberman/entities/item.ts");
-/* harmony import */ var _core_constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/constants */ "./src/bomberman/core/constants.ts");
+/* harmony import */ var _core_constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/constants */ "./src/bomberman/core/constants.ts");
+/* harmony import */ var _entities_item__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../entities/item */ "./src/bomberman/entities/item.ts");
 /* harmony import */ var _animation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./animation */ "./src/bomberman/renderers/animation.ts");
 
 
@@ -2195,13 +2195,15 @@ __webpack_require__.r(__webpack_exports__);
 
 class MonthLabelsLayerRenderer {
     render({ store, theme }) {
+        if (store.config.showMonthLabels === false)
+            return '';
         let svg = '';
         let lastMonth = '';
-        for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH; x++) {
+        for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
             if (store.monthLabels[x] === lastMonth)
                 continue;
-            const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_2__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2;
-            svg += `<text x="${xPos}" y="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.MONTH_LABEL_Y}" text-anchor="middle" font-size="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.MONTH_LABEL_FONT_SIZE}" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
+            const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+            svg += `<text x="${xPos}" y="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.MONTH_LABEL_Y}" text-anchor="middle" font-size="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.MONTH_LABEL_FONT_SIZE}" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
             lastMonth = store.monthLabels[x];
         }
         return svg;
@@ -2211,10 +2213,10 @@ class GridLayerRenderer {
     render({ store, theme, cellEventsByPosition, totalDurationMs }) {
         var _a, _b;
         let svg = '';
-        for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH; x++) {
-            for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT; y++) {
+        for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+            for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT; y++) {
                 const colorAnim = getCellAnimationData(store, x, y, cellEventsByPosition);
-                svg += `<rect id="c-${x}-${y}" x="${toSvgX(x)}" y="${toSvgY(y)}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE}" rx="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.CELL_RADIUS}" fill="${(_b = (_a = store.initialColors[x]) === null || _a === void 0 ? void 0 : _a[y]) !== null && _b !== void 0 ? _b : theme.intensityColors[0]}">`;
+                svg += `<rect id="c-${x}-${y}" x="${toSvgX(x)}" y="${toSvgY(y)}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" rx="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.CELL_RADIUS}" fill="${(_b = (_a = store.initialColors[x]) === null || _a === void 0 ? void 0 : _a[y]) !== null && _b !== void 0 ? _b : theme.intensityColors[0]}">`;
                 if (colorAnim) {
                     svg += `<animate attributeName="fill" calcMode="discrete" dur="${totalDurationMs}ms" repeatCount="indefinite" values="${colorAnim.values}" keyTimes="${colorAnim.keyTimes}"/>`;
                 }
@@ -2247,9 +2249,9 @@ class ItemLayerRenderer {
         const totalFrames = store.gameHistory.length;
         for (const { item, startFrame, endFrameExclusive } of collectItems(store)) {
             const opacityAnim = (0,_animation__WEBPACK_IMPORTED_MODULE_3__.buildVisibilityAnimation)(totalFrames, startFrame, endFrameExclusive);
-            const x = toSvgX(item.x) + (_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE - _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.ITEM_WIDTH) / 2;
-            const y = toSvgY(item.y) + (_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE - _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.ITEM_HEIGHT) / 2;
-            svg += `<use id="item-${item.id}" x="${x}" y="${y}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.ITEM_WIDTH}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.ITEM_HEIGHT}" href="${getItemRef(item.type)}" opacity="${startFrame === 0 ? '1' : '0'}">`;
+            const x = toSvgX(item.x) + (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE - _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.ITEM_WIDTH) / 2;
+            const y = toSvgY(item.y) + (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE - _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.ITEM_HEIGHT) / 2;
+            svg += `<use id="item-${item.id}" x="${x}" y="${y}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.ITEM_WIDTH}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.ITEM_HEIGHT}" href="${getItemRef(item.type)}" opacity="${startFrame === 0 ? '1' : '0'}">`;
             if (opacityAnim) {
                 svg += `<animate attributeName="opacity" calcMode="discrete" dur="${totalDurationMs}ms" repeatCount="indefinite" keyTimes="${opacityAnim.keyTimes}" values="${opacityAnim.values}"/>`;
             }
@@ -2276,7 +2278,7 @@ class PlayerLayerRenderer {
             const positionAnim = (0,_animation__WEBPACK_IMPORTED_MODULE_3__.buildStepwiseLinearAnimation)(positions);
             const opacityAnim = (0,_animation__WEBPACK_IMPORTED_MODULE_3__.buildChangingValuesAnimation)(opacities);
             const spriteAnim = (0,_animation__WEBPACK_IMPORTED_MODULE_3__.buildChangingValuesAnimation)(spriteRefs);
-            svg += `<use id="player-${player.id}" x="${-_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PLAYER_SPRITE_WIDTH / 2}" y="${-_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PLAYER_SPRITE_HEIGHT + _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PLAYER_SPRITE_WIDTH}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PLAYER_SPRITE_HEIGHT}" href="${(_a = spriteRefs[0]) !== null && _a !== void 0 ? _a : getDefaultPlayerRef(player.id)}" opacity="${(_b = opacities[0]) !== null && _b !== void 0 ? _b : '0'}" transform="translate(${(_c = positions[0]) !== null && _c !== void 0 ? _c : '0 0'})">`;
+            svg += `<use id="player-${player.id}" x="${-_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PLAYER_SPRITE_WIDTH / 2}" y="${-_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PLAYER_SPRITE_HEIGHT + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PLAYER_SPRITE_WIDTH}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PLAYER_SPRITE_HEIGHT}" href="${(_a = spriteRefs[0]) !== null && _a !== void 0 ? _a : getDefaultPlayerRef(player.id)}" opacity="${(_b = opacities[0]) !== null && _b !== void 0 ? _b : '0'}" transform="translate(${(_c = positions[0]) !== null && _c !== void 0 ? _c : '0 0'})">`;
             if (spriteAnim) {
                 svg += `<animate attributeName="href" calcMode="discrete" dur="${totalDurationMs}ms" repeatCount="indefinite" keyTimes="${spriteAnim.keyTimes}" values="${spriteAnim.values}"/>`;
             }
@@ -2323,50 +2325,50 @@ const createPlayerChains = (playerId, spriteSet) => {
     };
 };
 const PLAYER_SPRITE_CHAINS = {
-    1: createPlayerChains(1, _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.player),
-    2: createPlayerChains(2, _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.plunderBomber)
+    1: createPlayerChains(1, _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.player),
+    2: createPlayerChains(2, _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.plunderBomber)
 };
 const PLAYER_DEATH_SPRITE_CHAINS = {
     1: [
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.player.death0,
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.player.death1,
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.player.death2,
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.player.death3,
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.player.death4
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.player.death0,
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.player.death1,
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.player.death2,
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.player.death3,
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.player.death4
     ].map((frame, i) => ({ id: `bm-player-1-death-${i}`, frame })),
     2: [
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.plunderBomber.death0,
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.plunderBomber.death1,
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.plunderBomber.death2,
-        _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.plunderBomber.death3
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.plunderBomber.death0,
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.plunderBomber.death1,
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.plunderBomber.death2,
+        _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.plunderBomber.death3
     ].map((frame, i) => ({ id: `bm-player-2-death-${i}`, frame }))
 };
-const BOMB_SPRITE = { id: 'bm-bomb', frame: _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.explosions.bombs.fuse0 };
+const BOMB_SPRITE = { id: 'bm-bomb', frame: _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.explosions.bombs.fuse0 };
 const BLAST_SPRITES = {
-    center: _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.explosions.blast.center.map((frame, index) => ({
+    center: _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.explosions.blast.center.map((frame, index) => ({
         id: `bm-blast-center-${index}`,
         frame,
         preserveAspectRatio: 'none'
     })),
-    segment: _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.explosions.blast.segment.map((frame, index) => ({
+    segment: _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.explosions.blast.segment.map((frame, index) => ({
         id: `bm-blast-segment-${index}`,
         frame,
         preserveAspectRatio: 'none'
     })),
-    end: _core_constants__WEBPACK_IMPORTED_MODULE_2__.SPRITE_SETS.explosions.blast.end.map((frame, index) => ({
+    end: _core_constants__WEBPACK_IMPORTED_MODULE_1__.SPRITE_SETS.explosions.blast.end.map((frame, index) => ({
         id: `bm-blast-end-${index}`,
         frame,
         preserveAspectRatio: 'none'
     }))
 };
-const ITEM_SPRITES = Object.fromEntries(Object.entries(_entities_item__WEBPACK_IMPORTED_MODULE_1__.ITEM_DEFINITIONS).map(([type, definition]) => [type, { id: `bm-item-${type}`, frame: definition.sprite }]));
-const toSvgX = (gx) => gx * (_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_2__.GAP_SIZE);
-const toSvgY = (gy) => gy * (_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_2__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.HEADER_HEIGHT;
+const ITEM_SPRITES = Object.fromEntries(Object.entries(_entities_item__WEBPACK_IMPORTED_MODULE_2__.ITEM_DEFINITIONS).map(([type, definition]) => [type, { id: `bm-item-${type}`, frame: definition.sprite }]));
+const toSvgX = (gx) => gx * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+const toSvgY = (gy) => gy * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.HEADER_HEIGHT;
 const generateAnimatedSVG = (store) => {
-    const svgWidth = _core_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH * (_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_2__.GAP_SIZE);
-    const svgHeight = _core_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT * (_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_2__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.HEADER_HEIGHT;
+    const svgWidth = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+    const svgHeight = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.HEADER_HEIGHT;
     const totalFrames = store.gameHistory.length;
-    const totalDurationMs = Math.max((totalFrames * _core_constants__WEBPACK_IMPORTED_MODULE_2__.DELTA_TIME) / _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.DURATION_SPEED_DIVISOR, _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.MIN_DURATION_MS);
+    const totalDurationMs = Math.max((totalFrames * _core_constants__WEBPACK_IMPORTED_MODULE_1__.DELTA_TIME) / _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.DURATION_SPEED_DIVISOR, _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.MIN_DURATION_MS);
     const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store);
     const cellEventsByPosition = indexCellEvents(store.cellEvents);
     const context = { store, theme, cellEventsByPosition, totalDurationMs };
@@ -2435,7 +2437,7 @@ const getInitialBombRenderPosition = (bomb) => {
     if (!bomb.kickDirection)
         return centerPosition(bomb.x, bomb.y);
     const source = getKickSourcePosition(bomb, bomb.kickDirection);
-    if (source.x < 0 || source.x >= _core_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH || source.y < 0 || source.y >= _core_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT) {
+    if (source.x < 0 || source.x >= _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH || source.y < 0 || source.y >= _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT) {
         return centerPosition(bomb.x, bomb.y);
     }
     return centerPosition(source.x, source.y);
@@ -2493,7 +2495,7 @@ const getPlayerTimeline = (store, playerId) => {
         if (player.alive) {
             const moving = Boolean(previousPlayer && (previousPlayer.x !== player.x || previousPlayer.y !== player.y));
             const cycle = PLAYER_SPRITE_CHAINS[playerId][player.direction];
-            const spriteIndex = moving ? Math.floor(frameIndex / _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PLAYER_SPRITE_FRAME_INTERVAL) % cycle.length : 0;
+            const spriteIndex = moving ? Math.floor(frameIndex / _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PLAYER_SPRITE_FRAME_INTERVAL) % cycle.length : 0;
             opacities.push('1');
             spriteRefs.push(toSpriteRef(cycle[spriteIndex]));
             previousPlayer = player;
@@ -2523,20 +2525,20 @@ const getPlayerDeathFrameIndex = (store, playerId) => {
     }
     return null;
 };
-const centerPosition = (x, y) => `${toSvgX(x) + _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2} ${toSvgY(y) + _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2}`;
+const centerPosition = (x, y) => `${toSvgX(x) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2} ${toSvgY(y) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2}`;
 const renderBombPulse = (positions, totalDurationMs) => {
-    const scaledWidth = Number((_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_WIDTH * _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_PULSE_SCALE).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PRECISION));
-    const scaledHeight = Number((_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_HEIGHT * _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_PULSE_SCALE).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PRECISION));
-    const scaledX = Number((_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_X - (scaledWidth - _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_WIDTH) / 2).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PRECISION));
-    const scaledY = Number((_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_Y - (scaledHeight - _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_HEIGHT) / 2).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PRECISION));
+    const scaledWidth = Number((_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_WIDTH * _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_PULSE_SCALE).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PRECISION));
+    const scaledHeight = Number((_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_HEIGHT * _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_PULSE_SCALE).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PRECISION));
+    const scaledX = Number((_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_X - (scaledWidth - _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_WIDTH) / 2).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PRECISION));
+    const scaledY = Number((_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_Y - (scaledHeight - _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_HEIGHT) / 2).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PRECISION));
     const ref = getDefaultBombRef();
-    const baseX = getOffsetPositionAnimation(positions, _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_X, 'x');
-    const baseY = getOffsetPositionAnimation(positions, _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_Y, 'y');
+    const baseX = getOffsetPositionAnimation(positions, _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_X, 'x');
+    const baseY = getOffsetPositionAnimation(positions, _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_Y, 'y');
     const scaledXAnim = getOffsetPositionAnimation(positions, scaledX, 'x');
     const scaledYAnim = getOffsetPositionAnimation(positions, scaledY, 'y');
     return [
-        `<use x="${baseX.initial}" y="${baseY.initial}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_WIDTH}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_HEIGHT}" href="${ref}" opacity="1">${renderPositionAttributeAnimation('x', baseX.animation, totalDurationMs)}${renderPositionAttributeAnimation('y', baseY.animation, totalDurationMs)}<animate attributeName="opacity" calcMode="discrete" dur="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_PULSE_DURATION_MS}ms" repeatCount="indefinite" keyTimes="0;0.5;1" values="1;0;1"/></use>`,
-        `<use x="${scaledXAnim.initial}" y="${scaledYAnim.initial}" width="${scaledWidth}" height="${scaledHeight}" href="${ref}" opacity="0">${renderPositionAttributeAnimation('x', scaledXAnim.animation, totalDurationMs)}${renderPositionAttributeAnimation('y', scaledYAnim.animation, totalDurationMs)}<animate attributeName="opacity" calcMode="discrete" dur="${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BOMB_PULSE_DURATION_MS}ms" repeatCount="indefinite" keyTimes="0;0.5;1" values="0;1;0"/></use>`
+        `<use x="${baseX.initial}" y="${baseY.initial}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_WIDTH}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_HEIGHT}" href="${ref}" opacity="1">${renderPositionAttributeAnimation('x', baseX.animation, totalDurationMs)}${renderPositionAttributeAnimation('y', baseY.animation, totalDurationMs)}<animate attributeName="opacity" calcMode="discrete" dur="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_PULSE_DURATION_MS}ms" repeatCount="indefinite" keyTimes="0;0.5;1" values="1;0;1"/></use>`,
+        `<use x="${scaledXAnim.initial}" y="${scaledYAnim.initial}" width="${scaledWidth}" height="${scaledHeight}" href="${ref}" opacity="0">${renderPositionAttributeAnimation('x', scaledXAnim.animation, totalDurationMs)}${renderPositionAttributeAnimation('y', scaledYAnim.animation, totalDurationMs)}<animate attributeName="opacity" calcMode="discrete" dur="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BOMB_PULSE_DURATION_MS}ms" repeatCount="indefinite" keyTimes="0;0.5;1" values="0;1;0"/></use>`
     ].join('');
 };
 const getOffsetPositionAnimation = (positions, offset, axis) => {
@@ -2545,7 +2547,7 @@ const getOffsetPositionAnimation = (positions, offset, axis) => {
     const values = positions.map((position) => {
         var _a;
         const coordinate = Number((_a = position.split(' ')[axisIndex]) !== null && _a !== void 0 ? _a : 0);
-        return `${Number((coordinate + offset).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.PRECISION))}`;
+        return `${Number((coordinate + offset).toFixed(_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.PRECISION))}`;
     });
     return {
         initial: (_a = values[0]) !== null && _a !== void 0 ? _a : `${offset}`,
@@ -2563,8 +2565,8 @@ const renderExplosionAnimation = (store, explosion, totalDurationMs) => {
         const endFrameExclusive = startFrame + 1;
         if (startFrame >= totalFrames)
             break;
-        const opacityAnim = (0,_animation__WEBPACK_IMPORTED_MODULE_3__.buildValueWindowAnimation)(totalFrames, startFrame, Math.min(endFrameExclusive, totalFrames), `${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.EXPLOSION_OPACITY}`);
-        const initialOpacity = startFrame === 0 ? `${_core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.EXPLOSION_OPACITY}` : '0';
+        const opacityAnim = (0,_animation__WEBPACK_IMPORTED_MODULE_3__.buildValueWindowAnimation)(totalFrames, startFrame, Math.min(endFrameExclusive, totalFrames), `${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.EXPLOSION_OPACITY}`);
+        const initialOpacity = startFrame === 0 ? `${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.EXPLOSION_OPACITY}` : '0';
         svg += `<g opacity="${initialOpacity}">`;
         svg += `<use href="#${getExplosionShapeId(explosion, elapsedFrame)}" transform="translate(${centerPosition(explosion.x, explosion.y)})"/>`;
         if (opacityAnim) {
@@ -2616,13 +2618,13 @@ const renderBlastArmBody = (animation, direction, length) => {
     return `<use x="${placement.x}" y="${placement.y}" width="${placement.width}" height="${placement.height}" href="${getStaticBlastRef('segment', animation)}"${rotation}/>`;
 };
 const getBlastPlacement = (kind, x, y, direction) => {
-    const cellStep = _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_2__.GAP_SIZE;
+    const cellStep = _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE;
     const cellCenterX = x * cellStep;
     const cellCenterY = y * cellStep;
-    const cellX = cellCenterX - _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2;
-    const cellY = cellCenterY - _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2;
+    const cellX = cellCenterX - _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+    const cellY = cellCenterY - _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
     if (kind === 'center') {
-        const size = _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BLAST_THICKNESS;
+        const size = _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BLAST_THICKNESS;
         return {
             x: cellCenterX - size / 2,
             y: cellCenterY - size / 2,
@@ -2633,8 +2635,8 @@ const getBlastPlacement = (kind, x, y, direction) => {
             degrees: 0
         };
     }
-    const axisLength = _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE;
-    const thickness = _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BLAST_THICKNESS;
+    const axisLength = _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE;
+    const thickness = _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BLAST_THICKNESS;
     switch (direction) {
         case 'left':
             return {
@@ -2692,15 +2694,15 @@ const renderBlastCenterConnector = (animation, axis) => {
     return `<use x="${placement.x}" y="${placement.y}" width="${placement.width}" height="${placement.height}" href="${getStaticBlastRef('segment', animation)}"${rotation}/>`;
 };
 const getBlastCenterConnectorPlacement = (axis) => {
-    const cellX = -_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2;
-    const cellY = -_core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE / 2;
+    const cellX = -_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+    const cellY = -_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
     const cellCenterX = 0;
     const cellCenterY = 0;
-    const thickness = _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BLAST_THICKNESS;
+    const thickness = _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BLAST_THICKNESS;
     return {
         x: cellX,
         y: cellCenterY - thickness / 2,
-        width: _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE,
+        width: _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE,
         height: thickness,
         centerX: cellCenterX,
         centerY: cellCenterY,
@@ -2710,11 +2712,11 @@ const getBlastCenterConnectorPlacement = (axis) => {
 const getBlastArmBodyPlacement = (direction, length) => {
     const originCenterX = 0;
     const originCenterY = 0;
-    const cellStep = _core_constants__WEBPACK_IMPORTED_MODULE_2__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_2__.GAP_SIZE;
+    const cellStep = _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE;
     const end = getExplosionArmOffset(direction, length);
     const endCenterX = end.x * cellStep;
     const endCenterY = end.y * cellStep;
-    const thickness = _core_constants__WEBPACK_IMPORTED_MODULE_2__.SVG.BLAST_THICKNESS;
+    const thickness = _core_constants__WEBPACK_IMPORTED_MODULE_1__.SVG.BLAST_THICKNESS;
     if (direction === 'left' || direction === 'right') {
         const left = Math.min(originCenterX, endCenterX);
         const right = Math.max(originCenterX, endCenterX);
@@ -2833,13 +2835,13 @@ const Renderer = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/breakout/core/constants.ts"
+/***/ "./src/breakout/core/constants.ts":
 /*!****************************************!*\
   !*** ./src/breakout/core/constants.ts ***!
   \****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -2897,13 +2899,13 @@ const PADDLE_COLOR = '#ffffff';
 const BALL_SHADOW_COLOR = '#aaaaaa';
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/breakout/core/game.ts"
+/***/ "./src/breakout/core/game.ts":
 /*!***********************************!*\
   !*** ./src/breakout/core/game.ts ***!
   \***********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3182,13 +3184,13 @@ const BreakoutGame = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/breakout/core/store.ts"
+/***/ "./src/breakout/core/store.ts":
 /*!************************************!*\
   !*** ./src/breakout/core/store.ts ***!
   \************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3211,13 +3213,13 @@ const BreakoutStore = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/breakout/index.ts"
+/***/ "./src/breakout/index.ts":
 /*!*******************************!*\
   !*** ./src/breakout/index.ts ***!
   \*******************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3270,13 +3272,13 @@ class BreakoutRenderer {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/breakout/renderers/svg.ts"
+/***/ "./src/breakout/renderers/svg.ts":
 /*!***************************************!*\
   !*** ./src/breakout/renderers/svg.ts ***!
   \***************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3310,12 +3312,14 @@ const generateAnimatedSVG = (store) => {
 	</metadata>`;
     svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
     // ── Month labels ─────────────────────────────────────────────────────
-    let lastMonth = '';
-    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
-        if (store.monthLabels[x] !== lastMonth) {
-            const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
-            svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
-            lastMonth = store.monthLabels[x];
+    if (store.config.showMonthLabels !== false) {
+        let lastMonth = '';
+        for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+            if (store.monthLabels[x] !== lastMonth) {
+                const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+                svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
+                lastMonth = store.monthLabels[x];
+            }
         }
     }
     // ── Grid cells (bricks) ───────────────────────────────────────────────
@@ -3437,13 +3441,13 @@ const buildChangingValuesAnimation = (store, values) => {
 const BreakoutSVG = { generateAnimatedSVG };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/galaga/core/constants.ts"
+/***/ "./src/galaga/core/constants.ts":
 /*!**************************************!*\
   !*** ./src/galaga/core/constants.ts ***!
   \**************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3497,13 +3501,13 @@ const BULLET_IMAGE_DATA = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAC
 const SHIP_IMAGE_DATA = 'data:image/png;base64,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';
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/galaga/core/game.ts"
+/***/ "./src/galaga/core/game.ts":
 /*!*********************************!*\
   !*** ./src/galaga/core/game.ts ***!
   \*********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3703,13 +3707,13 @@ const updateGame = (store) => {
 const GalagaGame = { startGame, stopGame };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/galaga/core/store.ts"
+/***/ "./src/galaga/core/store.ts":
 /*!**********************************!*\
   !*** ./src/galaga/core/store.ts ***!
   \**********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3734,13 +3738,13 @@ const GalagaStore = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/galaga/index.ts"
+/***/ "./src/galaga/index.ts":
 /*!*****************************!*\
   !*** ./src/galaga/index.ts ***!
   \*****************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3793,13 +3797,13 @@ class GalagaRenderer {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/galaga/renderers/svg.ts"
+/***/ "./src/galaga/renderers/svg.ts":
 /*!*************************************!*\
   !*** ./src/galaga/renderers/svg.ts ***!
   \*************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -3888,12 +3892,14 @@ const generateAnimatedSVG = (store) => {
         }
     }
     // ── Month labels ─────────────────────────────────────────────────────
-    let lastMonth = '';
-    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
-        if (store.monthLabels[x] !== lastMonth) {
-            const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
-            svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="#aaaaaa">${store.monthLabels[x]}</text>`;
-            lastMonth = store.monthLabels[x];
+    if (store.config.showMonthLabels !== false) {
+        let lastMonth = '';
+        for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+            if (store.monthLabels[x] !== lastMonth) {
+                const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+                svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="#aaaaaa">${store.monthLabels[x]}</text>`;
+                lastMonth = store.monthLabels[x];
+            }
         }
     }
     // ── Grid cells (enemy formation) ─────────────────────────────────────
@@ -4088,13 +4094,13 @@ const buildChangingValuesAnimation = (store, values) => {
 const GalagaSVG = { generateAnimatedSVG };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/minesweeper/core/constants.ts"
+/***/ "./src/minesweeper/core/constants.ts":
 /*!*******************************************!*\
   !*** ./src/minesweeper/core/constants.ts ***!
   \*******************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -4127,13 +4133,13 @@ const MINESWEEPER_MS_PER_FRAME = _shared_constants__WEBPACK_IMPORTED_MODULE_0__.
 const MINESWEEPER_MAX_MOVE_FRAMES = Math.max(1, Math.ceil(MINESWEEPER_MAX_MOVE_DURATION_MS / MINESWEEPER_MS_PER_FRAME));
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/minesweeper/core/game.ts"
+/***/ "./src/minesweeper/core/game.ts":
 /*!**************************************!*\
   !*** ./src/minesweeper/core/game.ts ***!
   \**************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -4462,13 +4468,13 @@ const Game = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/minesweeper/core/store.ts"
+/***/ "./src/minesweeper/core/store.ts":
 /*!***************************************!*\
   !*** ./src/minesweeper/core/store.ts ***!
   \***************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -4492,13 +4498,13 @@ const Store = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/minesweeper/index.ts"
+/***/ "./src/minesweeper/index.ts":
 /*!**********************************!*\
   !*** ./src/minesweeper/index.ts ***!
   \**********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -4551,13 +4557,13 @@ class MinesweeperRenderer {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/minesweeper/renderers/svg.ts"
+/***/ "./src/minesweeper/renderers/svg.ts":
 /*!******************************************!*\
   !*** ./src/minesweeper/renderers/svg.ts ***!
   \******************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -4713,6 +4719,8 @@ const buildCursorTransformSeries = (store) => {
 };
 const buildMonthLabels = (store) => {
     var _a;
+    if (store.config.showMonthLabels === false)
+        return '';
     let labels = '';
     let last = '';
     const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store);
@@ -4839,13 +4847,13 @@ const Renderer = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/core/constants.ts"
+/***/ "./src/pacman/core/constants.ts":
 /*!**************************************!*\
   !*** ./src/pacman/core/constants.ts ***!
   \**************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -4949,13 +4957,13 @@ const hasWall = (x, y, direction) => {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/core/game.ts"
+/***/ "./src/pacman/core/game.ts":
 /*!*********************************!*\
   !*** ./src/pacman/core/game.ts ***!
   \*********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -5063,6 +5071,19 @@ const placeGhosts = (store) => {
 const stopGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
     clearInterval(store.gameInterval);
 });
+const finalizeGame = (store) => {
+    var _a;
+    const svg = _renderers_svg__WEBPACK_IMPORTED_MODULE_3__.SVG.generateAnimatedSVG(store);
+    store.config.svgCallback(svg);
+    if (store.config.gameStatsCallback) {
+        store.config.gameStatsCallback({
+            totalScore: store.pacman.totalPoints,
+            steps: store.aliveSteps,
+            ghostsEaten: (_a = store.pacman.ghostsEaten) !== null && _a !== void 0 ? _a : 0
+        });
+    }
+    store.config.gameOverCallback();
+};
 const startGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
     store.frameCount = 0;
     store.aliveSteps = 0;
@@ -5081,6 +5102,10 @@ const startGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
     while (remainingCells() && store.gameHistory.length < MAX_FRAMES) {
         yield updateGame(store);
     }
+    if (remainingCells()) {
+        finalizeGame(store);
+        return;
+    }
     yield updateGame(store);
 });
 /* ---------- utilities ---------- */
@@ -5089,6 +5114,7 @@ const resetPacman = (store) => {
     store.pacman.y = 7;
     store.pacman.direction = 'right';
     store.pacman.recentPositions = [];
+    store.pacman.target = undefined;
 };
 const determineGhostName = (index) => {
     const names = ['blinky', 'inky', 'pinky', 'clyde'];
@@ -5096,7 +5122,6 @@ const determineGhostName = (index) => {
 };
 /* ---------- update per frame ---------- */
 const updateGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
     store.frameCount++;
     if (store.pacman.deadRemainingDuration > 0) {
         store.pacman.deadRemainingDuration--;
@@ -5139,16 +5164,7 @@ const updateGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
     });
     const remaining = store.grid.some((row) => row.some((c) => c.commitsCount > 0));
     if (!remaining) {
-        const svg = _renderers_svg__WEBPACK_IMPORTED_MODULE_3__.SVG.generateAnimatedSVG(store);
-        store.config.svgCallback(svg);
-        if (store.config.gameStatsCallback) {
-            store.config.gameStatsCallback({
-                totalScore: store.pacman.totalPoints,
-                steps: store.aliveSteps,
-                ghostsEaten: (_a = store.pacman.ghostsEaten) !== null && _a !== void 0 ? _a : 0
-            });
-        }
-        store.config.gameOverCallback();
+        finalizeGame(store);
         return;
     }
     _movement_pacman_movement__WEBPACK_IMPORTED_MODULE_2__.PacmanMovement.movePacman(store);
@@ -5161,13 +5177,6 @@ const updateGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
     if (store.pacman.deadRemainingDuration === 0) {
         store.aliveSteps++;
     }
-    if (store.config.gameStatsCallback) {
-        store.config.gameStatsCallback({
-            totalScore: store.pacman.totalPoints,
-            steps: store.aliveSteps,
-            ghostsEaten: (_b = store.pacman.ghostsEaten) !== null && _b !== void 0 ? _b : 0
-        });
-    }
     pushSnapshot(store);
 });
 /* ---------- snapshot helper ---------- */
@@ -5179,14 +5188,14 @@ const pushSnapshot = (store) => {
 };
 /* ---------- collisions & house ---------- */
 const checkCollisions = (store) => {
+    var _a;
     if (store.pacman.deadRemainingDuration)
         return;
-    store.ghosts.forEach((ghost) => {
-        var _a;
+    for (const ghost of store.ghosts) {
         if (ghost.name === 'eyes')
-            return;
+            continue;
         if (ghost.x === store.pacman.x && ghost.y === store.pacman.y) {
-            if (store.pacman.powerupRemainingDuration && ghost.scared) {
+            if (ghost.scared) {
                 ghost.originalName = ghost.name;
                 ghost.name = 'eyes';
                 ghost.scared = false;
@@ -5202,9 +5211,10 @@ const checkCollisions = (store) => {
                 if (store.pacman.deadRemainingDuration === 0) {
                     store.pacman.deadRemainingDuration = _constants__WEBPACK_IMPORTED_MODULE_4__.PACMAN_DEATH_DURATION;
                 }
+                return;
             }
         }
-    });
+    }
 };
 const releaseGhostFromHouse = (store, name) => {
     const ghost = store.ghosts.find((g) => g.name === name && g.inHouse);
@@ -5220,13 +5230,13 @@ const Game = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/core/store.ts"
+/***/ "./src/pacman/core/store.ts":
 /*!**********************************!*\
   !*** ./src/pacman/core/store.ts ***!
   \**********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -5260,13 +5270,13 @@ const Store = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/index.ts"
+/***/ "./src/pacman/index.ts":
 /*!*****************************!*\
   !*** ./src/pacman/index.ts ***!
   \*****************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -5327,13 +5337,13 @@ class PacmanRenderer {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/movement/ghosts-movement.ts"
+/***/ "./src/pacman/movement/ghosts-movement.ts":
 /*!************************************************!*\
   !*** ./src/pacman/movement/ghosts-movement.ts ***!
   \************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -5704,12 +5714,13 @@ const BFSTargetLocation = (startX, startY, targetX, targetY, currentDirection) =
     // If we are already on target, no need to move
     if (startX === targetX && startY === targetY)
         return null;
-    const queue = [{ x: startX, y: startY, path: [], direction: currentDirection || 'right' }];
+    const queue = [{ x: startX, y: startY, direction: currentDirection || 'right' }];
+    let queueHead = 0;
     const visited = new Set();
     visited.add(`${startX},${startY}`);
-    while (queue.length > 0) {
-        const current = queue.shift();
-        const { x, y, path, direction } = current;
+    while (queueHead < queue.length) {
+        const current = queue[queueHead++];
+        const { x, y, firstStep, direction } = current;
         // Get valid moves
         const validMoves = _movement_utils__WEBPACK_IMPORTED_MODULE_1__.MovementUtils.getValidMoves(x, y);
         // Filter out moves that would reverse the current direction
@@ -5752,18 +5763,16 @@ const BFSTargetLocation = (startX, startY, targetX, targetY, currentDirection) =
                 y: newY,
                 pathDirection: newDirection
             };
-            const newPath = [...path, pathNode];
+            const nextFirstStep = firstStep !== null && firstStep !== void 0 ? firstStep : pathNode;
             if (newX === targetX && newY === targetY) {
                 // Return the first position of the path with the direction
-                return newPath.length > 0
-                    ? {
-                        x: newPath[0].x,
-                        y: newPath[0].y,
-                        direction: newPath[0].pathDirection
-                    }
-                    : null;
+                return {
+                    x: nextFirstStep.x,
+                    y: nextFirstStep.y,
+                    direction: nextFirstStep.pathDirection
+                };
             }
-            queue.push({ x: newX, y: newY, path: newPath, direction: newDirection });
+            queue.push({ x: newX, y: newY, firstStep: nextFirstStep, direction: newDirection });
         }
     }
     // If we don't find a path, check if there is any valid movement
@@ -5905,13 +5914,13 @@ const GhostsMovement = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/movement/movement-utils.ts"
+/***/ "./src/pacman/movement/movement-utils.ts":
 /*!***********************************************!*\
   !*** ./src/pacman/movement/movement-utils.ts ***!
   \***********************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -5978,13 +5987,13 @@ const MovementUtils = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/movement/pacman-movement.ts"
+/***/ "./src/pacman/movement/pacman-movement.ts":
 /*!************************************************!*\
   !*** ./src/pacman/movement/pacman-movement.ts ***!
   \************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -6232,7 +6241,6 @@ const checkAndEatPoint = (store) => {
     if (cell.level !== 'NONE') {
         store.pacman.totalPoints += cell.commitsCount;
         store.pacman.points++;
-        store.config.pointsIncreasedCallback(store.pacman.totalPoints);
         const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_2__.Utils.getCurrentTheme(store);
         if (cell.level === 'FOURTH_QUARTILE') {
             activatePowerUp(store);
@@ -6247,6 +6255,7 @@ const checkAndEatPoint = (store) => {
             y: store.pacman.y,
             color: cell.color
         });
+        store.config.pointsIncreasedCallback(store.pacman.totalPoints);
     }
 };
 const activatePowerUp = (store) => {
@@ -6261,13 +6270,13 @@ const PacmanMovement = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/renderers/renderer-units.ts"
+/***/ "./src/pacman/renderers/renderer-units.ts":
 /*!************************************************!*\
   !*** ./src/pacman/renderers/renderer-units.ts ***!
   \************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -6291,105 +6300,116 @@ const RendererUnits = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/renderers/svg.ts"
+/***/ "./src/pacman/renderers/svg.ts":
 /*!*************************************!*\
   !*** ./src/pacman/renderers/svg.ts ***!
   \*************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   SVG: () => (/* binding */ SVG)
 /* harmony export */ });
-/* harmony import */ var _core_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core/constants */ "./src/pacman/core/constants.ts");
-/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _core_constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/constants */ "./src/pacman/core/constants.ts");
 /* harmony import */ var _renderer_units__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./renderer-units */ "./src/pacman/renderers/renderer-units.ts");
 
 
 
 const SVG_KEY_TIMES_PRECISION = 4;
 const generateAnimatedSVG = (store) => {
-    const svgWidth = _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE);
-    const svgHeight = _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) + 30;
-    const totalDurationMs = store.gameHistory.length * _core_constants__WEBPACK_IMPORTED_MODULE_0__.DELTA_TIME;
+    const svgWidth = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+    const svgHeight = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + 30;
+    const totalDurationMs = store.gameHistory.length * _core_constants__WEBPACK_IMPORTED_MODULE_1__.DELTA_TIME;
+    const animationDurationMs = Math.max(totalDurationMs, _core_constants__WEBPACK_IMPORTED_MODULE_1__.DELTA_TIME);
+    const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store);
     let svg = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
     svg += `<desc>Generated with pacman-contribution-graph on ${new Date()}</desc>`;
     svg += `<metadata>
 		<info>
 			<frames>${store.gameHistory.length}</frames>
-			<frameRate>${1000 / _core_constants__WEBPACK_IMPORTED_MODULE_0__.DELTA_TIME}</frameRate>
+			<frameRate>${1000 / _core_constants__WEBPACK_IMPORTED_MODULE_1__.DELTA_TIME}</frameRate>
 			<durationMs>${totalDurationMs}</durationMs>
 			<generatedOn>${new Date().toISOString()}</generatedOn>
 		</info>
 	</metadata>`;
-    svg += `<rect width="100%" height="100%" fill="${_shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).gridBackground}"/>`;
-    svg += generateGhostsPredefinition();
+    svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
+    if (store.ghosts.length > 0) {
+        svg += generateGhostsPredefinition();
+    }
     let lastMonth = '';
-    for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH; y++) {
-        if (store.monthLabels[y] !== lastMonth) {
-            const xPos = y * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE / 2;
-            svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${_shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).textColor}">${store.monthLabels[y]}</text>`;
-            lastMonth = store.monthLabels[y];
+    if (store.config.showMonthLabels !== false) {
+        for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; y++) {
+            if (store.monthLabels[y] !== lastMonth) {
+                const xPos = y * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+                svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[y]}</text>`;
+                lastMonth = store.monthLabels[y];
+            }
         }
     }
     // Grid
-    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH; x++) {
-        for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT; y++) {
-            const cellX = x * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE);
-            const cellY = y * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) + 15;
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+        for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT; y++) {
+            const cellX = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+            const cellY = y * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + 15;
             const cellColorAnimation = getCellAnimationData(store, x, y);
-            svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}" rx="5" fill="${_shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).intensityColors[0]}">
-				<animate attributeName="fill" dur="${totalDurationMs}ms" repeatCount="indefinite" calcMode="discrete"
-					values="${cellColorAnimation.values}" 
-					keyTimes="${cellColorAnimation.keyTimes}"/>
-			</rect>`;
+            const cellColors = cellColorAnimation.values.split(';');
+            const isAnimated = cellColors.some((color) => color !== cellColors[0]);
+            const initialFill = isAnimated ? theme.intensityColors[0] : cellColors[0];
+            svg += `<rect id="c-${x}-${y}" x="${cellX}" y="${cellY}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" rx="5" fill="${initialFill}">`;
+            if (isAnimated) {
+                svg += `<animate attributeName="fill" dur="${animationDurationMs}ms" repeatCount="indefinite" calcMode="discrete"
+					values="${cellColorAnimation.values}"
+					keyTimes="${cellColorAnimation.keyTimes}"/>`;
+            }
+            svg += `</rect>`;
         }
     }
     // Horizontal walls
-    for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT; y++) {
+    for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT; y++) {
         let runStart = null;
-        for (let x = 0; x <= _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH; x++) {
-            let active = x < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH && _core_constants__WEBPACK_IMPORTED_MODULE_0__.WALLS.horizontal[x][y].active;
+        for (let x = 0; x <= _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+            let active = x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH && _core_constants__WEBPACK_IMPORTED_MODULE_1__.WALLS.horizontal[x][y].active;
             if (active && runStart === null) {
                 runStart = x;
             }
-            if ((!active || x === _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH) && runStart !== null) {
+            if ((!active || x === _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH) && runStart !== null) {
                 let length = x - runStart;
-                svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" y="${y * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE + 15}" width="${length * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE)}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" fill="${_shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).wallColor}"></rect>`;
+                svg += `<rect id="wh-${runStart}-${y}" x="${runStart * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE}" y="${y * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE + 15}" width="${length * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE)}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE}" fill="${theme.wallColor}"></rect>`;
                 runStart = null;
             }
         }
     }
     // Vertical walls
-    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH; x++) {
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
         let runStart = null;
-        for (let y = 0; y <= _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT; y++) {
-            let active = y < _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT && _core_constants__WEBPACK_IMPORTED_MODULE_0__.WALLS.vertical[x][y].active;
+        for (let y = 0; y <= _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT; y++) {
+            let active = y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT && _core_constants__WEBPACK_IMPORTED_MODULE_1__.WALLS.vertical[x][y].active;
             if (active && runStart === null) {
                 runStart = y;
             }
-            if ((!active || y === _core_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT) && runStart !== null) {
+            if ((!active || y === _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT) && runStart !== null) {
                 let length = y - runStart;
-                svg += `<rect id="wv-${x}-${runStart}" x="${x * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" y="${runStart * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE + 15}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE}" height="${length * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE)}" fill="${_shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).wallColor}"></rect>`;
+                svg += `<rect id="wv-${x}-${runStart}" x="${x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE}" y="${runStart * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) - _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE + 15}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE}" height="${length * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE)}" fill="${theme.wallColor}"></rect>`;
                 runStart = null;
             }
         }
     }
     // Pacman
-    const pacmanColorAnimation = generateChangingValuesAnimation(store, store.gameHistory.map((el) => _renderer_units__WEBPACK_IMPORTED_MODULE_2__.RendererUnits.generatePacManColors(el.pacman)));
-    const pacmanPositionAnimation = generateChangingValuesAnimation(store, generatePacManPositions(store));
-    const pacmanRotationAnimation = generateChangingValuesAnimation(store, generatePacManRotations(store));
-    svg += `<path id="pacman" d="${generatePacManPath(0.55)}" fill="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.PACMAN_COLOR}">
-		<animate attributeName="fill" dur="${totalDurationMs}ms" repeatCount="indefinite"
+    const pacmanColorAnimation = generateChangingValuesAnimation(store, store.gameHistory.map((el) => _renderer_units__WEBPACK_IMPORTED_MODULE_2__.RendererUnits.generatePacManColors(el.pacman)), _renderer_units__WEBPACK_IMPORTED_MODULE_2__.RendererUnits.generatePacManColors(store.pacman));
+    const pacmanPositionAnimation = generateChangingValuesAnimation(store, generatePacManPositions(store), generatePacManPosition(store.pacman));
+    const pacmanRotationAnimation = generateChangingValuesAnimation(store, generatePacManRotations(store), generatePacManRotation(store.pacman.direction));
+    svg += `<path id="pacman" d="${generatePacManPath(0.55)}" fill="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.PACMAN_COLOR}">
+		<animate attributeName="fill" dur="${animationDurationMs}ms" repeatCount="indefinite"
 			keyTimes="${pacmanColorAnimation.keyTimes}"
 			values="${pacmanColorAnimation.values}"/>
-		<animateTransform attributeName="transform" type="translate" dur="${totalDurationMs}ms" repeatCount="indefinite"
+		<animateTransform attributeName="transform" type="translate" dur="${animationDurationMs}ms" repeatCount="indefinite"
 			keyTimes="${pacmanPositionAnimation.keyTimes}"
 			values="${pacmanPositionAnimation.values}"
 			additive="sum"/>
-		<animateTransform attributeName="transform" type="rotate" dur="${totalDurationMs}ms" repeatCount="indefinite"
+		<animateTransform attributeName="transform" type="rotate" dur="${animationDurationMs}ms" repeatCount="indefinite"
 			keyTimes="${pacmanRotationAnimation.keyTimes}"
 			values="${pacmanRotationAnimation.values}"
 			calcMode="discrete"
@@ -6398,24 +6418,24 @@ const generateAnimatedSVG = (store) => {
 			values="${generatePacManPath(0.55)};${generatePacManPath(0.05)};${generatePacManPath(0.55)}"/>
 	</path>`;
     store.ghosts.forEach((ghost, index) => {
-        const ghostPositionAnimation = generateChangingValuesAnimation(store, generateGhostPositions(store, index));
+        const ghostPositionAnimation = generateChangingValuesAnimation(store, generateGhostPositions(store, index), generateGhostPosition(ghost));
         svg += `<g id="ghost${index}" transform="translate(0,0)">
 			<animateTransform attributeName="transform" type="translate" 
-				dur="${totalDurationMs}ms" repeatCount="indefinite"
+				dur="${animationDurationMs}ms" repeatCount="indefinite"
 				keyTimes="${ghostPositionAnimation.keyTimes}"
 				values="${ghostPositionAnimation.values}"
 				additive="replace"/>`;
         const stateChanges = mapGhostStateChanges(store, index);
         for (const [state, keyframes] of Object.entries(stateChanges)) {
-            if (keyframes.length === 0)
+            if (keyframes.length === 0 || !keyframes.some((keyframe) => keyframe.visible))
                 continue;
             const href = `#ghost-${state}`;
             const keyTimes = keyframes.map((kf) => kf.time.toFixed(SVG_KEY_TIMES_PRECISION)).join(';');
             const values = keyframes.map((kf) => (kf.visible ? 'visible' : 'hidden')).join(';');
             const initialVisibility = keyframes[0].visible ? 'visible' : 'hidden';
-            svg += `<use href="${href}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}" visibility="${initialVisibility}">
+            svg += `<use href="${href}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" visibility="${initialVisibility}">
 				<animate attributeName="visibility" 
-					dur="${totalDurationMs}ms" repeatCount="indefinite"
+					dur="${animationDurationMs}ms" repeatCount="indefinite"
 					keyTimes="${keyTimes}"
 					values="${values}" />
 			</use>`;
@@ -6469,7 +6489,7 @@ function mapGhostStateChanges(store, ghostIndex) {
         if (ghostIndex >= state.ghosts.length)
             return;
         const ghost = state.ghosts[ghostIndex];
-        const currentTime = frameIndex / (store.gameHistory.length - 1);
+        const currentTime = frameIndex / Math.max(store.gameHistory.length - 1, 1);
         const currentState = ghost.scared
             ? 'scared'
             : ghost.name === 'eyes'
@@ -6496,7 +6516,7 @@ function mapGhostStateChanges(store, ghostIndex) {
     return stateChanges;
 }
 const generatePacManPath = (mouthAngle) => {
-    const radius = _core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE / 2;
+    const radius = _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
     const startAngle = mouthAngle;
     const endAngle = 2 * Math.PI - mouthAngle;
     return `M ${radius},${radius}
@@ -6504,41 +6524,38 @@ const generatePacManPath = (mouthAngle) => {
             A ${radius},${radius} 0 1,1 ${radius + radius * Math.cos(endAngle)},${radius + radius * Math.sin(endAngle)}
             Z`;
 };
-const generatePacManPositions = (store) => {
-    return store.gameHistory.map((state) => {
-        const x = state.pacman.x * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE);
-        const y = state.pacman.y * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) + 15;
-        return `${x},${y}`;
-    });
+const generatePacManPosition = (pacman) => {
+    const x = pacman.x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+    const y = pacman.y * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + 15;
+    return `${x},${y}`;
+};
+const generatePacManPositions = (store) => store.gameHistory.map((state) => generatePacManPosition(state.pacman));
+const generatePacManRotation = (direction) => {
+    const pivot = _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+    switch (direction) {
+        case 'right':
+            return `0 ${pivot} ${pivot}`;
+        case 'left':
+            return `180 ${pivot} ${pivot}`;
+        case 'up':
+            return `270 ${pivot} ${pivot}`;
+        case 'down':
+            return `90 ${pivot} ${pivot}`;
+    }
 };
 const generatePacManRotations = (store) => {
-    const pivit = _core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE / 2;
-    const directionToRotation = (direction) => {
-        switch (direction) {
-            case 'right':
-                return `0 ${pivit} ${pivit}`;
-            case 'left':
-                return `180 ${pivit} ${pivit}`;
-            case 'up':
-                return `270 ${pivit} ${pivit}`;
-            case 'down':
-                return `90 ${pivit} ${pivit}`;
-            default:
-                return `0 ${pivit} ${pivit}`;
-        }
-    };
     // The direction stored in snapshot[i+1] is the direction taken during the slide
     // that begins at keyframe i, so shift one frame forward to keep it in sync.
     return store.gameHistory.map((_, i) => {
         const lookaheadIndex = Math.min(i + 1, store.gameHistory.length - 1);
-        return directionToRotation(store.gameHistory[lookaheadIndex].pacman.direction);
+        return generatePacManRotation(store.gameHistory[lookaheadIndex].pacman.direction);
     });
 };
 /** Build cell color animation data from the sparse cellEvents list. */
 const getCellAnimationData = (store, x, y) => {
     var _a, _b;
     const totalFrames = store.gameHistory.length;
-    const initialColor = (_b = (_a = store.initialColors[x]) === null || _a === void 0 ? void 0 : _a[y]) !== null && _b !== void 0 ? _b : _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.getCurrentTheme(store).intensityColors[0];
+    const initialColor = (_b = (_a = store.initialColors[x]) === null || _a === void 0 ? void 0 : _a[y]) !== null && _b !== void 0 ? _b : _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store).intensityColors[0];
     const events = store.cellEvents.filter((e) => e.x === x && e.y === y);
     if (events.length === 0) {
         return { keyTimes: '0;1', values: `${initialColor};${initialColor}` };
@@ -6561,31 +6578,26 @@ const getCellAnimationData = (store, x, y) => {
     }
     return { keyTimes: kTimes.join(';'), values: kValues.join(';') };
 };
-const generateGhostPositions = (store, ghostIndex) => {
-    return store.gameHistory.map((state) => {
-        var _a, _b;
-        if (ghostIndex >= state.ghosts.length) {
-            return '0,0'; // Default value for cases where the ghost does not exist
-        }
-        const ghost = state.ghosts[ghostIndex];
-        const fx = ghost.x + ((_a = ghost.subX) !== null && _a !== void 0 ? _a : 0);
-        const fy = ghost.y + ((_b = ghost.subY) !== null && _b !== void 0 ? _b : 0);
-        const x = fx * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE);
-        const y = fy * (_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE) + 15;
-        return `${x},${y}`;
-    });
+const generateGhostPosition = (ghost) => {
+    var _a, _b;
+    const fx = ghost.x + ((_a = ghost.subX) !== null && _a !== void 0 ? _a : 0);
+    const fy = ghost.y + ((_b = ghost.subY) !== null && _b !== void 0 ? _b : 0);
+    const x = fx * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+    const y = fy * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + 15;
+    return `${x},${y}`;
 };
+const generateGhostPositions = (store, ghostIndex) => store.gameHistory.map((state) => (ghostIndex < state.ghosts.length ? generateGhostPosition(state.ghosts[ghostIndex]) : '0,0'));
 const generateGhostsPredefinition = () => {
     let defs = `<defs>`;
     // For every regular ghost
     ['blinky', 'inky', 'pinky', 'clyde'].forEach((ghostName) => {
         // For each direction
         ['up', 'down', 'left', 'right'].forEach((direction) => {
-            const ghostObj = _core_constants__WEBPACK_IMPORTED_MODULE_0__.GHOSTS[ghostName];
+            const ghostObj = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GHOSTS[ghostName];
             if (direction in ghostObj) {
                 defs += `
-                <symbol id="ghost-${ghostName}-${direction}" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}">
-                    <image href="${ghostObj[direction]}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}"/>
+                <symbol id="ghost-${ghostName}-${direction}" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}">
+                    <image href="${ghostObj[direction]}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}"/>
                 </symbol>
                 `;
             }
@@ -6593,16 +6605,16 @@ const generateGhostsPredefinition = () => {
     });
     // Add the scared ghost
     defs += `
-    <symbol id="ghost-scared" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}">
-        <image href="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.GHOSTS['scared'].imgDate}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}"/>
+    <symbol id="ghost-scared" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}">
+        <image href="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.GHOSTS['scared'].imgDate}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}"/>
     </symbol>`;
     // Add ghost eyes (for each direction)
     ['up', 'down', 'left', 'right'].forEach((direction) => {
-        if (_core_constants__WEBPACK_IMPORTED_MODULE_0__.GHOSTS['eyes'] && direction in _core_constants__WEBPACK_IMPORTED_MODULE_0__.GHOSTS['eyes']) {
-            const eyesObj = _core_constants__WEBPACK_IMPORTED_MODULE_0__.GHOSTS['eyes'];
+        if (_core_constants__WEBPACK_IMPORTED_MODULE_1__.GHOSTS['eyes'] && direction in _core_constants__WEBPACK_IMPORTED_MODULE_1__.GHOSTS['eyes']) {
+            const eyesObj = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GHOSTS['eyes'];
             defs += `
-            <symbol id="ghost-eyes-${direction}" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}">
-                <image href="${eyesObj[direction]}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}"/>
+            <symbol id="ghost-eyes-${direction}" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}">
+                <image href="${eyesObj[direction]}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}"/>
             </symbol>
             `;
         }
@@ -6610,8 +6622,8 @@ const generateGhostsPredefinition = () => {
             // Fallback if direction is not set
             console.warn(`Imagem para eyes-${direction} não encontrada, usando placeholder`);
             defs += `
-            <symbol id="ghost-eyes-${direction}" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE}">
-                <circle cx="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE / 2}" cy="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE / 2}" r="${_core_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE / 3}" fill="white"/>
+            <symbol id="ghost-eyes-${direction}" viewBox="0 0 ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE} ${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}">
+                <circle cx="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2}" cy="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2}" r="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 3}" fill="white"/>
             </symbol>
             `;
         }
@@ -6619,13 +6631,15 @@ const generateGhostsPredefinition = () => {
     defs += `</defs>`;
     return defs;
 };
-const generateChangingValuesAnimation = (store, changingValues) => {
+const generateChangingValuesAnimation = (store, changingValues, fallbackValue) => {
+    var _a;
     if (store.gameHistory.length !== changingValues.length) {
         throw new Error(`The amount of values (${changingValues.length}) does not match the size of the game history (${store.gameHistory.length})`);
     }
     const totalFrames = store.gameHistory.length;
-    if (totalFrames === 0) {
-        return { keyTimes: '0;1', values: changingValues[0] || '#000;#000' };
+    if (totalFrames <= 1) {
+        const value = (_a = changingValues[0]) !== null && _a !== void 0 ? _a : fallbackValue;
+        return { keyTimes: '0;1', values: `${value};${value}` };
     }
     let keyTimes = [];
     let values = [];
@@ -6667,13 +6681,13 @@ const SVG = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/types.ts"
+/***/ "./src/pacman/types.ts":
 /*!*****************************!*\
   !*** ./src/pacman/types.ts ***!
   \*****************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -6687,13 +6701,13 @@ var PlayerStyle;
 })(PlayerStyle || (PlayerStyle = {}));
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/pacman/utils/grid.ts"
+/***/ "./src/pacman/utils/grid.ts":
 /*!**********************************!*\
   !*** ./src/pacman/utils/grid.ts ***!
   \**********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -6819,13 +6833,13 @@ const Grid = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/puzzle-bobble/core/constants.ts"
+/***/ "./src/puzzle-bobble/core/constants.ts":
 /*!*********************************************!*\
   !*** ./src/puzzle-bobble/core/constants.ts ***!
   \*********************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -6890,13 +6904,13 @@ const PB_COLORS = [
 ];
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/puzzle-bobble/core/game.ts"
+/***/ "./src/puzzle-bobble/core/game.ts":
 /*!****************************************!*\
   !*** ./src/puzzle-bobble/core/game.ts ***!
   \****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -7439,13 +7453,13 @@ const updateGame = (store) => {
 const PuzzleBobbleGame = { startGame, stopGame };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/puzzle-bobble/core/store.ts"
+/***/ "./src/puzzle-bobble/core/store.ts":
 /*!*****************************************!*\
   !*** ./src/puzzle-bobble/core/store.ts ***!
   \*****************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -7471,13 +7485,13 @@ const PuzzleBobbleStore = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/puzzle-bobble/index.ts"
+/***/ "./src/puzzle-bobble/index.ts":
 /*!************************************!*\
   !*** ./src/puzzle-bobble/index.ts ***!
   \************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -7530,13 +7544,13 @@ class PuzzleBobbleRenderer {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/puzzle-bobble/renderers/svg.ts"
+/***/ "./src/puzzle-bobble/renderers/svg.ts":
 /*!********************************************!*\
   !*** ./src/puzzle-bobble/renderers/svg.ts ***!
   \********************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -7645,12 +7659,14 @@ const generateAnimatedSVG = (store) => {
     // Background
     svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
     // ── Month labels ─────────────────────────────────────────────────────
-    let lastMonth = '';
-    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
-        if (store.monthLabels[x] !== lastMonth) {
-            const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
-            svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
-            lastMonth = store.monthLabels[x];
+    if (store.config.showMonthLabels !== false) {
+        let lastMonth = '';
+        for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+            if (store.monthLabels[x] !== lastMonth) {
+                const xPos = x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2;
+                svg += `<text x="${xPos}" y="10" text-anchor="middle" font-size="10" fill="${theme.textColor}">${store.monthLabels[x]}</text>`;
+                lastMonth = store.monthLabels[x];
+            }
         }
     }
     // ── Grid cells as circles (bubbles) ──────────────────────────────────
@@ -7810,13 +7826,13 @@ const generateAnimatedSVG = (store) => {
 const PuzzleBobblesVG = { generateAnimatedSVG };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/arcade-renderer.ts"
+/***/ "./src/shared/arcade-renderer.ts":
 /*!***************************************!*\
   !*** ./src/shared/arcade-renderer.ts ***!
   \***************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -7894,13 +7910,13 @@ class ArcadeRenderer {
 }
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/constants.ts"
+/***/ "./src/shared/constants.ts":
 /*!*********************************!*\
   !*** ./src/shared/constants.ts ***!
   \*********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -7954,13 +7970,13 @@ const GAME_THEMES = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/providers/github-contributions.ts"
+/***/ "./src/shared/providers/github-contributions.ts":
 /*!******************************************************!*\
   !*** ./src/shared/providers/github-contributions.ts ***!
   \******************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8035,7 +8051,7 @@ const fetchGithubContributionsRest = (store) => __awaiter(void 0, void 0, void 0
     });
 });
 const fetchGithubContributionsGraphQL = (store) => __awaiter(void 0, void 0, void 0, function* () {
-    var _e;
+    var _e, _f, _g, _h, _j, _k;
     const query = /* GraphQL */ `
 		query ($login: String!) {
 			user(login: $login) {
@@ -8066,7 +8082,18 @@ const fetchGithubContributionsGraphQL = (store) => __awaiter(void 0, void 0, voi
         throw new Error(`GitHub GraphQL request failed: ${response.status} ${response.statusText}`);
     }
     const json = (yield response.json());
-    return json.data.user.contributionsCollection.contributionCalendar.weeks
+    if ((_f = json.errors) === null || _f === void 0 ? void 0 : _f.length) {
+        const details = json.errors
+            .map((error) => error.message)
+            .filter(Boolean)
+            .join('; ');
+        throw new Error(`GitHub GraphQL request failed${details ? `: ${details}` : ''}`);
+    }
+    const weeks = (_k = (_j = (_h = (_g = json.data) === null || _g === void 0 ? void 0 : _g.user) === null || _h === void 0 ? void 0 : _h.contributionsCollection) === null || _j === void 0 ? void 0 : _j.contributionCalendar) === null || _k === void 0 ? void 0 : _k.weeks;
+    if (!Array.isArray(weeks)) {
+        throw new Error(`GitHub GraphQL response did not include contribution data for "${store.config.username}"`);
+    }
+    return weeks
         .map((week) => week.contributionDays)
         .reduce((acc, days) => acc.concat(days), [])
         .map((d) => {
@@ -8082,13 +8109,13 @@ const fetchGithubContributionsGraphQL = (store) => __awaiter(void 0, void 0, voi
 });
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/providers/gitlab-contributions.ts"
+/***/ "./src/shared/providers/gitlab-contributions.ts":
 /*!******************************************************!*\
   !*** ./src/shared/providers/gitlab-contributions.ts ***!
   \******************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8128,13 +8155,13 @@ const fetchGitlabContributions = (store) => __awaiter(void 0, void 0, void 0, fu
 });
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/providers/providers.ts"
+/***/ "./src/shared/providers/providers.ts":
 /*!*******************************************!*\
   !*** ./src/shared/providers/providers.ts ***!
   \*******************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8177,13 +8204,13 @@ const Providers = {
 };
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/providers/scenarios.ts"
+/***/ "./src/shared/providers/scenarios.ts":
 /*!*******************************************!*\
   !*** ./src/shared/providers/scenarios.ts ***!
   \*******************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8351,13 +8378,13 @@ const toNonNegativeInteger = (value) => {
 const clampNumber = (value, min, max) => Math.max(min, Math.min(max, value));
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/types.ts"
+/***/ "./src/shared/types.ts":
 /*!*****************************!*\
   !*** ./src/shared/types.ts ***!
   \*****************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8401,13 +8428,13 @@ const SCENARIO_REGISTRY = {
 const SCENARIOS = Object.keys(SCENARIO_REGISTRY);
 
 
-/***/ },
+/***/ }),
 
-/***/ "./src/shared/utils/utils.ts"
+/***/ "./src/shared/utils/utils.ts":
 /*!***********************************!*\
   !*** ./src/shared/utils/utils.ts ***!
   \***********************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -8435,6 +8462,11 @@ const getGridEndDate = (store) => {
         return latestContributionDate;
     }
     return endDate;
+};
+const getGridStartDate = (endDate) => {
+    const startDate = new Date(endDate);
+    startDate.setUTCDate(endDate.getUTCDate() - (_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH - 1) * 7 - endDate.getUTCDay());
+    return startDate;
 };
 /* ───────────────────────── Theme helpers ────────────────────── */
 const getCurrentTheme = (store) => { var _a; return (_a = _constants__WEBPACK_IMPORTED_MODULE_0__.GAME_THEMES[store.config.gameTheme]) !== null && _a !== void 0 ? _a : _constants__WEBPACK_IMPORTED_MODULE_0__.GAME_THEMES['github']; };
@@ -8468,11 +8500,8 @@ const calculateContributionLevel = (contribution, maxContribution) => {
 };
 const buildGrid = (store) => {
     const endDate = getGridEndDate(store);
-    const startDate = new Date(endDate);
-    startDate.setUTCDate(endDate.getUTCDate() - 365);
-    startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay());
-    const realWidth = 53;
-    const grid = Array.from({ length: realWidth }, () => Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT }, () => ({
+    const startDate = getGridStartDate(endDate);
+    const grid = Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH }, () => Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT }, () => ({
         commitsCount: 0,
         color: getCurrentTheme(store).intensityColors[0],
         level: 'NONE'
@@ -8483,7 +8512,7 @@ const buildGrid = (store) => {
             return;
         const day = date.getUTCDay();
         const week = weeksBetween(startDate, date);
-        if (week >= 0 && week < realWidth) {
+        if (week >= 0 && week < _constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH) {
             const theme = getCurrentTheme(store);
             grid[week][day] = {
                 commitsCount: c.count,
@@ -8496,16 +8525,14 @@ const buildGrid = (store) => {
 };
 const buildMonthLabels = (store) => {
     const endDate = getGridEndDate(store);
-    const startDate = new Date(endDate);
-    startDate.setUTCDate(endDate.getUTCDate() - 365);
-    startDate.setUTCDate(startDate.getUTCDate() - startDate.getUTCDay());
+    const startDate = getGridStartDate(endDate);
     const realWidth = weeksBetween(startDate, endDate) + 1;
     const labels = Array(realWidth).fill('');
     let lastMonth = '';
     for (let week = 0; week < realWidth; week++) {
         const date = new Date(startDate);
         date.setUTCDate(date.getUTCDate() + week * 7);
-        const currentMonth = date.toLocaleString('default', { month: 'short' });
+        const currentMonth = date.toLocaleString('default', { month: 'short', timeZone: 'UTC' });
         if (currentMonth !== lastMonth) {
             labels[week] = currentMonth;
             lastMonth = currentMonth;
@@ -8526,7 +8553,7 @@ const Utils = {
 };
 
 
-/***/ }
+/***/ })
 
 /******/ });
 /************************************************************************/
@@ -8548,12 +8575,6 @@ const Utils = {
 /******/ 	};
 /******/ 
 /******/ 	// Execute the module function
-/******/ 	if (!(moduleId in __webpack_modules__)) {
-/******/ 		delete __webpack_module_cache__[moduleId];
-/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
-/******/ 		e.code = 'MODULE_NOT_FOUND';
-/******/ 		throw e;
-/******/ 	}
 /******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 
 /******/ 	// Return the exports of the module
@@ -8637,23 +8658,23 @@ __webpack_require__.r(__webpack_exports__);
 
 })();
 
-const __webpack_exports__ARCADE_GAMES = __webpack_exports__.ARCADE_GAMES;
-const __webpack_exports__ArcadeRenderer = __webpack_exports__.ArcadeRenderer;
-const __webpack_exports__BombermanRenderer = __webpack_exports__.BombermanRenderer;
-const __webpack_exports__BreakoutRenderer = __webpack_exports__.BreakoutRenderer;
-const __webpack_exports__GAME_REGISTRY = __webpack_exports__.GAME_REGISTRY;
-const __webpack_exports__GalagaRenderer = __webpack_exports__.GalagaRenderer;
-const __webpack_exports__MinesweeperRenderer = __webpack_exports__.MinesweeperRenderer;
-const __webpack_exports__PLATFORMS = __webpack_exports__.PLATFORMS;
-const __webpack_exports__PLATFORM_REGISTRY = __webpack_exports__.PLATFORM_REGISTRY;
-const __webpack_exports__PacmanRenderer = __webpack_exports__.PacmanRenderer;
-const __webpack_exports__PlayerStyle = __webpack_exports__.PlayerStyle;
-const __webpack_exports__PuzzleBobbleRenderer = __webpack_exports__.PuzzleBobbleRenderer;
-const __webpack_exports__SCENARIOS = __webpack_exports__.SCENARIOS;
-const __webpack_exports__SCENARIO_REGISTRY = __webpack_exports__.SCENARIO_REGISTRY;
-const __webpack_exports__generateScenarioContributions = __webpack_exports__.generateScenarioContributions;
-const __webpack_exports__isScenarioName = __webpack_exports__.isScenarioName;
-const __webpack_exports__resolveScenarioName = __webpack_exports__.resolveScenarioName;
+var __webpack_exports__ARCADE_GAMES = __webpack_exports__.ARCADE_GAMES;
+var __webpack_exports__ArcadeRenderer = __webpack_exports__.ArcadeRenderer;
+var __webpack_exports__BombermanRenderer = __webpack_exports__.BombermanRenderer;
+var __webpack_exports__BreakoutRenderer = __webpack_exports__.BreakoutRenderer;
+var __webpack_exports__GAME_REGISTRY = __webpack_exports__.GAME_REGISTRY;
+var __webpack_exports__GalagaRenderer = __webpack_exports__.GalagaRenderer;
+var __webpack_exports__MinesweeperRenderer = __webpack_exports__.MinesweeperRenderer;
+var __webpack_exports__PLATFORMS = __webpack_exports__.PLATFORMS;
+var __webpack_exports__PLATFORM_REGISTRY = __webpack_exports__.PLATFORM_REGISTRY;
+var __webpack_exports__PacmanRenderer = __webpack_exports__.PacmanRenderer;
+var __webpack_exports__PlayerStyle = __webpack_exports__.PlayerStyle;
+var __webpack_exports__PuzzleBobbleRenderer = __webpack_exports__.PuzzleBobbleRenderer;
+var __webpack_exports__SCENARIOS = __webpack_exports__.SCENARIOS;
+var __webpack_exports__SCENARIO_REGISTRY = __webpack_exports__.SCENARIO_REGISTRY;
+var __webpack_exports__generateScenarioContributions = __webpack_exports__.generateScenarioContributions;
+var __webpack_exports__isScenarioName = __webpack_exports__.isScenarioName;
+var __webpack_exports__resolveScenarioName = __webpack_exports__.resolveScenarioName;
 export { __webpack_exports__ARCADE_GAMES as ARCADE_GAMES, __webpack_exports__ArcadeRenderer as ArcadeRenderer, __webpack_exports__BombermanRenderer as BombermanRenderer, __webpack_exports__BreakoutRenderer as BreakoutRenderer, __webpack_exports__GAME_REGISTRY as GAME_REGISTRY, __webpack_exports__GalagaRenderer as GalagaRenderer, __webpack_exports__MinesweeperRenderer as MinesweeperRenderer, __webpack_exports__PLATFORMS as PLATFORMS, __webpack_exports__PLATFORM_REGISTRY as PLATFORM_REGISTRY, __webpack_exports__PacmanRenderer as PacmanRenderer, __webpack_exports__PlayerStyle as PlayerStyle, __webpack_exports__PuzzleBobbleRenderer as PuzzleBobbleRenderer, __webpack_exports__SCENARIOS as SCENARIOS, __webpack_exports__SCENARIO_REGISTRY as SCENARIO_REGISTRY, __webpack_exports__generateScenarioContributions as generateScenarioContributions, __webpack_exports__isScenarioName as isScenarioName, __webpack_exports__resolveScenarioName as resolveScenarioName };
 
 //# sourceMappingURL=pacman-contribution-graph.js.map

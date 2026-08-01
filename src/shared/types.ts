@@ -87,6 +87,7 @@ export interface BaseConfig {
 	};
 	maxFrames?: number;
 	maxHistorySize?: number;
+	showMonthLabels?: boolean;
 }
 
 /** Minimal shape that all game stores share, accepted by shared providers & utils. */

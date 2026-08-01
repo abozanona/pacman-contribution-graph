@@ -248,6 +248,15 @@
 									</select>
 								</div>
 							</div>
+							<div class="col-md-6">
+								<div class="mb-3">
+									<label class="form-label d-block">Month Labels:</label>
+									<div class="form-check form-switch">
+										<input class="form-check-input" type="checkbox" id="showMonthLabels" checked />
+										<label class="form-check-label" for="showMonthLabels">Show month labels above the grid</label>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -320,6 +329,11 @@
 							<td><code>playerStyle</code></td>
 							<td>Pacman movement style</td>
 							<td><code>conservative</code>, <code>aggressive</code>, <code>opportunistic</code></td>
+						</tr>
+						<tr>
+							<td><code>showMonthLabels</code></td>
+							<td>Whether to render the month labels row above the grid</td>
+							<td><code>true</code> (default), <code>false</code></td>
 						</tr>
 					</tbody>
 				</table>
@@ -511,6 +525,7 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 			const scenarioSelect = document.getElementById('scenario');
 			const playerStyleSelect = document.getElementById('playerStyle');
 			const playerStyleRow = document.getElementById('playerStyleRow');
+			const showMonthLabelsInput = document.getElementById('showMonthLabels');
 			const svgContainer = document.getElementById('svgContainer');
 			const svgHolder = document.getElementById('svgholder');
 			const generationLoading = document.getElementById('generationLoading');
@@ -595,6 +610,7 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 				githubAccessToken.disabled = isGenerating || !isGithubPlatform;
 				playerStyleSelect.disabled = isGenerating || !isPacmanGame;
 				playerStyleRow.classList.toggle('text-muted', !isPacmanGame);
+				showMonthLabelsInput.disabled = isGenerating;
 				statGhosts.style.display = isPacmanGame ? '' : 'none';
 			}
 
@@ -614,6 +630,7 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 					platform,
 					username: usernameInput.value,
 					gameTheme: themeSelect.value,
+					showMonthLabels: showMonthLabelsInput.checked,
 					...(platform === 'scenario' ? { scenario: scenarioSelect.value } : {}),
 					...(platform === 'github' ? { githubSettings: { accessToken: githubAccessToken.value } } : {}),
 					...(game === 'pacman' ? { playerStyle: playerStyleSelect.value } : {})

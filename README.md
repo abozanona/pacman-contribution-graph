@@ -136,6 +136,7 @@ Here's how to set up and run the games:
     - `gameTheme`: Choose between `'github'`, `'github-dark'`, `'gitlab'`, or `'gitlab-dark'`.
     - `scenario`: Use a predefined contribution scenario instead of fetching platform contributions. Available scenarios: `full`, `empty`, `random`, `checkerboard`, `gradient`, `streaks`. This option is only active when `platform` is set to `'scenario'`; with `platform: 'github'` or `platform: 'gitlab'`, real platform contributions are fetched and the scenario value is ignored.
     - `playerStyle` _(Pac-Man only)_: `PlayerStyle.OPPORTUNISTIC` (default), `PlayerStyle.CONSERVATIVE`, or `PlayerStyle.AGGRESSIVE`.
+    - `showMonthLabels`: `true` (default) renders the month labels row above the grid; set to `false` for a cleaner, header-free SVG.
     - `svgCallback`: Called with the finished SVG string once generation is complete.
     - `gameOverCallback`: Called when the game finishes.
     - `pointsIncreasedCallback`: Called each time the score increases.
@@ -199,6 +200,8 @@ To showcase the Pac-Man game on your GitHub profile, follow these steps:
                           github_user_name: ${{ github.repository_owner }}
                           # Comma-separated list of game names to generate. Default: pacman
                           games: 'pacman,breakout'
+                          # Optional: omit the month labels row above the grid. Default: false
+                          hide_month_labels: 'false'
 
                     # Push the generated SVGs to the output branch
                     - name: push SVGs to the output branch

@@ -25,7 +25,7 @@ const reportStats = async (username, platform, gameType, stats) => {
 	}
 };
 
-const generateSvg = async (game, userName, githubToken, theme, playerStyle) => {
+const generateSvg = async (game, userName, githubToken, theme, playerStyle, showMonthLabels) => {
 	return new Promise((resolve, reject) => {
 		let generatedSvg = '';
 		let gameStats = null;
@@ -35,6 +35,7 @@ const generateSvg = async (game, userName, githubToken, theme, playerStyle) => {
 			username: userName,
 			gameTheme: theme,
 			playerStyle,
+			showMonthLabels,
 			githubSettings: {
 				accessToken: githubToken
 			},
@@ -59,6 +60,7 @@ const generateSvg = async (game, userName, githubToken, theme, playerStyle) => {
 		const githubToken = core.getInput('github_token');
 		const playerStyle = core.getInput('player_style') || 'opportunistic';
 		const gamesInput = core.getInput('games') || 'pacman';
+		const showMonthLabels = !core.getBooleanInput('hide_month_labels');
 
 		// Parse comma-separated games list, trim whitespace, deduplicate
 		const games = [
@@ -88,13 +90,13 @@ const generateSvg = async (game, userName, githubToken, theme, playerStyle) => {
 		for (const game of selectedGames) {
 			const prefix = `${game}-contribution-graph`;
 
-			const lightResult = await generateSvg(game, userName, githubToken, 'github', playerStyle);
+			const lightResult = await generateSvg(game, userName, githubToken, 'github', playerStyle, showMonthLabels);
 			const lightFile = `dist/${prefix}.svg`;
 			console.log(`💾 writing to ${lightFile}`);
 			fs.mkdirSync(path.dirname(lightFile), { recursive: true });
 			fs.writeFileSync(lightFile, lightResult.svg);
 
-			const darkResult = await generateSvg(game, userName, githubToken, 'github-dark', playerStyle);
+			const darkResult = await generateSvg(game, userName, githubToken, 'github-dark', playerStyle, showMonthLabels);
 			const darkFile = `dist/${prefix}-dark.svg`;
 			console.log(`💾 writing to ${darkFile}`);
 			fs.mkdirSync(path.dirname(darkFile), { recursive: true });
