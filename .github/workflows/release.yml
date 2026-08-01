@@ -104,12 +104,6 @@ jobs:
           BUMP: ${{ inputs.bump }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify npm authentication
-        if: steps.version.outputs.npm_published != 'true'
-        run: npm whoami
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Run tests
         run: pnpm test -- --runInBand
 
