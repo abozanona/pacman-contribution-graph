@@ -1,6 +1,6 @@
 {
 	"name": "pacman-contribution-graph",
-	"version": "5.3.1",
+	"version": "5.3.2",
 	"description": "Generates a pacman game from a github or gitlab user contributions grid",
 	"repository": "github:abozanona/pacman-contribution-graph",
 	"homepage": "https://abozanona.github.io/pacman-contribution-graph/",
