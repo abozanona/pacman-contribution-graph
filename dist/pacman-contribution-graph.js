@@ -7847,6 +7847,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _minesweeper_index__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../minesweeper/index */ "./src/minesweeper/index.ts");
 /* harmony import */ var _pacman_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pacman/index */ "./src/pacman/index.ts");
 /* harmony import */ var _puzzle_bobble_index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../puzzle-bobble/index */ "./src/puzzle-bobble/index.ts");
+/* harmony import */ var _snake_index__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../snake/index */ "./src/snake/index.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7856,6 +7857,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 
 
@@ -7887,6 +7889,10 @@ const gameRegistry = {
     minesweeper: {
         label: '💠 Minesweeper',
         factory: (conf) => new _minesweeper_index__WEBPACK_IMPORTED_MODULE_3__.MinesweeperRenderer(conf)
+    },
+    snake: {
+        label: '🐍 Snake',
+        factory: (conf) => new _snake_index__WEBPACK_IMPORTED_MODULE_6__.SnakeRenderer(conf)
     }
 };
 const GAME_REGISTRY = gameRegistry;
@@ -8553,6 +8559,636 @@ const Utils = {
 };
 
 
+/***/ }),
+
+/***/ "./src/snake/core/ai.ts":
+/*!******************************!*\
+  !*** ./src/snake/core/ai.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   blockedCells: () => (/* binding */ blockedCells),
+/* harmony export */   canReachTail: () => (/* binding */ canReachTail),
+/* harmony export */   distanceBetween: () => (/* binding */ distanceBetween),
+/* harmony export */   findNearest: () => (/* binding */ findNearest),
+/* harmony export */   getNeighbors: () => (/* binding */ getNeighbors),
+/* harmony export */   inBounds: () => (/* binding */ inBounds),
+/* harmony export */   keyOf: () => (/* binding */ keyOf),
+/* harmony export */   reachableArea: () => (/* binding */ reachableArea),
+/* harmony export */   samePosition: () => (/* binding */ samePosition),
+/* harmony export */   simulateWalk: () => (/* binding */ simulateWalk)
+/* harmony export */ });
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./src/snake/core/constants.ts");
+
+const DIRECTIONS = [
+    { x: 1, y: 0 },
+    { x: 0, y: 1 },
+    { x: 0, y: -1 },
+    { x: -1, y: 0 }
+];
+const keyOf = (p) => p.y * _constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH + p.x;
+const samePosition = (a, b) => a.x === b.x && a.y === b.y;
+const inBounds = (p) => p.x >= 0 && p.x < _constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH && p.y >= 0 && p.y < _constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT;
+const getNeighbors = (p) => DIRECTIONS.map((d) => ({ x: p.x + d.x, y: p.y + d.y })).filter(inBounds);
+/** Cells the head cannot enter on its next move. The tail is free unless the snake is about to grow. */
+const blockedCells = (body, growing) => {
+    const blocked = new Set();
+    const end = growing ? body.length : body.length - 1;
+    for (let i = 0; i < end; i++)
+        blocked.add(keyOf(body[i]));
+    return blocked;
+};
+/**
+ * Breadth-first search from `start` to every cell matching `isTarget`.
+ * Returns the paths (excluding `start`) to all targets at the minimal distance.
+ */
+const findNearest = (start, blocked, isTarget) => {
+    const previous = new Map([[keyOf(start), null]]);
+    let frontier = [start];
+    const found = [];
+    while (frontier.length > 0 && found.length === 0) {
+        const next = [];
+        for (const current of frontier) {
+            for (const neighbor of getNeighbors(current)) {
+                const key = keyOf(neighbor);
+                if (previous.has(key) || blocked.has(key))
+                    continue;
+                previous.set(key, current);
+                if (isTarget(neighbor))
+                    found.push(neighbor);
+                next.push(neighbor);
+            }
+        }
+        frontier = next;
+    }
+    return found.map((target) => {
+        const path = [];
+        let cursor = target;
+        while (cursor && !samePosition(cursor, start)) {
+            path.unshift(cursor);
+            cursor = previous.get(keyOf(cursor));
+        }
+        return path;
+    });
+};
+const distanceBetween = (from, to, blocked) => {
+    const paths = findNearest(from, blocked, (p) => samePosition(p, to));
+    return paths.length > 0 ? paths[0].length : -1;
+};
+/** Number of free cells reachable from `start`, used to pick the roomiest escape. */
+const reachableArea = (start, blocked) => {
+    const seen = new Set([keyOf(start)]);
+    const queue = [start];
+    while (queue.length > 0) {
+        const current = queue.pop();
+        for (const neighbor of getNeighbors(current)) {
+            const key = keyOf(neighbor);
+            if (seen.has(key) || blocked.has(key))
+                continue;
+            seen.add(key);
+            queue.push(neighbor);
+        }
+    }
+    return seen.size;
+};
+/** Body after the head walks along `path`, assuming it gains `growth` segments on the way. */
+const simulateWalk = (body, path, growth) => {
+    const walked = [...path].reverse().concat(body);
+    return walked.slice(0, body.length + Math.min(growth, path.length));
+};
+/** A position is safe when the head can still reach its own tail, so it can never box itself in. */
+const canReachTail = (body) => {
+    if (body.length < 3)
+        return true;
+    const tail = body[body.length - 1];
+    return distanceBetween(body[0], tail, blockedCells(body, false)) > 0;
+};
+
+
+/***/ }),
+
+/***/ "./src/snake/core/constants.ts":
+/*!*************************************!*\
+  !*** ./src/snake/core/constants.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CELL_SIZE: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE),
+/* harmony export */   DELTA_TIME: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.DELTA_TIME),
+/* harmony export */   GAP_SIZE: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE),
+/* harmony export */   GRID_HEIGHT: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT),
+/* harmony export */   GRID_WIDTH: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH),
+/* harmony export */   SNAKE_BITE_FRAMES: () => (/* binding */ SNAKE_BITE_FRAMES),
+/* harmony export */   SNAKE_CELL_RADIUS: () => (/* binding */ SNAKE_CELL_RADIUS),
+/* harmony export */   SNAKE_DURATION_DIVISOR: () => (/* binding */ SNAKE_DURATION_DIVISOR),
+/* harmony export */   SNAKE_END_HOLD_FRAMES: () => (/* binding */ SNAKE_END_HOLD_FRAMES),
+/* harmony export */   SNAKE_HEADER_HEIGHT: () => (/* binding */ SNAKE_HEADER_HEIGHT),
+/* harmony export */   SNAKE_INITIAL_LENGTH: () => (/* binding */ SNAKE_INITIAL_LENGTH),
+/* harmony export */   SNAKE_LEVEL_POINTS: () => (/* binding */ SNAKE_LEVEL_POINTS),
+/* harmony export */   SNAKE_MAX_IDLE_STEPS: () => (/* binding */ SNAKE_MAX_IDLE_STEPS),
+/* harmony export */   SNAKE_MAX_STEPS: () => (/* binding */ SNAKE_MAX_STEPS),
+/* harmony export */   SNAKE_MIN_DURATION_MS: () => (/* binding */ SNAKE_MIN_DURATION_MS),
+/* harmony export */   SNAKE_SHED_FRAMES: () => (/* binding */ SNAKE_SHED_FRAMES)
+/* harmony export */ });
+/* harmony import */ var _shared_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/constants */ "./src/shared/constants.ts");
+
+
+const SNAKE_HEADER_HEIGHT = 24;
+const SNAKE_CELL_RADIUS = 3;
+const SNAKE_INITIAL_LENGTH = 4;
+const SNAKE_MIN_DURATION_MS = 5000;
+const SNAKE_DURATION_DIVISOR = 1.5;
+const SNAKE_MAX_STEPS = _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH * _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT * 8;
+/** How long the snake may chase its own tail before it gets hungry enough to take a risk. */
+const SNAKE_MAX_IDLE_STEPS = _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH * _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT;
+const SNAKE_BITE_FRAMES = 3;
+const SNAKE_SHED_FRAMES = 4;
+const SNAKE_END_HOLD_FRAMES = 12;
+/** Score awarded per contribution level (index = level). */
+const SNAKE_LEVEL_POINTS = [0, 1, 2, 3, 5];
+
+
+/***/ }),
+
+/***/ "./src/snake/core/game.ts":
+/*!********************************!*\
+  !*** ./src/snake/core/game.ts ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Game: () => (/* binding */ Game)
+/* harmony export */ });
+/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _renderers_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../renderers/svg */ "./src/snake/renderers/svg.ts");
+/* harmony import */ var _ai__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ai */ "./src/snake/core/ai.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./constants */ "./src/snake/core/constants.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+const effects = new WeakMap();
+const hasFood = (store, p) => store.cells[p.x][p.y] === 'food';
+const levelIndex = (store, p) => _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.levelToIndex(store.grid[p.x][p.y].level);
+const resetGameState = (store) => {
+    store.frameCount = 0;
+    store.score = 0;
+    store.bites = 0;
+    store.pendingGrowth = 0;
+    store.meals = [];
+    store.activeMeals = {};
+    store.snapshots = [];
+    effects.set(store, new Map());
+    store.cells = Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_3__.GRID_WIDTH }, (_, x) => Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_3__.GRID_HEIGHT }, (_, y) => { var _a, _b, _c; return (((_c = (_b = (_a = store.grid[x]) === null || _a === void 0 ? void 0 : _a[y]) === null || _b === void 0 ? void 0 : _b.commitsCount) !== null && _c !== void 0 ? _c : 0) > 0 ? 'food' : 'empty'); }));
+    // The snake slithers in from the left edge, in the middle row (Wednesday).
+    const row = Math.floor(_constants__WEBPACK_IMPORTED_MODULE_3__.GRID_HEIGHT / 2);
+    store.body = Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_INITIAL_LENGTH }, (_, i) => ({ x: _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_INITIAL_LENGTH - 1 - i, y: row }));
+    for (const segment of store.body)
+        store.cells[segment.x][segment.y] = 'empty';
+    pushSnapshot(store);
+};
+const isGrowing = (store) => store.pendingGrowth > 0 ||
+    Object.entries(store.activeMeals).some(([mealIndex, bodyIndex]) => store.meals[+mealIndex].grows && bodyIndex + 2 >= store.body.length - 1);
+const buildCellStates = (store) => {
+    const cells = store.cells.map((column) => [...column]);
+    const activeEffects = effects.get(store);
+    for (const [key, effect] of activeEffects) {
+        if (effect.untilFrame < store.snapshots.length) {
+            activeEffects.delete(key);
+            continue;
+        }
+        if (effect.state === 'shed')
+            cells[key % _constants__WEBPACK_IMPORTED_MODULE_3__.GRID_WIDTH][Math.floor(key / _constants__WEBPACK_IMPORTED_MODULE_3__.GRID_WIDTH)] = 'shed';
+    }
+    for (const segment of store.body)
+        cells[segment.x][segment.y] = 'body';
+    for (const [key, effect] of activeEffects) {
+        if (effect.state === 'bite')
+            cells[key % _constants__WEBPACK_IMPORTED_MODULE_3__.GRID_WIDTH][Math.floor(key / _constants__WEBPACK_IMPORTED_MODULE_3__.GRID_WIDTH)] = 'bite';
+    }
+    return cells;
+};
+const pushSnapshot = (store) => {
+    store.snapshots.push({
+        body: store.body.map((p) => (Object.assign({}, p))),
+        cells: buildCellStates(store),
+        score: store.score,
+        meals: Object.assign({}, store.activeMeals)
+    });
+    store.frameCount = store.snapshots.length - 1;
+};
+/** Meals travel two body segments per frame, so the bulge visibly slides one cell per frame towards the tail. */
+const digest = (store) => {
+    for (const [mealIndex, bodyIndex] of Object.entries(store.activeMeals)) {
+        const next = bodyIndex + 2;
+        if (next >= store.body.length) {
+            if (store.meals[+mealIndex].grows)
+                store.pendingGrowth++;
+            delete store.activeMeals[+mealIndex];
+        }
+        else {
+            store.activeMeals[+mealIndex] = next;
+        }
+    }
+};
+const moveTo = (store, target) => {
+    var _a;
+    digest(store);
+    const biteIndex = store.body.findIndex((segment, i) => i > 0 && (0,_ai__WEBPACK_IMPORTED_MODULE_2__.samePosition)(segment, target));
+    if (biteIndex > 0 && !(biteIndex === store.body.length - 1 && store.pendingGrowth === 0)) {
+        biteSelf(store, biteIndex);
+        return;
+    }
+    store.body.unshift(Object.assign({}, target));
+    if (store.pendingGrowth > 0) {
+        store.pendingGrowth--;
+    }
+    else {
+        store.body.pop();
+    }
+    if (hasFood(store, target)) {
+        const level = levelIndex(store, target);
+        store.score += (_a = _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_LEVEL_POINTS[level]) !== null && _a !== void 0 ? _a : 1;
+        store.meals.push({
+            frameIndex: store.snapshots.length,
+            x: target.x,
+            y: target.y,
+            color: store.grid[target.x][target.y].color,
+            level: store.grid[target.x][target.y].level,
+            grows: level === _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_LEVEL_POINTS.length - 1
+        });
+        store.activeMeals[store.meals.length - 1] = 0;
+        store.cells[target.x][target.y] = 'empty';
+        store.config.pointsIncreasedCallback(store.score);
+    }
+};
+/** Cornered: the snake bites itself, flashes red and sheds everything behind the bite. */
+const biteSelf = (store, biteIndex) => {
+    const activeEffects = effects.get(store);
+    const frame = store.snapshots.length;
+    const target = store.body[biteIndex];
+    const shed = store.body.slice(biteIndex + 1);
+    store.body = [Object.assign({}, target), ...store.body.slice(0, biteIndex)];
+    store.pendingGrowth = 0;
+    store.bites++;
+    activeEffects.set((0,_ai__WEBPACK_IMPORTED_MODULE_2__.keyOf)(target), { state: 'bite', untilFrame: frame + _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_BITE_FRAMES });
+    for (const segment of shed) {
+        activeEffects.set((0,_ai__WEBPACK_IMPORTED_MODULE_2__.keyOf)(segment), { state: 'shed', untilFrame: frame + _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_SHED_FRAMES });
+    }
+    for (const [mealIndex, bodyIndex] of Object.entries(store.activeMeals)) {
+        if (bodyIndex >= store.body.length)
+            delete store.activeMeals[+mealIndex];
+    }
+};
+const pickFoodPath = (store, requireSafe) => {
+    const head = store.body[0];
+    const paths = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.findNearest)(head, (0,_ai__WEBPACK_IMPORTED_MODULE_2__.blockedCells)(store.body, isGrowing(store)), (p) => hasFood(store, p));
+    // Among equally close meals, the darkest (juiciest) one wins.
+    paths.sort((a, b) => levelIndex(store, b[b.length - 1]) - levelIndex(store, a[a.length - 1]));
+    for (const path of paths) {
+        if (!requireSafe)
+            return path;
+        if ((0,_ai__WEBPACK_IMPORTED_MODULE_2__.canReachTail)((0,_ai__WEBPACK_IMPORTED_MODULE_2__.simulateWalk)(store.body, path, store.pendingGrowth)))
+            return path;
+    }
+    return null;
+};
+/** No safe meal in sight: wander while keeping the tail in reach, taking the longest way round. */
+const pickWanderMove = (store) => {
+    const growing = isGrowing(store);
+    const blocked = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.blockedCells)(store.body, growing);
+    const candidates = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.getNeighbors)(store.body[0]).filter((p) => !blocked.has((0,_ai__WEBPACK_IMPORTED_MODULE_2__.keyOf)(p)));
+    let best = null;
+    let bestScore = -Infinity;
+    for (const candidate of candidates) {
+        const nextBody = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.simulateWalk)(store.body, [candidate], growing ? 1 : 0);
+        const tail = nextBody[nextBody.length - 1];
+        const safe = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.canReachTail)(nextBody);
+        const distance = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.distanceBetween)(candidate, tail, (0,_ai__WEBPACK_IMPORTED_MODULE_2__.blockedCells)(nextBody, false));
+        const area = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.reachableArea)(candidate, (0,_ai__WEBPACK_IMPORTED_MODULE_2__.blockedCells)(nextBody, false));
+        const score = (safe ? 10000 : 0) + area * 10 + distance;
+        if (score > bestScore) {
+            bestScore = score;
+            best = candidate;
+        }
+    }
+    return best;
+};
+const pickBiteTarget = (store) => {
+    const head = store.body[0];
+    const options = (0,_ai__WEBPACK_IMPORTED_MODULE_2__.getNeighbors)(head)
+        .map((p) => ({ p, index: store.body.findIndex((segment) => (0,_ai__WEBPACK_IMPORTED_MODULE_2__.samePosition)(segment, p)) }))
+        .filter((o) => o.index > 0)
+        .sort((a, b) => b.index - a.index);
+    return options[0].p;
+};
+const remainingFood = (store) => store.cells.reduce((sum, column) => sum + column.filter((c) => c === 'food').length, 0);
+const playSingleTurn = (store, idleSteps) => {
+    var _a, _b, _c;
+    const hungry = idleSteps > _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_MAX_IDLE_STEPS;
+    const path = (_a = pickFoodPath(store, true)) !== null && _a !== void 0 ? _a : (hungry ? pickFoodPath(store, false) : null);
+    const next = (_c = (_b = path === null || path === void 0 ? void 0 : path[0]) !== null && _b !== void 0 ? _b : pickWanderMove(store)) !== null && _c !== void 0 ? _c : pickBiteTarget(store);
+    const foodBefore = remainingFood(store);
+    moveTo(store, next);
+    pushSnapshot(store);
+    return remainingFood(store) < foodBefore;
+};
+const appendEndHoldFrames = (store) => {
+    for (let i = 0; i < _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_END_HOLD_FRAMES; i++) {
+        digest(store);
+        if (store.pendingGrowth > 0) {
+            store.body.push(Object.assign({}, store.body[store.body.length - 1]));
+            store.pendingGrowth--;
+        }
+        pushSnapshot(store);
+    }
+};
+const startGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
+    resetGameState(store);
+    const maxSteps = store.config.maxFrames ? Math.min(store.config.maxFrames, _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_MAX_STEPS) : _constants__WEBPACK_IMPORTED_MODULE_3__.SNAKE_MAX_STEPS;
+    let idleSteps = 0;
+    let steps = 0;
+    while (remainingFood(store) > 0 && steps < maxSteps) {
+        idleSteps = playSingleTurn(store, idleSteps) ? 0 : idleSteps + 1;
+        steps++;
+    }
+    appendEndHoldFrames(store);
+    const svg = _renderers_svg__WEBPACK_IMPORTED_MODULE_1__.Renderer.generateAnimatedSVG(store);
+    store.config.svgCallback(svg);
+    if (store.config.gameStatsCallback) {
+        store.config.gameStatsCallback({
+            totalScore: store.score,
+            steps: store.frameCount,
+            ghostsEaten: store.bites
+        });
+    }
+    store.config.gameOverCallback();
+});
+const stopGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
+    clearInterval(store.gameInterval);
+});
+const Game = {
+    startGame,
+    stopGame
+};
+
+
+/***/ }),
+
+/***/ "./src/snake/core/store.ts":
+/*!*********************************!*\
+  !*** ./src/snake/core/store.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Store: () => (/* binding */ Store)
+/* harmony export */ });
+const Store = {
+    contributions: [],
+    grid: [],
+    monthLabels: [],
+    config: undefined,
+    gameInterval: 0,
+    frameCount: 0,
+    body: [],
+    cells: [],
+    score: 0,
+    pendingGrowth: 0,
+    meals: [],
+    activeMeals: {},
+    snapshots: [],
+    bites: 0
+};
+
+
+/***/ }),
+
+/***/ "./src/snake/index.ts":
+/*!****************************!*\
+  !*** ./src/snake/index.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SnakeRenderer: () => (/* binding */ SnakeRenderer)
+/* harmony export */ });
+/* harmony import */ var _shared_providers_providers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/providers/providers */ "./src/shared/providers/providers.ts");
+/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _snake_core_game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../snake/core/game */ "./src/snake/core/game.ts");
+/* harmony import */ var _snake_core_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../snake/core/store */ "./src/snake/core/store.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+class SnakeRenderer {
+    constructor(conf) {
+        this.conf = Object.assign({}, conf);
+    }
+    start() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const defaultConfig = {
+                platform: 'github',
+                username: '',
+                svgCallback: (_) => { },
+                gameOverCallback: () => { },
+                gameTheme: 'github',
+                pointsIncreasedCallback: (_) => { },
+                githubSettings: { accessToken: '' }
+            };
+            this.store = JSON.parse(JSON.stringify(_snake_core_store__WEBPACK_IMPORTED_MODULE_3__.Store));
+            this.store.config = Object.assign(Object.assign({}, defaultConfig), this.conf);
+            this.store.contributions = yield _shared_providers_providers__WEBPACK_IMPORTED_MODULE_0__.Providers.fetchContributions(this.store);
+            _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.buildGrid(this.store);
+            _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.buildMonthLabels(this.store);
+            yield _snake_core_game__WEBPACK_IMPORTED_MODULE_2__.Game.startGame(this.store);
+            return this.store;
+        });
+    }
+    stop() {
+        _snake_core_game__WEBPACK_IMPORTED_MODULE_2__.Game.stopGame(this.store);
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/snake/renderers/svg.ts":
+/*!************************************!*\
+  !*** ./src/snake/renderers/svg.ts ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Renderer: () => (/* binding */ Renderer),
+/* harmony export */   SVG_KEY_TIMES_PRECISION: () => (/* binding */ SVG_KEY_TIMES_PRECISION)
+/* harmony export */ });
+/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _core_constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/constants */ "./src/snake/core/constants.ts");
+
+
+const toX = (x) => x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+const toY = (y) => y * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.SNAKE_HEADER_HEIGHT;
+/** The snake wears a colour that stands out against each platform's contribution palette. */
+const getSnakePalette = (store) => {
+    switch (store.config.gameTheme) {
+        case 'github-dark':
+            return { body: '#a371f7', bite: '#f85149', shed: '#3d2f5c' };
+        case 'gitlab':
+            return { body: '#fc6d26', bite: '#c0392b', shed: '#fdd5c2' };
+        case 'gitlab-dark':
+            return { body: '#fc6d26', bite: '#ff4d4f', shed: '#5c3a24' };
+        default:
+            return { body: '#8250df', bite: '#cf222e', shed: '#e3d7fa' };
+    }
+};
+/** Gaps bridged between consecutive body segments, keyed `r:x:y` (to the right of x,y) or `d:x:y` (below x,y). */
+const buildConnectedGaps = (store) => store.snapshots.map(({ body }) => {
+    const gaps = new Set();
+    for (let i = 1; i < body.length; i++) {
+        const a = body[i - 1];
+        const b = body[i];
+        if (a.y === b.y && Math.abs(a.x - b.x) === 1)
+            gaps.add(`r:${Math.min(a.x, b.x)}:${a.y}`);
+        else if (a.x === b.x && Math.abs(a.y - b.y) === 1)
+            gaps.add(`d:${a.x}:${Math.min(a.y, b.y)}`);
+    }
+    return gaps;
+});
+const buildCellFillSeries = (store, x, y, colors) => store.snapshots.map((snapshot) => colors[snapshot.cells[x][y]]);
+const buildMonthLabels = (store) => {
+    var _a;
+    if (store.config.showMonthLabels === false)
+        return '';
+    let labels = '';
+    let last = '';
+    const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store);
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+        const month = (_a = store.monthLabels[x]) !== null && _a !== void 0 ? _a : '';
+        if (!month || month === last)
+            continue;
+        labels += `<text x="${toX(x) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2}" y="16" text-anchor="middle" font-size="10" fill="${theme.textColor}">${month}</text>`;
+        last = month;
+    }
+    return labels;
+};
+const generateAnimatedSVG = (store) => {
+    var _a, _b, _c;
+    const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store);
+    const palette = getSnakePalette(store);
+    const width = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+    const height = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.SNAKE_HEADER_HEIGHT;
+    const totalFrames = Math.max(store.snapshots.length, 1);
+    const durationMs = Math.max((totalFrames * _core_constants__WEBPACK_IMPORTED_MODULE_1__.DELTA_TIME) / _core_constants__WEBPACK_IMPORTED_MODULE_1__.SNAKE_DURATION_DIVISOR, _core_constants__WEBPACK_IMPORTED_MODULE_1__.SNAKE_MIN_DURATION_MS);
+    const animate = (attributeName, anim, calcMode = 'discrete') => anim
+        ? `<animate attributeName="${attributeName}" calcMode="${calcMode}" dur="${durationMs}ms" repeatCount="indefinite" keyTimes="${anim.keyTimes}" values="${anim.values}"/>`
+        : '';
+    let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" color-interpolation="sRGB">`;
+    svg += `<desc>Snake game inspired by Platane/snk (https://github.com/Platane/snk)</desc>`;
+    svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
+    svg += buildMonthLabels(store);
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+        for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT; y++) {
+            const colors = {
+                food: (_c = (_b = (_a = store.grid[x]) === null || _a === void 0 ? void 0 : _a[y]) === null || _b === void 0 ? void 0 : _b.color) !== null && _c !== void 0 ? _c : theme.intensityColors[0],
+                empty: theme.intensityColors[0],
+                body: palette.body,
+                bite: palette.bite,
+                shed: palette.shed
+            };
+            const fillSeries = buildCellFillSeries(store, x, y, colors);
+            svg += `<rect x="${toX(x)}" y="${toY(y)}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" rx="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.SNAKE_CELL_RADIUS}" fill="${fillSeries[0]}">`;
+            svg += animate('fill', generateChangingValuesAnimation(store, fillSeries));
+            svg += `</rect>`;
+        }
+    }
+    // Bridge the gap between neighbouring segments so the snake reads as one continuous body.
+    const connectedGaps = buildConnectedGaps(store);
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+        for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT; y++) {
+            for (const direction of ['r', 'd']) {
+                const key = `${direction}:${x}:${y}`;
+                const opacitySeries = connectedGaps.map((gaps) => (gaps.has(key) ? '1' : '0'));
+                if (!opacitySeries.includes('1'))
+                    continue;
+                const overlap = _core_constants__WEBPACK_IMPORTED_MODULE_1__.SNAKE_CELL_RADIUS;
+                const rect = direction === 'r'
+                    ? { x: toX(x) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE - overlap, y: toY(y), width: _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE + overlap * 2, height: _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE }
+                    : { x: toX(x), y: toY(y) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE - overlap, width: _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE, height: _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE + overlap * 2 };
+                svg += `<rect x="${rect.x}" y="${rect.y}" width="${rect.width}" height="${rect.height}" fill="${palette.body}" opacity="${opacitySeries[0]}">`;
+                svg += animate('opacity', generateChangingValuesAnimation(store, opacitySeries));
+                svg += `</rect>`;
+            }
+        }
+    }
+    svg += `</svg>`;
+    return svg;
+};
+const SVG_KEY_TIMES_PRECISION = 4;
+const generateChangingValuesAnimation = (store, changingValues) => {
+    const totalFrames = store.snapshots.length;
+    if (totalFrames <= 1) {
+        return null;
+    }
+    let keyTimes = [];
+    let values = [];
+    let lastValue = null;
+    let lastIndex = null;
+    changingValues.forEach((currentValue, index) => {
+        if (currentValue !== lastValue) {
+            if (lastValue !== null && lastIndex !== null && index - 1 !== lastIndex) {
+                keyTimes.push(Number(((index - 0.1) / (totalFrames - 1)).toFixed(SVG_KEY_TIMES_PRECISION)));
+                values.push(lastValue);
+            }
+            keyTimes.push(Number((index / (totalFrames - 1)).toFixed(SVG_KEY_TIMES_PRECISION)));
+            values.push(currentValue);
+            lastValue = currentValue;
+            lastIndex = index;
+        }
+    });
+    if (keyTimes.length === 0) {
+        return null;
+    }
+    if (keyTimes[keyTimes.length - 1] !== 1) {
+        keyTimes.push(1);
+        values.push(lastValue || changingValues[changingValues.length - 1]);
+    }
+    return {
+        keyTimes: keyTimes.join(';'),
+        values: values.join(';')
+    };
+};
+const Renderer = {
+    generateAnimatedSVG
+};
+
+
 /***/ })
 
 /******/ });
@@ -8633,6 +9269,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   PuzzleBobbleRenderer: () => (/* reexport safe */ _puzzle_bobble_index__WEBPACK_IMPORTED_MODULE_5__.PuzzleBobbleRenderer),
 /* harmony export */   SCENARIOS: () => (/* reexport safe */ _shared_types__WEBPACK_IMPORTED_MODULE_8__.SCENARIOS),
 /* harmony export */   SCENARIO_REGISTRY: () => (/* reexport safe */ _shared_types__WEBPACK_IMPORTED_MODULE_8__.SCENARIO_REGISTRY),
+/* harmony export */   SnakeRenderer: () => (/* reexport safe */ _snake_index__WEBPACK_IMPORTED_MODULE_9__.SnakeRenderer),
 /* harmony export */   generateScenarioContributions: () => (/* reexport safe */ _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__.generateScenarioContributions),
 /* harmony export */   isScenarioName: () => (/* reexport safe */ _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__.isScenarioName),
 /* harmony export */   resolveScenarioName: () => (/* reexport safe */ _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__.resolveScenarioName)
@@ -8646,6 +9283,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_arcade_renderer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./shared/arcade-renderer */ "./src/shared/arcade-renderer.ts");
 /* harmony import */ var _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./shared/providers/scenarios */ "./src/shared/providers/scenarios.ts");
 /* harmony import */ var _shared_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./shared/types */ "./src/shared/types.ts");
+/* harmony import */ var _snake_index__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./snake/index */ "./src/snake/index.ts");
+
 
 
 
@@ -8672,9 +9311,10 @@ var __webpack_exports__PlayerStyle = __webpack_exports__.PlayerStyle;
 var __webpack_exports__PuzzleBobbleRenderer = __webpack_exports__.PuzzleBobbleRenderer;
 var __webpack_exports__SCENARIOS = __webpack_exports__.SCENARIOS;
 var __webpack_exports__SCENARIO_REGISTRY = __webpack_exports__.SCENARIO_REGISTRY;
+var __webpack_exports__SnakeRenderer = __webpack_exports__.SnakeRenderer;
 var __webpack_exports__generateScenarioContributions = __webpack_exports__.generateScenarioContributions;
 var __webpack_exports__isScenarioName = __webpack_exports__.isScenarioName;
 var __webpack_exports__resolveScenarioName = __webpack_exports__.resolveScenarioName;
-export { __webpack_exports__ARCADE_GAMES as ARCADE_GAMES, __webpack_exports__ArcadeRenderer as ArcadeRenderer, __webpack_exports__BombermanRenderer as BombermanRenderer, __webpack_exports__BreakoutRenderer as BreakoutRenderer, __webpack_exports__GAME_REGISTRY as GAME_REGISTRY, __webpack_exports__GalagaRenderer as GalagaRenderer, __webpack_exports__MinesweeperRenderer as MinesweeperRenderer, __webpack_exports__PLATFORMS as PLATFORMS, __webpack_exports__PLATFORM_REGISTRY as PLATFORM_REGISTRY, __webpack_exports__PacmanRenderer as PacmanRenderer, __webpack_exports__PlayerStyle as PlayerStyle, __webpack_exports__PuzzleBobbleRenderer as PuzzleBobbleRenderer, __webpack_exports__SCENARIOS as SCENARIOS, __webpack_exports__SCENARIO_REGISTRY as SCENARIO_REGISTRY, __webpack_exports__generateScenarioContributions as generateScenarioContributions, __webpack_exports__isScenarioName as isScenarioName, __webpack_exports__resolveScenarioName as resolveScenarioName };
+export { __webpack_exports__ARCADE_GAMES as ARCADE_GAMES, __webpack_exports__ArcadeRenderer as ArcadeRenderer, __webpack_exports__BombermanRenderer as BombermanRenderer, __webpack_exports__BreakoutRenderer as BreakoutRenderer, __webpack_exports__GAME_REGISTRY as GAME_REGISTRY, __webpack_exports__GalagaRenderer as GalagaRenderer, __webpack_exports__MinesweeperRenderer as MinesweeperRenderer, __webpack_exports__PLATFORMS as PLATFORMS, __webpack_exports__PLATFORM_REGISTRY as PLATFORM_REGISTRY, __webpack_exports__PacmanRenderer as PacmanRenderer, __webpack_exports__PlayerStyle as PlayerStyle, __webpack_exports__PuzzleBobbleRenderer as PuzzleBobbleRenderer, __webpack_exports__SCENARIOS as SCENARIOS, __webpack_exports__SCENARIO_REGISTRY as SCENARIO_REGISTRY, __webpack_exports__SnakeRenderer as SnakeRenderer, __webpack_exports__generateScenarioContributions as generateScenarioContributions, __webpack_exports__isScenarioName as isScenarioName, __webpack_exports__resolveScenarioName as resolveScenarioName };
 
 //# sourceMappingURL=pacman-contribution-graph.js.map

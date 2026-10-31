@@ -19,6 +19,7 @@ Transform your GitHub or GitLab contribution graph into arcade games! This JavaS
 | 🫧 **Puzzle Bobble** | puzzle-bobble | A cannon fires colored bubbles to pop matching contribution clusters |
 | 💣 **Bomberman**     | bomberman     | Two bombers blast contribution cells across the graph                |
 | 💠 **Minesweeper**   | minesweeper   | A solver clears cells, flags guaranteed mines, and survives guesses  |
+| 🐍 **Snake**         | snake         | A snake eats your contributions and only the darkest ones grow it    |
 
 More games coming soon!
 
@@ -65,7 +66,15 @@ More games coming soon!
 <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/demo/minesweeper-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="assets/demo/minesweeper.svg">
-    <img alt="bomberman contribution graph" src="assets/demo/minesweeper.svg">
+    <img alt="minesweeper contribution graph" src="assets/demo/minesweeper.svg">
+</picture>
+
+### Snake preview
+
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/demo/snake-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/demo/snake.svg">
+    <img alt="snake contribution graph" src="assets/demo/snake.svg">
 </picture>
 
 ## 🎮 Features
@@ -73,7 +82,7 @@ More games coming soon!
 Elevate your GitHub profile with the Pac-Man Contribution Graph Game and add a playful touch to your coding journey!
 
 - **Contribution Visualization**: Converts your GitHub or GitLab contribution data into a colorful grid.
-- **Multiple Games**: Classic Pac-Man, Breakout, Galaga, Puzzle Bobble, Bomberman, and Minesweeper, with more planned
+- **Multiple Games**: Classic Pac-Man, Breakout, Galaga, Puzzle Bobble, Bomberman, Minesweeper, and Snake, with more planned
 - **Multiple Themes**: Choose between different themes, such as GitHub Dark and GitLab Dark.
 - **Customizable Settings**: Adjust game settings.
 - **GitHub Integration**: Automatically fetches your contribution data via GraphQL API

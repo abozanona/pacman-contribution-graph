@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 $dbPath = __DIR__ . '/pacman_stats.sqlite';
-$allowedGameTypes = ['pacman', 'breakout', 'galaga', 'puzzle-bobble', 'bomberman'];
+$allowedGameTypes = ['pacman', 'breakout', 'galaga', 'puzzle-bobble', 'bomberman', 'minesweeper', 'snake'];
 $rawGameType = $_GET['game_type'] ?? $_GET['game'] ?? null;
 $gameType = 'pacman';
 $isAllGameTypes = false;

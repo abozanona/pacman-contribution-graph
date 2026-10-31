@@ -4,6 +4,7 @@ import { GalagaConfig, GalagaRenderer } from '../galaga/index';
 import { MinesweeperConfig, MinesweeperRenderer } from '../minesweeper/index';
 import { PacmanConfig, PacmanRenderer, PlayerStyle } from '../pacman/index';
 import { PuzzleBobbleConfig, PuzzleBobbleRenderer } from '../puzzle-bobble/index';
+import { SnakeConfig, SnakeRenderer } from '../snake/index';
 import { BaseConfig } from './types';
 
 export { PlayerStyle };
@@ -42,6 +43,10 @@ const gameRegistry = {
 	minesweeper: {
 		label: '💠 Minesweeper',
 		factory: (conf: ArcadeConfig) => new MinesweeperRenderer(conf as MinesweeperConfig)
+	},
+	snake: {
+		label: '🐍 Snake',
+		factory: (conf: ArcadeConfig) => new SnakeRenderer(conf as SnakeConfig)
 	}
 } satisfies Record<string, GameRegistryEntry>;
 
