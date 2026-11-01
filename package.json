@@ -1,6 +1,6 @@
 {
 	"name": "pacman-contribution-graph",
-	"version": "5.4.2",
+	"version": "5.5.2",
 	"description": "Generates a pacman game from a github or gitlab user contributions grid",
 	"repository": "github:abozanona/pacman-contribution-graph",
 	"homepage": "https://abozanona.github.io/pacman-contribution-graph/",
@@ -25,6 +25,7 @@
 		"bomberman",
 		"minesweeper",
 		"snake",
+		"tetris",
 		"svg",
 		"contribution-graph",
 		"animation",

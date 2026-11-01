@@ -7848,6 +7848,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pacman_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pacman/index */ "./src/pacman/index.ts");
 /* harmony import */ var _puzzle_bobble_index__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../puzzle-bobble/index */ "./src/puzzle-bobble/index.ts");
 /* harmony import */ var _snake_index__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../snake/index */ "./src/snake/index.ts");
+/* harmony import */ var _tetris_index__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../tetris/index */ "./src/tetris/index.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7857,6 +7858,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 
 
@@ -7893,6 +7895,10 @@ const gameRegistry = {
     snake: {
         label: '🐍 Snake',
         factory: (conf) => new _snake_index__WEBPACK_IMPORTED_MODULE_6__.SnakeRenderer(conf)
+    },
+    tetris: {
+        label: '🟪 Tetris',
+        factory: (conf) => new _tetris_index__WEBPACK_IMPORTED_MODULE_7__.TetrisRenderer(conf)
     }
 };
 const GAME_REGISTRY = gameRegistry;
@@ -9189,6 +9195,697 @@ const Renderer = {
 };
 
 
+/***/ }),
+
+/***/ "./src/tetris/core/constants.ts":
+/*!**************************************!*\
+  !*** ./src/tetris/core/constants.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CELL_SIZE: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.CELL_SIZE),
+/* harmony export */   DELTA_TIME: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.DELTA_TIME),
+/* harmony export */   GAP_SIZE: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GAP_SIZE),
+/* harmony export */   GRID_HEIGHT: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT),
+/* harmony export */   GRID_WIDTH: () => (/* reexport safe */ _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH),
+/* harmony export */   TETRIS_CELL_RADIUS: () => (/* binding */ TETRIS_CELL_RADIUS),
+/* harmony export */   TETRIS_CLEAR_FLASH_FRAMES: () => (/* binding */ TETRIS_CLEAR_FLASH_FRAMES),
+/* harmony export */   TETRIS_DURATION_DIVISOR: () => (/* binding */ TETRIS_DURATION_DIVISOR),
+/* harmony export */   TETRIS_END_HOLD_FRAMES: () => (/* binding */ TETRIS_END_HOLD_FRAMES),
+/* harmony export */   TETRIS_FADE_FRAMES: () => (/* binding */ TETRIS_FADE_FRAMES),
+/* harmony export */   TETRIS_HEADER_HEIGHT: () => (/* binding */ TETRIS_HEADER_HEIGHT),
+/* harmony export */   TETRIS_LEVEL_POINTS: () => (/* binding */ TETRIS_LEVEL_POINTS),
+/* harmony export */   TETRIS_LINE_LENGTH: () => (/* binding */ TETRIS_LINE_LENGTH),
+/* harmony export */   TETRIS_MAX_IDLE_PIECES: () => (/* binding */ TETRIS_MAX_IDLE_PIECES),
+/* harmony export */   TETRIS_MAX_PIECES: () => (/* binding */ TETRIS_MAX_PIECES),
+/* harmony export */   TETRIS_MIN_DURATION_MS: () => (/* binding */ TETRIS_MIN_DURATION_MS)
+/* harmony export */ });
+/* harmony import */ var _shared_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/constants */ "./src/shared/constants.ts");
+
+
+const TETRIS_HEADER_HEIGHT = 24;
+const TETRIS_CELL_RADIUS = 3;
+const TETRIS_MIN_DURATION_MS = 5000;
+const TETRIS_DURATION_DIVISOR = 1.5;
+/** A horizontal run of at least this many filled squares is cleared. */
+const TETRIS_LINE_LENGTH = 5;
+const TETRIS_MAX_PIECES = _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_WIDTH * _shared_constants__WEBPACK_IMPORTED_MODULE_0__.GRID_HEIGHT * 2;
+/** Give up after this many pieces in a row that clear no contributions. */
+const TETRIS_MAX_IDLE_PIECES = 150;
+const TETRIS_CLEAR_FLASH_FRAMES = 2;
+const TETRIS_END_HOLD_FRAMES = 12;
+/** Frames over which leftover piece squares fade away at the end. */
+const TETRIS_FADE_FRAMES = 10;
+/** Score awarded per cleared contribution, by level (index = level). Piece squares are worth 1. */
+const TETRIS_LEVEL_POINTS = [0, 10, 20, 30, 50];
+
+
+/***/ }),
+
+/***/ "./src/tetris/core/game.ts":
+/*!*********************************!*\
+  !*** ./src/tetris/core/game.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Game: () => (/* binding */ Game)
+/* harmony export */ });
+/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _renderers_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../renderers/svg */ "./src/tetris/renderers/svg.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constants */ "./src/tetris/core/constants.ts");
+/* harmony import */ var _pieces__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pieces */ "./src/tetris/core/pieces.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+const isFilled = (cell) => cell.kind === 'contribution' || cell.kind === 'piece';
+const cloneBoard = (board) => board.map((column) => column.map((cell) => (Object.assign({}, cell))));
+const pushSnapshot = (store, board = store.board) => {
+    store.snapshots.push({ cells: cloneBoard(board) });
+    store.frameCount = store.snapshots.length - 1;
+};
+const resetGameState = (store) => {
+    store.frameCount = 0;
+    store.score = 0;
+    store.piecesPlaced = 0;
+    store.linesCleared = 0;
+    store.snapshots = [];
+    store.board = Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH }, (_, x) => Array.from({ length: _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT }, (_, y) => {
+        var _a;
+        const cell = (_a = store.grid[x]) === null || _a === void 0 ? void 0 : _a[y];
+        return cell && cell.commitsCount > 0 ? { kind: 'contribution', level: cell.level } : { kind: 'empty' };
+    }));
+    store.contributionsLeft = countContributions(store.board);
+    pushSnapshot(store);
+};
+/** A piece square with an empty cell underneath it is left hanging above the ground. */
+const isHanging = (board, x, y) => board[x][y].kind === 'piece' && y < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT - 1 && board[x][y + 1].kind === 'empty';
+const countHanging = (board) => board.reduce((sum, column, x) => sum + column.filter((_, y) => isHanging(board, x, y)).length, 0);
+const hasHangingSquares = (board) => countHanging(board) > 0;
+const isTarget = (board, target, x, y) => target === 'contribution' ? board[x][y].kind === 'contribution' : isHanging(board, x, y);
+const countContributions = (board) => board.reduce((sum, column) => sum + column.filter((c) => c.kind === 'contribution').length, 0);
+/**
+ * Where a piece dropped straight down at `offsetX` comes to rest. Squares left above the top edge are
+ * dropped (the board is only 7 rows tall and often full at the top), but a piece always touches something.
+ */
+const dropPiece = (board, shape, offsetX) => {
+    const fits = (offsetY) => shape.every(({ x, y }) => {
+        const cx = x + offsetX;
+        const cy = y + offsetY;
+        if (cx < 0 || cx >= _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH || cy >= _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT)
+            return false;
+        return cy < 0 || board[cx][cy].kind === 'empty';
+    });
+    const height = Math.max(...shape.map((c) => c.y)) + 1;
+    let offsetY = -height;
+    if (!fits(offsetY))
+        return null;
+    while (fits(offsetY + 1))
+        offsetY++;
+    const landed = shape.map(({ x, y }) => ({ x: x + offsetX, y: y + offsetY }));
+    const isPiece = (x, y) => landed.some((c) => c.x === x && c.y === y);
+    const supports = landed
+        .map((c) => ({ x: c.x, y: c.y + 1 }))
+        .filter((c) => c.y >= 0 && c.y < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT && !isPiece(c.x, c.y) && isFilled(board[c.x][c.y]));
+    const cells = landed.filter((c) => c.y >= 0);
+    return { cells, lost: landed.length - cells.length, supports };
+};
+/** Every square in a horizontal line of 5+ filled squares that passes through one of `origins`. */
+const findLines = (board, origins) => {
+    const found = new Map();
+    for (const { x, y } of origins) {
+        let from = x;
+        let to = x;
+        while (from > 0 && isFilled(board[from - 1][y]))
+            from--;
+        while (to < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH - 1 && isFilled(board[to + 1][y]))
+            to++;
+        if (to - from + 1 < _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_LINE_LENGTH)
+            continue;
+        for (let lineX = from; lineX <= to; lineX++)
+            found.set(`${lineX}:${y}`, { x: lineX, y });
+    }
+    return [...found.values()];
+};
+/** An empty square is a dead hole once something sits above it: falling pieces can never reach it. */
+const isCovered = (board, x, y) => {
+    for (let above = y - 1; above >= 0; above--) {
+        if (board[x][above].kind !== 'empty')
+            return true;
+    }
+    return false;
+};
+/**
+ * How many more squares must be dropped before the contribution at (cx, cy) can be part of a line.
+ * Every empty square in the line also needs support underneath it.
+ */
+const lineCost = (board, cx, cy) => {
+    let best = Infinity;
+    for (let start = cx - _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_LINE_LENGTH + 1; start <= cx; start++) {
+        if (start < 0 || start + _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_LINE_LENGTH > _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH)
+            continue;
+        let cost = 0;
+        for (let x = start; x < start + _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_LINE_LENGTH && cost < best; x++) {
+            if (isFilled(board[x][cy]))
+                continue;
+            if (isCovered(board, x, cy)) {
+                cost = Infinity;
+                break;
+            }
+            cost++;
+            for (let below = cy + 1; below < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT && board[x][below].kind === 'empty'; below++)
+                cost++;
+        }
+        best = Math.min(best, cost);
+    }
+    return best;
+};
+/** Sum of target-square costs in the columns a placement can influence (unreachable ones count as a flat penalty). */
+const localCost = (board, target, fromX, toX) => {
+    let total = 0;
+    for (let x = Math.max(0, fromX); x <= Math.min(_constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH - 1, toX); x++) {
+        for (let y = 0; y < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT; y++) {
+            if (!isTarget(board, target, x, y))
+                continue;
+            const cost = lineCost(board, x, y);
+            total += Number.isFinite(cost) ? cost : 40;
+        }
+    }
+    return total;
+};
+const evaluatePlacement = (board, target, { cells, lost, supports }) => {
+    const columns = [...cells, ...supports].map((c) => c.x);
+    const minX = Math.min(...columns);
+    const maxX = Math.max(...columns);
+    const reach = _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_LINE_LENGTH;
+    const before = localCost(board, target, minX - reach, maxX + reach);
+    const after = cloneBoard(board);
+    for (const c of cells)
+        after[c.x][c.y] = { kind: 'piece', pieceColor: 0 };
+    const cleared = findLines(after, [...cells, ...supports]);
+    const clearedTargets = cleared.filter((c) => isTarget(after, target, c.x, c.y)).length;
+    for (const c of cleared)
+        after[c.x][c.y] = { kind: 'empty' };
+    let newHoles = 0;
+    for (const c of cells) {
+        if (after[c.x][c.y].kind === 'empty')
+            continue;
+        for (let y = c.y + 1; y < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT && after[c.x][y].kind === 'empty'; y++)
+            newHoles++;
+    }
+    const improvement = before - localCost(after, target, minX - reach, maxX + reach);
+    const height = cells.length > 0 ? _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT - Math.min(...cells.map((c) => c.y)) : _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT;
+    return clearedTargets * 1000 + cleared.length * 15 + improvement * 25 - newHoles * 30 - lost * 5 - height;
+};
+const findBestPlacement = (board, target, pieceIndex) => {
+    let best = null;
+    // PIECES lists each orientation in the order it is reached by rotating, so the index is the number of
+    // rotations needed. Every piece has at most 4 orientations, so all are reachable within 3 rotations.
+    _pieces__WEBPACK_IMPORTED_MODULE_3__.PIECES[pieceIndex].forEach((shape, rotation) => {
+        for (let offsetX = 0; offsetX < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH; offsetX++) {
+            const landing = dropPiece(board, shape, offsetX);
+            if (!landing)
+                continue;
+            // Among equally good moves, the one needing fewer rotations wins.
+            const score = evaluatePlacement(board, target, landing) - rotation * 0.5;
+            if (!best || score > best.score)
+                best = Object.assign(Object.assign({}, landing), { pieceColor: pieceIndex, rotation, offsetX, score });
+        }
+    });
+    return best;
+};
+/**
+ * The piece falls one row per frame and rotates at most once per frame on the way down, so every rotation is
+ * visible. Squares are only drawn over empty cells so the piece never hides what it passes.
+ */
+const animateFall = (store, placement) => {
+    if (placement.cells.length === 0)
+        return;
+    const orientations = _pieces__WEBPACK_IMPORTED_MODULE_3__.PIECES[placement.pieceColor];
+    const landedBottom = Math.max(...placement.cells.map((c) => c.y));
+    const fallFrames = landedBottom;
+    const totalFrames = Math.max(fallFrames, placement.rotation);
+    for (let frameIndex = 0; frameIndex < totalFrames; frameIndex++) {
+        // When the drop is too short for all rotations, the piece waits at the top until it has turned.
+        const shift = Math.min(fallFrames, totalFrames - frameIndex);
+        const shape = orientations[Math.min(frameIndex, placement.rotation)];
+        const shapeBottom = Math.max(...shape.map((c) => c.y));
+        const frame = cloneBoard(store.board);
+        for (const c of shape) {
+            const x = c.x + placement.offsetX;
+            const y = c.y - shapeBottom + landedBottom - shift;
+            if (x < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH && y >= 0 && frame[x][y].kind === 'empty') {
+                frame[x][y] = { kind: 'falling', pieceColor: placement.pieceColor };
+            }
+        }
+        pushSnapshot(store, frame);
+    }
+};
+/** Flash the cleared squares, then remove them. */
+const clearLines = (store, cleared) => {
+    var _a;
+    for (let flash = 0; flash < _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_CLEAR_FLASH_FRAMES; flash++) {
+        for (const c of cleared)
+            store.board[c.x][c.y] = Object.assign(Object.assign({}, store.board[c.x][c.y]), { kind: 'clearing', flash });
+        pushSnapshot(store);
+    }
+    let clearedContributions = 0;
+    for (const c of cleared) {
+        const level = store.board[c.x][c.y].level;
+        if (level) {
+            clearedContributions++;
+            store.score += (_a = _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_LEVEL_POINTS[_shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.levelToIndex(level)]) !== null && _a !== void 0 ? _a : 10;
+        }
+        else {
+            store.score += 1;
+        }
+        store.board[c.x][c.y] = { kind: 'empty' };
+    }
+    store.linesCleared++;
+    store.contributionsLeft -= clearedContributions;
+    store.config.pointsIncreasedCallback(store.score);
+    pushSnapshot(store);
+};
+/**
+ * Piece squares left hanging after a clear drop one row per frame until they rest on something.
+ * Contributions never move. Returns where the moved squares ended up.
+ */
+const settlePieces = (store) => {
+    const moved = new Map();
+    let anyMoved = true;
+    while (anyMoved) {
+        anyMoved = false;
+        for (let y = _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_HEIGHT - 2; y >= 0; y--) {
+            for (let x = 0; x < _constants__WEBPACK_IMPORTED_MODULE_2__.GRID_WIDTH; x++) {
+                if (store.board[x][y].kind !== 'piece' || store.board[x][y + 1].kind !== 'empty')
+                    continue;
+                store.board[x][y + 1] = store.board[x][y];
+                store.board[x][y] = { kind: 'empty' };
+                moved.delete(`${x}:${y}`);
+                moved.set(`${x}:${y + 1}`, { x, y: y + 1 });
+                anyMoved = true;
+            }
+        }
+        if (anyMoved)
+            pushSnapshot(store);
+    }
+    return [...moved.values()];
+};
+/** Drops the piece and resolves every clear it causes. Returns how many squares were cleared. */
+const placePiece = (store, placement) => {
+    animateFall(store, placement);
+    for (const c of placement.cells)
+        store.board[c.x][c.y] = { kind: 'piece', pieceColor: placement.pieceColor };
+    pushSnapshot(store);
+    store.piecesPlaced++;
+    let clearedSquares = 0;
+    let cleared = findLines(store.board, [...placement.cells, ...placement.supports]);
+    // Chain reaction: squares settling after a clear can complete new lines.
+    while (cleared.length > 0) {
+        clearedSquares += cleared.length;
+        clearLines(store, cleared);
+        cleared = findLines(store.board, settlePieces(store));
+    }
+    return clearedSquares;
+};
+/** Leftover piece squares slowly fade into the empty board once the game is over. */
+const fadeOutLeftovers = (store) => {
+    const leftovers = [];
+    store.board.forEach((column, x) => column.forEach((cell, y) => cell.kind === 'piece' && leftovers.push({ x, y })));
+    if (leftovers.length === 0)
+        return;
+    for (let step = 1; step <= _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_FADE_FRAMES; step++) {
+        for (const { x, y } of leftovers)
+            store.board[x][y] = Object.assign(Object.assign({}, store.board[x][y]), { kind: 'fading', fade: step / (_constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_FADE_FRAMES + 1) });
+        pushSnapshot(store);
+    }
+    for (const { x, y } of leftovers)
+        store.board[x][y] = { kind: 'empty' };
+    pushSnapshot(store);
+};
+const startGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
+    resetGameState(store);
+    const random = (0,_pieces__WEBPACK_IMPORTED_MODULE_3__.createRandom)(store.contributions.reduce((sum, c) => sum + c.count, store.contributionsLeft));
+    let idlePieces = 0;
+    // The game is won once every contribution is cleared and nothing is left hanging over a gap.
+    const isWon = () => store.contributionsLeft === 0 && !hasHangingSquares(store.board);
+    while (!isWon() && store.piecesPlaced < _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_MAX_PIECES && idlePieces < _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_MAX_IDLE_PIECES) {
+        const target = store.contributionsLeft > 0 ? 'contribution' : 'hanging';
+        const placement = findBestPlacement(store.board, target, Math.floor(random() * _pieces__WEBPACK_IMPORTED_MODULE_3__.PIECES.length));
+        if (!placement)
+            break;
+        const before = target === 'contribution' ? store.contributionsLeft : countHanging(store.board);
+        placePiece(store, placement);
+        const after = target === 'contribution' ? store.contributionsLeft : countHanging(store.board);
+        idlePieces = after < before ? 0 : idlePieces + 1;
+    }
+    fadeOutLeftovers(store);
+    for (let i = 0; i < _constants__WEBPACK_IMPORTED_MODULE_2__.TETRIS_END_HOLD_FRAMES; i++)
+        pushSnapshot(store);
+    const svg = _renderers_svg__WEBPACK_IMPORTED_MODULE_1__.Renderer.generateAnimatedSVG(store);
+    store.config.svgCallback(svg);
+    if (store.config.gameStatsCallback) {
+        store.config.gameStatsCallback({
+            totalScore: store.score,
+            steps: store.frameCount,
+            ghostsEaten: store.linesCleared
+        });
+    }
+    store.config.gameOverCallback();
+});
+const stopGame = (store) => __awaiter(void 0, void 0, void 0, function* () {
+    clearInterval(store.gameInterval);
+});
+const Game = {
+    startGame,
+    stopGame
+};
+
+
+/***/ }),
+
+/***/ "./src/tetris/core/pieces.ts":
+/*!***********************************!*\
+  !*** ./src/tetris/core/pieces.ts ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PIECES: () => (/* binding */ PIECES),
+/* harmony export */   createRandom: () => (/* binding */ createRandom)
+/* harmony export */ });
+/** The seven four-square pieces, each listed in every distinct rotation. */
+const BASE_SHAPES = [
+    [
+        { x: 0, y: 0 },
+        { x: 1, y: 0 },
+        { x: 2, y: 0 },
+        { x: 3, y: 0 }
+    ],
+    [
+        { x: 0, y: 0 },
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 1 }
+    ],
+    [
+        { x: 0, y: 0 },
+        { x: 1, y: 0 },
+        { x: 2, y: 0 },
+        { x: 1, y: 1 }
+    ],
+    [
+        { x: 1, y: 0 },
+        { x: 2, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 1 }
+    ],
+    [
+        { x: 0, y: 0 },
+        { x: 1, y: 0 },
+        { x: 1, y: 1 },
+        { x: 2, y: 1 }
+    ],
+    [
+        { x: 0, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 1 },
+        { x: 2, y: 1 }
+    ],
+    [
+        { x: 2, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 1 },
+        { x: 2, y: 1 }
+    ]
+];
+const normalize = (cells) => {
+    const minX = Math.min(...cells.map((c) => c.x));
+    const minY = Math.min(...cells.map((c) => c.y));
+    return cells.map((c) => ({ x: c.x - minX, y: c.y - minY })).sort((a, b) => a.y - b.y || a.x - b.x);
+};
+const rotate = (cells) => normalize(cells.map((c) => ({ x: -c.y, y: c.x })));
+const allRotations = (shape) => {
+    const rotations = [];
+    let current = normalize(shape);
+    for (let i = 0; i < 4; i++) {
+        if (!rotations.some((r) => JSON.stringify(r) === JSON.stringify(current)))
+            rotations.push(current);
+        current = rotate(current);
+    }
+    return rotations;
+};
+const PIECES = BASE_SHAPES.map(allRotations);
+/** Small deterministic PRNG so the same contribution graph always plays the same game. */
+const createRandom = (seed) => {
+    let state = seed >>> 0 || 1;
+    return () => {
+        state = (state + 0x6d2b79f5) >>> 0;
+        let t = state;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+};
+
+
+/***/ }),
+
+/***/ "./src/tetris/core/store.ts":
+/*!**********************************!*\
+  !*** ./src/tetris/core/store.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Store: () => (/* binding */ Store)
+/* harmony export */ });
+const Store = {
+    contributions: [],
+    grid: [],
+    monthLabels: [],
+    config: undefined,
+    gameInterval: 0,
+    frameCount: 0,
+    board: [],
+    snapshots: [],
+    score: 0,
+    piecesPlaced: 0,
+    linesCleared: 0,
+    contributionsLeft: 0
+};
+
+
+/***/ }),
+
+/***/ "./src/tetris/index.ts":
+/*!*****************************!*\
+  !*** ./src/tetris/index.ts ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TetrisRenderer: () => (/* binding */ TetrisRenderer)
+/* harmony export */ });
+/* harmony import */ var _shared_providers_providers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../shared/providers/providers */ "./src/shared/providers/providers.ts");
+/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _tetris_core_game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tetris/core/game */ "./src/tetris/core/game.ts");
+/* harmony import */ var _tetris_core_store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../tetris/core/store */ "./src/tetris/core/store.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+class TetrisRenderer {
+    constructor(conf) {
+        this.conf = Object.assign({}, conf);
+    }
+    start() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const defaultConfig = {
+                platform: 'github',
+                username: '',
+                svgCallback: (_) => { },
+                gameOverCallback: () => { },
+                gameTheme: 'github',
+                pointsIncreasedCallback: (_) => { },
+                githubSettings: { accessToken: '' }
+            };
+            this.store = JSON.parse(JSON.stringify(_tetris_core_store__WEBPACK_IMPORTED_MODULE_3__.Store));
+            this.store.config = Object.assign(Object.assign({}, defaultConfig), this.conf);
+            this.store.contributions = yield _shared_providers_providers__WEBPACK_IMPORTED_MODULE_0__.Providers.fetchContributions(this.store);
+            _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.buildGrid(this.store);
+            _shared_utils_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.buildMonthLabels(this.store);
+            yield _tetris_core_game__WEBPACK_IMPORTED_MODULE_2__.Game.startGame(this.store);
+            return this.store;
+        });
+    }
+    stop() {
+        _tetris_core_game__WEBPACK_IMPORTED_MODULE_2__.Game.stopGame(this.store);
+    }
+}
+
+
+/***/ }),
+
+/***/ "./src/tetris/renderers/svg.ts":
+/*!*************************************!*\
+  !*** ./src/tetris/renderers/svg.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Renderer: () => (/* binding */ Renderer),
+/* harmony export */   SVG_KEY_TIMES_PRECISION: () => (/* binding */ SVG_KEY_TIMES_PRECISION)
+/* harmony export */ });
+/* harmony import */ var _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../shared/utils/utils */ "./src/shared/utils/utils.ts");
+/* harmony import */ var _core_constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/constants */ "./src/tetris/core/constants.ts");
+
+
+const toX = (x) => x * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+const toY = (y) => y * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.TETRIS_HEADER_HEIGHT;
+/** Piece colours avoid the green/blue of the contribution palettes so the two never blend together. */
+const getTetrisPalette = (store) => {
+    const isDark = store.config.gameTheme.endsWith('-dark');
+    return isDark
+        ? {
+            pieces: ['#a371f7', '#f0883e', '#db61a2', '#e3b341', '#f85149', '#56d4dd', '#ff9bce'],
+            flash: ['#ffffff', '#f0f6fc']
+        }
+        : {
+            pieces: ['#8250df', '#e16f24', '#bf3989', '#d4a72c', '#cf222e', '#1b7c83', '#a475f9'],
+            flash: ['#ffd33d', '#fff8c5']
+        };
+};
+const mixColors = (from, to, t) => {
+    const channel = (hex, i) => parseInt(hex.slice(1 + i * 2, 3 + i * 2), 16);
+    return ('#' +
+        [0, 1, 2]
+            .map((i) => Math.round(channel(from, i) + (channel(to, i) - channel(from, i)) * t)
+            .toString(16)
+            .padStart(2, '0'))
+            .join(''));
+};
+const cellColor = (store, palette, cell, x, y, emptyColor) => {
+    var _a, _b, _c, _d, _e, _f, _g;
+    switch (cell.kind) {
+        case 'contribution':
+            return (_c = (_b = (_a = store.grid[x]) === null || _a === void 0 ? void 0 : _a[y]) === null || _b === void 0 ? void 0 : _b.color) !== null && _c !== void 0 ? _c : emptyColor;
+        case 'piece':
+        case 'falling':
+            return palette.pieces[((_d = cell.pieceColor) !== null && _d !== void 0 ? _d : 0) % palette.pieces.length];
+        case 'fading':
+            return mixColors(palette.pieces[((_e = cell.pieceColor) !== null && _e !== void 0 ? _e : 0) % palette.pieces.length], emptyColor, (_f = cell.fade) !== null && _f !== void 0 ? _f : 1);
+        case 'clearing':
+            return palette.flash[((_g = cell.flash) !== null && _g !== void 0 ? _g : 0) % palette.flash.length];
+        default:
+            return emptyColor;
+    }
+};
+const buildMonthLabels = (store) => {
+    var _a;
+    if (store.config.showMonthLabels === false)
+        return '';
+    let labels = '';
+    let last = '';
+    const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store);
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+        const month = (_a = store.monthLabels[x]) !== null && _a !== void 0 ? _a : '';
+        if (!month || month === last)
+            continue;
+        labels += `<text x="${toX(x) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE / 2}" y="16" text-anchor="middle" font-size="10" fill="${theme.textColor}">${month}</text>`;
+        last = month;
+    }
+    return labels;
+};
+const generateAnimatedSVG = (store) => {
+    const theme = _shared_utils_utils__WEBPACK_IMPORTED_MODULE_0__.Utils.getCurrentTheme(store);
+    const palette = getTetrisPalette(store);
+    const width = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE);
+    const height = _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT * (_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE + _core_constants__WEBPACK_IMPORTED_MODULE_1__.GAP_SIZE) + _core_constants__WEBPACK_IMPORTED_MODULE_1__.TETRIS_HEADER_HEIGHT;
+    const totalFrames = Math.max(store.snapshots.length, 1);
+    const durationMs = Math.max((totalFrames * _core_constants__WEBPACK_IMPORTED_MODULE_1__.DELTA_TIME) / _core_constants__WEBPACK_IMPORTED_MODULE_1__.TETRIS_DURATION_DIVISOR, _core_constants__WEBPACK_IMPORTED_MODULE_1__.TETRIS_MIN_DURATION_MS);
+    let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision" color-interpolation="sRGB">`;
+    svg += `<rect width="100%" height="100%" fill="${theme.gridBackground}"/>`;
+    svg += buildMonthLabels(store);
+    for (let x = 0; x < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_WIDTH; x++) {
+        for (let y = 0; y < _core_constants__WEBPACK_IMPORTED_MODULE_1__.GRID_HEIGHT; y++) {
+            const fillSeries = store.snapshots.map((snapshot) => cellColor(store, palette, snapshot.cells[x][y], x, y, theme.intensityColors[0]));
+            const fillAnim = generateChangingValuesAnimation(store, fillSeries);
+            svg += `<rect x="${toX(x)}" y="${toY(y)}" width="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" height="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.CELL_SIZE}" rx="${_core_constants__WEBPACK_IMPORTED_MODULE_1__.TETRIS_CELL_RADIUS}" fill="${fillSeries[0]}">`;
+            if (fillAnim) {
+                svg += `<animate attributeName="fill" calcMode="discrete" dur="${durationMs}ms" repeatCount="indefinite" keyTimes="${fillAnim.keyTimes}" values="${fillAnim.values}"/>`;
+            }
+            svg += `</rect>`;
+        }
+    }
+    svg += `</svg>`;
+    return svg;
+};
+const SVG_KEY_TIMES_PRECISION = 4;
+const generateChangingValuesAnimation = (store, changingValues) => {
+    const totalFrames = store.snapshots.length;
+    if (totalFrames <= 1) {
+        return null;
+    }
+    let keyTimes = [];
+    let values = [];
+    let lastValue = null;
+    let lastIndex = null;
+    changingValues.forEach((currentValue, index) => {
+        if (currentValue !== lastValue) {
+            if (lastValue !== null && lastIndex !== null && index - 1 !== lastIndex) {
+                keyTimes.push(Number(((index - 0.1) / (totalFrames - 1)).toFixed(SVG_KEY_TIMES_PRECISION)));
+                values.push(lastValue);
+            }
+            keyTimes.push(Number((index / (totalFrames - 1)).toFixed(SVG_KEY_TIMES_PRECISION)));
+            values.push(currentValue);
+            lastValue = currentValue;
+            lastIndex = index;
+        }
+    });
+    if (keyTimes.length === 0) {
+        return null;
+    }
+    if (keyTimes[keyTimes.length - 1] !== 1) {
+        keyTimes.push(1);
+        values.push(lastValue || changingValues[changingValues.length - 1]);
+    }
+    return {
+        keyTimes: keyTimes.join(';'),
+        values: values.join(';')
+    };
+};
+const Renderer = {
+    generateAnimatedSVG
+};
+
+
 /***/ })
 
 /******/ });
@@ -9270,6 +9967,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   SCENARIOS: () => (/* reexport safe */ _shared_types__WEBPACK_IMPORTED_MODULE_8__.SCENARIOS),
 /* harmony export */   SCENARIO_REGISTRY: () => (/* reexport safe */ _shared_types__WEBPACK_IMPORTED_MODULE_8__.SCENARIO_REGISTRY),
 /* harmony export */   SnakeRenderer: () => (/* reexport safe */ _snake_index__WEBPACK_IMPORTED_MODULE_9__.SnakeRenderer),
+/* harmony export */   TetrisRenderer: () => (/* reexport safe */ _tetris_index__WEBPACK_IMPORTED_MODULE_10__.TetrisRenderer),
 /* harmony export */   generateScenarioContributions: () => (/* reexport safe */ _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__.generateScenarioContributions),
 /* harmony export */   isScenarioName: () => (/* reexport safe */ _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__.isScenarioName),
 /* harmony export */   resolveScenarioName: () => (/* reexport safe */ _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__.resolveScenarioName)
@@ -9284,6 +9982,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_providers_scenarios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./shared/providers/scenarios */ "./src/shared/providers/scenarios.ts");
 /* harmony import */ var _shared_types__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./shared/types */ "./src/shared/types.ts");
 /* harmony import */ var _snake_index__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./snake/index */ "./src/snake/index.ts");
+/* harmony import */ var _tetris_index__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./tetris/index */ "./src/tetris/index.ts");
+
 
 
 
@@ -9312,9 +10012,10 @@ var __webpack_exports__PuzzleBobbleRenderer = __webpack_exports__.PuzzleBobbleRe
 var __webpack_exports__SCENARIOS = __webpack_exports__.SCENARIOS;
 var __webpack_exports__SCENARIO_REGISTRY = __webpack_exports__.SCENARIO_REGISTRY;
 var __webpack_exports__SnakeRenderer = __webpack_exports__.SnakeRenderer;
+var __webpack_exports__TetrisRenderer = __webpack_exports__.TetrisRenderer;
 var __webpack_exports__generateScenarioContributions = __webpack_exports__.generateScenarioContributions;
 var __webpack_exports__isScenarioName = __webpack_exports__.isScenarioName;
 var __webpack_exports__resolveScenarioName = __webpack_exports__.resolveScenarioName;
-export { __webpack_exports__ARCADE_GAMES as ARCADE_GAMES, __webpack_exports__ArcadeRenderer as ArcadeRenderer, __webpack_exports__BombermanRenderer as BombermanRenderer, __webpack_exports__BreakoutRenderer as BreakoutRenderer, __webpack_exports__GAME_REGISTRY as GAME_REGISTRY, __webpack_exports__GalagaRenderer as GalagaRenderer, __webpack_exports__MinesweeperRenderer as MinesweeperRenderer, __webpack_exports__PLATFORMS as PLATFORMS, __webpack_exports__PLATFORM_REGISTRY as PLATFORM_REGISTRY, __webpack_exports__PacmanRenderer as PacmanRenderer, __webpack_exports__PlayerStyle as PlayerStyle, __webpack_exports__PuzzleBobbleRenderer as PuzzleBobbleRenderer, __webpack_exports__SCENARIOS as SCENARIOS, __webpack_exports__SCENARIO_REGISTRY as SCENARIO_REGISTRY, __webpack_exports__SnakeRenderer as SnakeRenderer, __webpack_exports__generateScenarioContributions as generateScenarioContributions, __webpack_exports__isScenarioName as isScenarioName, __webpack_exports__resolveScenarioName as resolveScenarioName };
+export { __webpack_exports__ARCADE_GAMES as ARCADE_GAMES, __webpack_exports__ArcadeRenderer as ArcadeRenderer, __webpack_exports__BombermanRenderer as BombermanRenderer, __webpack_exports__BreakoutRenderer as BreakoutRenderer, __webpack_exports__GAME_REGISTRY as GAME_REGISTRY, __webpack_exports__GalagaRenderer as GalagaRenderer, __webpack_exports__MinesweeperRenderer as MinesweeperRenderer, __webpack_exports__PLATFORMS as PLATFORMS, __webpack_exports__PLATFORM_REGISTRY as PLATFORM_REGISTRY, __webpack_exports__PacmanRenderer as PacmanRenderer, __webpack_exports__PlayerStyle as PlayerStyle, __webpack_exports__PuzzleBobbleRenderer as PuzzleBobbleRenderer, __webpack_exports__SCENARIOS as SCENARIOS, __webpack_exports__SCENARIO_REGISTRY as SCENARIO_REGISTRY, __webpack_exports__SnakeRenderer as SnakeRenderer, __webpack_exports__TetrisRenderer as TetrisRenderer, __webpack_exports__generateScenarioContributions as generateScenarioContributions, __webpack_exports__isScenarioName as isScenarioName, __webpack_exports__resolveScenarioName as resolveScenarioName };
 
 //# sourceMappingURL=pacman-contribution-graph.js.map

@@ -5,6 +5,7 @@ import { MinesweeperConfig, MinesweeperRenderer } from '../minesweeper/index';
 import { PacmanConfig, PacmanRenderer, PlayerStyle } from '../pacman/index';
 import { PuzzleBobbleConfig, PuzzleBobbleRenderer } from '../puzzle-bobble/index';
 import { SnakeConfig, SnakeRenderer } from '../snake/index';
+import { TetrisConfig, TetrisRenderer } from '../tetris/index';
 import { BaseConfig } from './types';
 
 export { PlayerStyle };
@@ -47,6 +48,10 @@ const gameRegistry = {
 	snake: {
 		label: '🐍 Snake',
 		factory: (conf: ArcadeConfig) => new SnakeRenderer(conf as SnakeConfig)
+	},
+	tetris: {
+		label: '🟪 Tetris',
+		factory: (conf: ArcadeConfig) => new TetrisRenderer(conf as TetrisConfig)
 	}
 } satisfies Record<string, GameRegistryEntry>;
 

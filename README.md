@@ -20,6 +20,7 @@ Transform your GitHub or GitLab contribution graph into arcade games! This JavaS
 | 💣 **Bomberman**     | bomberman     | Two bombers blast contribution cells across the graph                |
 | 💠 **Minesweeper**   | minesweeper   | A solver clears cells, flags guaranteed mines, and survives guesses  |
 | 🐍 **Snake**         | snake         | A snake eats your contributions and only the darkest ones grow it    |
+| 🟪 **Tetris**        | tetris        | Falling pieces line up with your contributions to clear lines of 5   |
 
 More games coming soon!
 
@@ -77,12 +78,20 @@ More games coming soon!
     <img alt="snake contribution graph" src="assets/demo/snake.svg">
 </picture>
 
+### Tetris preview
+
+<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/demo/tetris-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/demo/tetris.svg">
+    <img alt="tetris contribution graph" src="assets/demo/tetris.svg">
+</picture>
+
 ## 🎮 Features
 
 Elevate your GitHub profile with the Pac-Man Contribution Graph Game and add a playful touch to your coding journey!
 
 - **Contribution Visualization**: Converts your GitHub or GitLab contribution data into a colorful grid.
-- **Multiple Games**: Classic Pac-Man, Breakout, Galaga, Puzzle Bobble, Bomberman, Minesweeper, and Snake, with more planned
+- **Multiple Games**: Classic Pac-Man, Breakout, Galaga, Puzzle Bobble, Bomberman, Minesweeper, Snake, and Tetris, with more planned
 - **Multiple Themes**: Choose between different themes, such as GitHub Dark and GitLab Dark.
 - **Customizable Settings**: Adjust game settings.
 - **GitHub Integration**: Automatically fetches your contribution data via GraphQL API

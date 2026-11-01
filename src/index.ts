@@ -10,3 +10,4 @@ export { generateScenarioContributions, isScenarioName, resolveScenarioName } fr
 export { PLATFORM_REGISTRY, PLATFORMS, SCENARIO_REGISTRY, SCENARIOS } from './shared/types';
 export type { Platform, Scenario } from './shared/types';
 export { SnakeRenderer } from './snake/index';
+export { TetrisRenderer } from './tetris/index';
