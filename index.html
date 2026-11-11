@@ -26,9 +26,38 @@
 				padding: 2rem;
 				margin-bottom: 2rem;
 			}
-			#svgholder {
+			#svgPlayer {
+				display: inline-block;
+				max-width: 100%;
+			}
+			#svgStage {
+				position: relative;
+			}
+			#svgLive svg {
+				display: block;
 				max-width: 100%;
 				height: auto;
+			}
+			/* Invisible <img> layered over the live SVG so right-click → "Save image as" still saves the SVG */
+			#svgholder {
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+			}
+			#timeline {
+				position: relative;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+				width: 100%;
+				margin-top: 0.25rem;
+			}
+			#timelineSlider {
+				flex: 1;
+				accent-color: #2da44e;
+				height: 8px;
 			}
 			#generationLoading {
 				align-items: center;
@@ -270,8 +299,18 @@
 					<span>Generating contribution graph...</span>
 				</div>
 				<div id="svgContainer" style="display: none">
-					<img id="svgholder" />
-					<br />
+					<div id="svgPlayer">
+					<div id="svgStage">
+						<div id="svgLive"></div>
+						<img id="svgholder" alt="Generated contribution graph" />
+					</div>
+					<div id="timeline">
+						<button id="playPause" class="btn btn-success btn-sm" type="button" aria-label="Pause">
+							<i class="fas fa-pause"></i>
+						</button>
+						<input id="timelineSlider" type="range" min="0" max="1000" step="1" value="0" aria-label="Animation time" />
+					</div>
+					</div>
 					<button id="downloadSvg" class="btn btn-success mt-3" style="display: none">Download SVG</button>
 				</div>
 				<div id="statScore">Score: <span id="points">0</span></div>
@@ -640,8 +679,10 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 			function showGenerationResult(result, game) {
 				const svgBlob = new Blob([result.animatedSVG], { type: 'image/svg+xml;charset=utf-8' });
 				const svgUrl = URL.createObjectURL(svgBlob);
+				if (currentSvgBlob) URL.revokeObjectURL(currentSvgBlob.url);
 				svgHolder.src = svgUrl;
 				currentSvgBlob = { url: svgUrl, game };
+				loadTimeline(result.animatedSVG);
 
 				if (result.stats) {
 					points.innerText = result.stats.totalScore;
@@ -751,6 +792,81 @@ _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.i
 						setGenerating(false);
 						checkUser();
 					});
+			});
+
+			// ── Animation timeline (SMIL control on a live copy of the SVG) ──
+			const svgLive = document.getElementById('svgLive');
+			const playPauseButton = document.getElementById('playPause');
+			const timelineSlider = document.getElementById('timelineSlider');
+			const liveRoot = svgLive.attachShadow({ mode: 'open' });
+			let liveSvg = null;
+			let animDuration = 0;
+			let isPlaying = false;
+			let rafId = null;
+
+			function parseDurationSec(value) {
+				const m = /^([\d.]+)(ms|s)?$/.exec((value || '').trim());
+				if (!m) return 0;
+				const n = parseFloat(m[1]);
+				return m[2] === 'ms' ? n / 1000 : n;
+			}
+
+			function getAnimationDuration(svg) {
+				let max = 0;
+				svg.querySelectorAll('animate, animateTransform, animateMotion, set').forEach((el) => {
+					max = Math.max(max, parseDurationSec(el.getAttribute('dur')));
+				});
+				return max;
+			}
+
+			function updateTimelineUI(t) {
+				timelineSlider.value = animDuration ? Math.round((t / animDuration) * 1000) : 0;
+			}
+
+			function currentLoopTime() {
+				if (!liveSvg || !animDuration) return 0;
+				return liveSvg.getCurrentTime() % animDuration;
+			}
+
+			function tick() {
+				updateTimelineUI(currentLoopTime());
+				rafId = requestAnimationFrame(tick);
+			}
+
+			function setPlaying(playing) {
+				isPlaying = playing;
+				playPauseButton.innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+				playPauseButton.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+				if (!liveSvg) return;
+				cancelAnimationFrame(rafId);
+				if (playing) {
+					liveSvg.setCurrentTime(currentLoopTime());
+					liveSvg.unpauseAnimations();
+					rafId = requestAnimationFrame(tick);
+				} else {
+					liveSvg.pauseAnimations();
+					updateTimelineUI(currentLoopTime());
+				}
+			}
+
+			function loadTimeline(svgText) {
+				cancelAnimationFrame(rafId);
+				liveRoot.innerHTML = svgText;
+				liveSvg = liveRoot.querySelector('svg');
+				animDuration = liveSvg ? getAnimationDuration(liveSvg) : 0;
+				document.getElementById('timeline').style.display = animDuration ? 'flex' : 'none';
+				if (liveSvg) liveSvg.setCurrentTime(0);
+				setPlaying(true);
+			}
+
+			playPauseButton.addEventListener('click', () => setPlaying(!isPlaying));
+
+			timelineSlider.addEventListener('input', () => {
+				if (!liveSvg) return;
+				if (isPlaying) setPlaying(false);
+				const t = (timelineSlider.value / 1000) * animDuration;
+				liveSvg.setCurrentTime(Math.min(t, animDuration - 0.001));
+				updateTimelineUI(t);
 			});
 
 			downloadSvgButton.addEventListener('click', () => {
